@@ -4,12 +4,10 @@
  */
 package admin;
 
+import admin.UserDetailsManagementForm.*;
 public class App {
-    public String getGreeting() {
-        return "Hello World! from admin";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        UserDetailsManagementForm.main(args);
     }
 }
