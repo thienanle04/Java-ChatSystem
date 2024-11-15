@@ -10,3 +10,5 @@
 # Binary files should be left untouched
 *.jar           binary
 
+# Ensure all text files use LF in the repository, but allow conversion to CRLF on Windows
+* text=auto
