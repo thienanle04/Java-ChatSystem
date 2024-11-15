@@ -4,7 +4,6 @@
  */
 package admin;
 
-import admin.AdminHomePage.*;
 public class App {
 
     public static void main(String[] args) {
