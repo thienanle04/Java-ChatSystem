@@ -4,7 +4,15 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	verify_code varchar(255) DEFAULT NULL,
     status ENUM('online', 'offline') DEFAULT 'offline'
+);
+
+CREATE TABLE Login_History (
+	login_id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id INT,
+	logged_in_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE User_Friends (
@@ -38,7 +46,7 @@ CREATE TABLE Chat_History (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE Group_Chat (
+CREATE TABLE ChatGroup (
     group_id INT PRIMARY KEY AUTO_INCREMENT,
     group_name VARCHAR(100) NOT NULL,
     created_by INT NOT NULL,
@@ -53,6 +61,18 @@ CREATE TABLE Group_Members (
     role ENUM('admin', 'member') DEFAULT 'member',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (group_id, user_id),
-    FOREIGN KEY (group_id) REFERENCES Group_Chat(group_id),
+    FOREIGN KEY (group_id) REFERENCES ChatGroup(group_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+CREATE TABLE Group_Messages (
+    message_id INT PRIMARY KEY AUTO_INCREMENT,
+    group_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    message TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (group_id) REFERENCES ChatGroup(group_id),
+    FOREIGN KEY (sender_id) REFERENCES Users(user_id)
+);
+
