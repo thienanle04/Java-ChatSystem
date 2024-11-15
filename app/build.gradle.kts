@@ -30,6 +30,12 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.33")
 
     implementation("com.formdev:flatlaf:2.5")
+
+    implementation(files("libs/miglayout-core.jar"))
+    implementation(files("libs/miglayout-swing.jar"))
+
+    implementation("com.miglayout:miglayout-swing:5.3")
+
 }
 
 tasks.withType<Copy> {
@@ -46,13 +52,33 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "user.App"
+    mainClass = "user.main"
 }
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+tasks.register<JavaExec>("runUser") {
+    group = "application"
+    mainClass.set("user.main")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
+tasks.register<JavaExec>("runAdmin") {
+    group = "application"
+    mainClass.set("admin.main")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
+tasks.register<JavaExec>("runServer") {
+    group = "application"
+    mainClass.set("server.main")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
+defaultTasks("runUser")
 
 sourceSets {
     main {

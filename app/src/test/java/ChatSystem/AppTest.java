@@ -5,13 +5,13 @@ package ChatSystem;
 
 import org.junit.jupiter.api.Test;
 
-import user.App;
+import user.Main;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
     @Test void appHasAGreeting() {
-        App classUnderTest = new App();
+        Main classUnderTest = new Main();
         assertNotNull(classUnderTest, "app should have a greeting");
     }
 }
