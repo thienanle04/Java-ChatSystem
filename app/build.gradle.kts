@@ -25,17 +25,9 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
 
-    implementation("com.formdev:flatlaf:2.5")
-
     implementation("mysql:mysql-connector-java:8.0.33")
 
-    implementation("com.formdev:flatlaf:2.5")
-
-    implementation(files("libs/miglayout-core.jar"))
-    implementation(files("libs/miglayout-swing.jar"))
-
-    implementation("com.miglayout:miglayout-swing:5.3")
-
+    implementation(fileTree("libs") { include("*.jar") })
 }
 
 tasks.withType<Copy> {
@@ -52,7 +44,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "user.main"
+    mainClass = "user.Main"
 }
 
 tasks.named<Test>("test") {
