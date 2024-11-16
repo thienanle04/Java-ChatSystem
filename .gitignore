@@ -9,6 +9,5 @@ build
 .vscode
 
 # Ignore the libs folder and backups
-libs/
 script/system-models.mwb.bak
 script/system-models.mwb
