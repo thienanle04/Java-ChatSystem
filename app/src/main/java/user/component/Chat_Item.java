@@ -1,6 +1,7 @@
 package user.component;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
 
 public class Chat_Item extends javax.swing.JLayeredPane {
     private JLabel label;
@@ -20,6 +22,22 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setOpaque(false);
     }
     
+    public void setUserProfile(String user) {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        layer.setBorder(new EmptyBorder(10, 10, 0, 10));
+        JButton cmd = new JButton(user);
+        cmd.setContentAreaFilled(false);
+        cmd.setFocusable(false);
+        cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cmd.setForeground(new Color(30, 121, 213));
+        cmd.setFont(new java.awt.Font("sansserig", 1, 13));
+        cmd.setBorder(null);
+        txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 5, 10));
+        layer.add(cmd);
+        add(layer, 0);
+    }
+    
     public void setText(String text) {
         txt.setText(text);
     }
@@ -27,7 +45,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
     public void setTime(String time) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        layer.setBorder(new EmptyBorder(0, 5, 5, 5));
+        layer.setBorder(new EmptyBorder(0, 5, 10, 5));
         label = new JLabel(time);
         label.setForeground(new Color(110, 110, 110));
         label.setHorizontalTextPosition(JLabel.LEFT);

@@ -27,7 +27,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private void showGroup() {
         menuList.removeAll();
         for(int i = 0; i < 5; i++) {
-            menuList.add(new Item_People("Group " + i), "wrap");
+            menuList.add(new Item_People("Friend " + i), "wrap");
         }
         refreshMenuList();
     }
@@ -35,7 +35,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private void showBox() {
         menuList.removeAll();
         for(int i = 0; i < 10; i++) {
-            menuList.add(new Item_People("Box " + i), "wrap");
+            menuList.add(new Item_People("Request " + i), "wrap");
         }
         refreshMenuList();
     }
@@ -60,6 +60,7 @@ public class Menu_Left extends javax.swing.JPanel {
         menuBox = new user.component.MenuButton();
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
+        searchBar1 = new user.component.SearchBar();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
@@ -135,12 +136,9 @@ public class Menu_Left extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sp)
-                    .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 114, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+            .addComponent(sp)
+            .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,7 +146,9 @@ public class Menu_Left extends javax.swing.JPanel {
                 .addGap(3, 3, 3)
                 .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -187,6 +187,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private user.component.MenuButton menuGroup;
     private javax.swing.JLayeredPane menuList;
     private user.component.MenuButton menuMessage;
+    private user.component.SearchBar searchBar1;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables
 }

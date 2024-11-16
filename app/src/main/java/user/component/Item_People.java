@@ -44,6 +44,10 @@ public class Item_People extends javax.swing.JPanel {
 
         lb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lb.setText("Name");
+        lb.setMaximumSize(new java.awt.Dimension(50, 20));
+        lb.setMinimumSize(new java.awt.Dimension(50, 20));
+        lb.setName(""); // NOI18N
+        lb.setPreferredSize(new java.awt.Dimension(50, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -58,7 +62,7 @@ public class Item_People extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

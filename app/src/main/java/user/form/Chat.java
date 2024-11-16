@@ -1,18 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package user.form;
 
-/**
- *
- * @author asus
- */
 public class Chat extends javax.swing.JPanel {
-
-    /**
-     * Creates new form Menu_Left
-     */
     public Chat() {
         initComponents();
     }
@@ -30,7 +18,7 @@ public class Chat extends javax.swing.JPanel {
         chatBody = new user.component.Chat_Body();
         chat_Title1 = new user.component.Chat_Title();
 
-        setBackground(new java.awt.Color(249, 249, 249));
+        setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout chatBottomLayout = new javax.swing.GroupLayout(chatBottom);
         chatBottom.setLayout(chatBottomLayout);
@@ -45,6 +33,10 @@ public class Chat extends javax.swing.JPanel {
 
         chatBody.setBackground(new java.awt.Color(245, 245, 245));
 
+        chat_Title1.setBackground(new java.awt.Color(249, 249, 249));
+        chat_Title1.setMinimumSize(new java.awt.Dimension(180, 42));
+        chat_Title1.setPreferredSize(new java.awt.Dimension(400, 42));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -56,9 +48,10 @@ public class Chat extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(3, 3, 3)
                 .addComponent(chat_Title1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(chatBody, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                .addComponent(chatBody, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(chatBottom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

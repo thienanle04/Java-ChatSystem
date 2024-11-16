@@ -10,25 +10,19 @@ public class Chat_Body extends javax.swing.JPanel {
         initComponents();
         init();
         
-        addItemLeft("Hello");
-        addItemRight("22127005");
-        addItemLeft("22127294");
-        addItemRight("Bye bye");
+        addDate("11/06/2024");
+        addItemLeft("Hey! How’s everything going with you?", "Phuoc Nghia");
+        addItemRight("Hey! I'm good, just been super busy with work. How about you?");
         
-        addItemLeft("Hello");
-        addItemRight("22127005");
-        addItemLeft("22127294");
-        addItemRight("Bye bye");
+        addDate("Today");
+        addItemLeft("Same here! Work has been non-stop lately. But I'm looking forward to the weekend.", "Phuoc Nghia");
+        addItemRight("Oh, nice! Got any plans?");
         
-        addItemLeft("Hello");
-        addItemRight("22127005");
-        addItemLeft("22127294");
-        addItemRight("Bye bye");
-        
-        addItemLeft("Hello");
-        addItemRight("22127005");
-        addItemLeft("22127294");
-        addItemRight("Bye bye");
+        addItemLeft("Not sure yet, maybe catching up on some sleep. Or I might go hiking if the weahter's nice. You?", "Phuoc Nghia");
+        addItemRight("That sounds awesome! I've been meaning to go hiking too. I might just relax, though. I could use a lazy weekend.");
+    
+        addItemLeft("Totally understand. Sometimes doing nothing is the best plan.", "Phuoc Nghia");
+        addItemRight("Haha, exactly!");
     }
 
     private void init() {
@@ -38,10 +32,11 @@ public class Chat_Body extends javax.swing.JPanel {
         
     }
 
-    public void addItemLeft(String text) {
-        Chat_Left item = new Chat_Left();
+    public void addItemLeft(String text, String user) {
+        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
-        body.add(item, "wrap, w 100::60%");
+        item.setUserProfile(user);
+        body.add(item, "wrap, w 100::50%");
         body.repaint();
         body.revalidate();
     }
@@ -49,10 +44,19 @@ public class Chat_Body extends javax.swing.JPanel {
     public void addItemRight(String text) {
         Chat_Right item = new Chat_Right();
         item.setText(text);
-        body.add(item, "wrap, al right, w 100::60%");
+        body.add(item, "wrap, al right, w 100::50%");
         body.repaint();
         body.revalidate();
     }
+    
+    public void addDate(String date) {
+        Chat_Date item = new Chat_Date();
+        item.setDate(date);
+        body.add(item, "wrap, al center");
+        body.repaint();
+        body.revalidate();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
