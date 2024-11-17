@@ -31,7 +31,6 @@ public class activeList extends javax.swing.JPanel {
         jComboBox6 = new javax.swing.JComboBox<>();
         jScrollPane7 = new javax.swing.JScrollPane();
         jTable6 = new javax.swing.JTable();
-        jButton5 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         jTextField8 = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
@@ -74,13 +73,6 @@ public class activeList extends javax.swing.JPanel {
             }
         });
         jScrollPane7.setViewportView(jTable6);
-
-        jButton5.setText("View Charts");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
 
         jLabel14.setText("End Date (yyyy-mm-dd):");
 
@@ -129,7 +121,6 @@ public class activeList extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
@@ -189,18 +180,13 @@ public class activeList extends javax.swing.JPanel {
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton5))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox6ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
         // TODO add your handling code here:
@@ -216,6 +202,31 @@ public class activeList extends javax.swing.JPanel {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
+        org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
+        dataset.addValue(50, "Số lượng", "Tháng 1");
+        dataset.addValue(75, "Số lượng", "Tháng 2");
+        dataset.addValue(120, "Số lượng", "Tháng 3");
+
+        // Tạo biểu đồ
+        org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
+                "Biểu đồ số lượng người hoạt động",
+                "Tháng",
+                "Số lượng",
+                dataset
+        );
+
+        // Tạo Panel chứa biểu đồ
+        org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
+
+        // Tạo JDialog để hiển thị biểu đồ
+        javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
+        chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
+        chartDialog.setContentPane(chartPanel);
+        chartDialog.setSize(800, 600);
+        chartDialog.setLocationRelativeTo(this);
+
+        // Hiển thị hộp thoại
+        chartDialog.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
@@ -224,7 +235,6 @@ public class activeList extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox6;

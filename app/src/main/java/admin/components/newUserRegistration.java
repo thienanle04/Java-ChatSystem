@@ -163,6 +163,31 @@ public class newUserRegistration extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
+        dataset.addValue(50, "Số lượng", "Tháng 1");
+        dataset.addValue(75, "Số lượng", "Tháng 2");
+        dataset.addValue(120, "Số lượng", "Tháng 3");
+
+        // Tạo biểu đồ
+        org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
+                "Biểu đồ số lượng người đăng ký",
+                "Tháng",
+                "Số lượng",
+                dataset
+        );
+
+        // Tạo Panel chứa biểu đồ
+        org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
+
+        // Tạo JDialog để hiển thị biểu đồ
+        javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
+        chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
+        chartDialog.setContentPane(chartPanel);
+        chartDialog.setSize(800, 600);
+        chartDialog.setLocationRelativeTo(this);
+
+        // Hiển thị hộp thoại
+        chartDialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed

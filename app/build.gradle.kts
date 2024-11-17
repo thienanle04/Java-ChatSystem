@@ -27,6 +27,8 @@ dependencies {
 
     implementation("mysql:mysql-connector-java:8.0.33")
 
+    implementation("org.jfree:jfreechart:1.5.3")
+
     implementation(fileTree("libs") { include("*.jar") })
 }
 
