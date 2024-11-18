@@ -1,6 +1,9 @@
 package user.form;
 
 import net.miginfocom.swing.MigLayout;
+import user.component.Friend_List;
+import user.component.Friend_Request;
+import user.component.Friend_Search;
 import user.component.Item_People;
 import user.swing.ScrollBar;
 
@@ -22,22 +25,20 @@ public class Menu_Left extends javax.swing.JPanel {
             menuList.add(new Item_People("Person " + i), "wrap");
         }
         refreshMenuList();
+        searchBar1.setVisible(true);
     }
     
     private void showGroup() {
         menuList.removeAll();
-        for(int i = 0; i < 5; i++) {
-            menuList.add(new Item_People("Friend " + i), "wrap");
-        }
+        searchBar1.setVisible(false);
+        menuList.add(new Friend_Search(), "wrap");
+        menuList.add(new Friend_List(), "wrap");
+        menuList.add(new Friend_Request(), "wrap");
         refreshMenuList();
     }
     
     private void showBox() {
-        menuList.removeAll();
-        for(int i = 0; i < 10; i++) {
-            menuList.add(new Item_People("Request " + i), "wrap");
-        }
-        refreshMenuList();
+        searchBar1.setVisible(false);
     }
     
     private void refreshMenuList() {
@@ -97,13 +98,13 @@ public class Menu_Left extends javax.swing.JPanel {
         menu.add(menuGroup);
 
         menuBox.setBackground(new java.awt.Color(242, 242, 242));
-        menuBox.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/box.png"))); // NOI18N
+        menuBox.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
         menuBox.setDefaultCapable(false);
-        menuBox.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/box.png"))); // NOI18N
+        menuBox.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
         menuBox.setMaximumSize(new java.awt.Dimension(42, 42));
         menuBox.setMinimumSize(new java.awt.Dimension(42, 42));
         menuBox.setPreferredSize(new java.awt.Dimension(42, 42));
-        menuBox.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/box_selected.png"))); // NOI18N
+        menuBox.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_selected.png"))); // NOI18N
         menuBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuBoxActionPerformed(evt);

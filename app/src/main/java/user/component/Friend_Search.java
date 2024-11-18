@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Item_People extends javax.swing.JPanel {
-    public Item_People(String name) {
+public class Friend_Search extends javax.swing.JPanel {
+    public Friend_Search() {
         initComponents();
-        lb.setText(name);
         init();
     }
     
@@ -34,16 +33,16 @@ public class Item_People extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        imageAvatar1 = new user.swing.ImageAvatar();
+        icon = new user.swing.ImageAvatar();
         lb = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
-        imageAvatar1.setBorderSize(0);
-        imageAvatar1.setImage(new javax.swing.ImageIcon(getClass().getResource("/user/profile.png"))); // NOI18N
+        icon.setBorderSize(0);
+        icon.setImage(new javax.swing.ImageIcon(getClass().getResource("/user/friend_search.png"))); // NOI18N
 
-        lb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lb.setText("Name");
+        lb.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lb.setText("Find new");
         lb.setMaximumSize(new java.awt.Dimension(50, 20));
         lb.setMinimumSize(new java.awt.Dimension(50, 20));
         lb.setName(""); // NOI18N
@@ -55,14 +54,14 @@ public class Item_People extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(icon, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(icon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -72,7 +71,7 @@ public class Item_People extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private user.swing.ImageAvatar imageAvatar1;
+    private user.swing.ImageAvatar icon;
     private javax.swing.JLabel lb;
     // End of variables declaration//GEN-END:variables
 }
