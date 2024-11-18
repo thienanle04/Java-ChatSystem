@@ -114,11 +114,11 @@
               <Color blue="f2" green="f2" red="f2" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/user/box.png"/>
+              <Image iconType="3" name="/user/profile_default.png"/>
             </Property>
             <Property name="defaultCapable" type="boolean" value="false"/>
             <Property name="disabledIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/user/box.png"/>
+              <Image iconType="3" name="/user/profile_default.png"/>
             </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[42, 42]"/>
@@ -130,7 +130,7 @@
               <Dimension value="[42, 42]"/>
             </Property>
             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/user/box_selected.png"/>
+              <Image iconType="3" name="/user/profile_selected.png"/>
             </Property>
           </Properties>
           <Events>
