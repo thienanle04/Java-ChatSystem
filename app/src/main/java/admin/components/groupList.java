@@ -49,7 +49,6 @@ public class groupList extends javax.swing.JPanel {
         SortBy = new javax.swing.JComboBox<>();
         viewMember = new javax.swing.JButton();
         viewAdmin = new javax.swing.JButton();
-        filter = new javax.swing.JButton();
 
         GroupList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -103,13 +102,6 @@ public class groupList extends javax.swing.JPanel {
             }
         });
 
-        filter.setText("Filter");
-        filter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,9 +113,7 @@ public class groupList extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,7 +133,6 @@ public class groupList extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(filter)
                     .addComponent(SortBy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -154,8 +143,46 @@ public class groupList extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private DefaultTableModel originalModel;
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByNameActionPerformed
         // TODO add your handling code here:
+        String filterName = filterByName.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            // Get the table model
+            if (originalModel == null) {
+                // Lưu lại model gốc nếu chưa được lưu
+                originalModel = (DefaultTableModel) GroupList.getModel();
+            }
+
+            // Get the original model for filtering
+            DefaultTableModel model = originalModel;
+
+            // Create a new table model for filtered data
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            // Copy column names
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            // Filter rows
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    // Add matching row to the filtered model
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), // Name
+                        model.getValueAt(i, 1), // Creation Date
+                    });
+                }
+            }
+
+            // Set the filtered model on the table
+            GroupList.setModel(filteredModel);
+        } else {
+            GroupList.setModel(originalModel);
+        }
     }//GEN-LAST:event_filterByNameActionPerformed
 
     private void viewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMemberActionPerformed
@@ -272,54 +299,9 @@ public class groupList extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_viewAdminActionPerformed
     
-    private DefaultTableModel originalModel;
-    
-    private void filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterActionPerformed
-        // TODO add your handling code here:
-        String filterName = filterByName.getText().trim();
-
-        if (!filterName.isEmpty()) {
-            // Get the table model
-            if (originalModel == null) {
-                // Lưu lại model gốc nếu chưa được lưu
-                originalModel = (DefaultTableModel) GroupList.getModel();
-            }
-
-            // Get the original model for filtering
-            DefaultTableModel model = originalModel;
-
-            // Create a new table model for filtered data
-            DefaultTableModel filteredModel = new DefaultTableModel();
-
-            // Copy column names
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                filteredModel.addColumn(model.getColumnName(i));
-            }
-
-            // Filter rows
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
-                if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    // Add matching row to the filtered model
-                    filteredModel.addRow(new Object[] {
-                        model.getValueAt(i, 0), // Name
-                        model.getValueAt(i, 1), // Creation Date
-                    });
-                }
-            }
-
-            // Set the filtered model on the table
-            GroupList.setModel(filteredModel);
-        } else {
-            // If the filter field is empty, show an error or reset the table
-            JOptionPane.showMessageDialog(this, "Please enter a valid name to filter.", 
-                "Invalid Input", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_filterActionPerformed
-
     private void SortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByActionPerformed
         // TODO add your handling code here:
-         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
+        DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
         // Tạo TableRowSorter với model hiện tại
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
@@ -360,7 +342,6 @@ public class groupList extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable GroupList;
     private javax.swing.JComboBox<String> SortBy;
-    private javax.swing.JButton filter;
     private javax.swing.JTextField filterByName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

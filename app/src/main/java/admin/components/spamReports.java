@@ -4,6 +4,13 @@
  */
 package admin.components;
 
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Nghiax
@@ -27,21 +34,19 @@ public class spamReports extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        SpamReports = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        FilterByName = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        jComboBox5 = new javax.swing.JComboBox<>();
-        jTextField6 = new javax.swing.JTextField();
+        SortBy = new javax.swing.JComboBox<>();
+        FilterByTimeStamp = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        SpamReports.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"11-11-2024 2:07:20 ", "nghia"},
-                {"12-11-2024 12:07:20 ", "nghia"},
-                {null, null},
-                {null, null}
+                {"12-11-2024 12:07:20 ", "an"}
             },
             new String [] {
                 "Timestamp", "Username"
@@ -55,14 +60,14 @@ public class spamReports extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable3);
+        jScrollPane4.setViewportView(SpamReports);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Filter by name:");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        FilterByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                FilterByNameActionPerformed(evt);
             }
         });
 
@@ -76,11 +81,16 @@ public class spamReports extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Sort by:");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
-
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+                SortByActionPerformed(evt);
+            }
+        });
+
+        FilterByTimeStamp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FilterByTimeStampActionPerformed(evt);
             }
         });
 
@@ -101,15 +111,15 @@ public class spamReports extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(FilterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel11)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(FilterByTimeStamp, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -119,12 +129,12 @@ public class spamReports extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel11)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(FilterByTimeStamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel10)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(FilterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -132,29 +142,129 @@ public class spamReports extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private DefaultTableModel originalModel;
+    private void FilterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FilterByNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+        String filterName = FilterByName.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            // Get the table model
+            if (originalModel == null) {
+                // Lưu lại model gốc nếu chưa được lưu
+                originalModel = (DefaultTableModel) SpamReports.getModel();
+            }
+
+            // Get the original model for filtering
+            DefaultTableModel model = originalModel;
+
+            // Create a new table model for filtered data
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            // Copy column names
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            // Filter rows
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 1).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    // Add matching row to the filtered model
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), // Name
+                        model.getValueAt(i, 1), // Creation Date
+                    });
+                }
+            }
+
+            // Set the filtered model on the table
+            SpamReports.setModel(filteredModel);
+        } else {
+            SpamReports.setModel(originalModel);
+        }
+    }//GEN-LAST:event_FilterByNameActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void FilterByTimeStampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FilterByTimeStampActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+        String filterName = FilterByTimeStamp.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            // Get the table model
+            if (originalModel == null) {
+                // Lưu lại model gốc nếu chưa được lưu
+                originalModel = (DefaultTableModel) SpamReports.getModel();
+            }
+
+            // Get the original model for filtering
+            DefaultTableModel model = originalModel;
+
+            // Create a new table model for filtered data
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            // Copy column names
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            // Filter rows
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    // Add matching row to the filtered model
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), // Name
+                        model.getValueAt(i, 1), // Creation Date
+                    });
+                }
+            }
+
+            // Set the filtered model on the table
+            SpamReports.setModel(filteredModel);
+        } else {
+            SpamReports.setModel(originalModel);
+        }
+    }//GEN-LAST:event_FilterByTimeStampActionPerformed
+
+    private void SortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
+
+        // Tạo TableRowSorter với model hiện tại
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        SpamReports.setRowSorter(sorter);
+
+        // Lấy lựa chọn từ JComboBox
+        String selectedOption = (String) SortBy.getSelectedItem();
+        int columnIndex = -1;
+
+        // Xác định chỉ số cột tương ứng với lựa chọn của JComboBox
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 1; 
+        } else if ("Timestamp".equals(selectedOption)) {
+            columnIndex = 0; 
+        }
+
+        if (columnIndex != -1) {
+            // Sắp xếp theo cột đã chọn (tăng dần)
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort(); // Thực hiện sắp xếp
+        }
+    }//GEN-LAST:event_SortByActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField FilterByName;
+    private javax.swing.JTextField FilterByTimeStamp;
+    private javax.swing.JComboBox<String> SortBy;
+    private javax.swing.JTable SpamReports;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }
