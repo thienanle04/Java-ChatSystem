@@ -4,6 +4,21 @@
  */
 package admin.components;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.Collections;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Nghiax
@@ -27,20 +42,19 @@ public class groupList extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        GroupList = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        filterByName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        SortBy = new javax.swing.JComboBox<>();
+        viewMember = new javax.swing.JButton();
+        viewAdmin = new javax.swing.JButton();
+        filter = new javax.swing.JButton();
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        GroupList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"GroupA", "11-11-2024"},
-                {"GroupB", "12-11-2024"},
-                {null, null},
-                {null, null}
+                {"Group B", "11-11-2024"},
+                {"Group A", "12-11-2024"}
             },
             new String [] {
                 "Group Name", "Creation Date"
@@ -54,30 +68,47 @@ public class groupList extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable2);
+        jScrollPane3.setViewportView(GroupList);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Filter by name:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        filterByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                filterByNameActionPerformed(evt);
             }
         });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Sort by:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
-
-        jButton1.setText("View Member");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                SortByActionPerformed(evt);
             }
         });
 
-        jButton2.setText("View Admin");
+        viewMember.setText("View Member");
+        viewMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewMemberActionPerformed(evt);
+            }
+        });
+
+        viewAdmin.setText("View Admin");
+        viewAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAdminActionPerformed(evt);
+            }
+        });
+
+        filter.setText("Filter");
+        filter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -86,20 +117,22 @@ public class groupList extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)
+                        .addComponent(viewMember)
                         .addGap(35, 35, 35)
-                        .addComponent(jButton2)))
+                        .addComponent(viewAdmin)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -108,35 +141,231 @@ public class groupList extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(filter)
+                    .addComponent(SortBy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)))
+                    .addComponent(viewAdmin)
+                    .addComponent(viewMember)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_filterByNameActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void viewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMemberActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        // Get the table model
+        DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
+        // Get the selected row
+        int selectedRow = GroupList.getSelectedRow();
 
+        if (selectedRow != -1) {
+            // Fetch group name or ID from the selected row (assuming it's in column 0)
+            String groupName = (String) model.getValueAt(selectedRow, 0);
+
+            // Fetch members dynamically (replace this with real data fetching logic)
+            String[][] members = getGroupMembers(groupName); // Replace with actual data
+
+            // Define column names for the table
+            String[] columnNames = {"Member Name", "Role"};
+
+            // Create JTable with members' data
+            JTable membersTable = new JTable(members, columnNames);
+            membersTable.setFillsViewportHeight(true); // Makes it look better when there are few rows
+            membersTable.setRowHeight(30); // Set row height for better readability
+
+            // Add the table to a scroll pane
+            JScrollPane scrollPane = new JScrollPane(membersTable);
+            scrollPane.setPreferredSize(new Dimension(400, 200)); // Set the preferred size
+
+            // Create a custom dialog
+            JDialog dialog = new JDialog((JFrame) null, "List Members of Group: " + groupName, true);
+            dialog.setLayout(new BorderLayout());
+            dialog.add(scrollPane, BorderLayout.CENTER);
+
+            // Add a Close button
+            JButton closeButton = new JButton("Close");
+            closeButton.addActionListener(e -> dialog.dispose());
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(closeButton);
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Set dialog size and make it visible
+            dialog.setSize(450, 300);
+            dialog.setLocationRelativeTo(this); // Center the dialog relative to the main frame
+            dialog.setVisible(true);
+        } else {
+            // Handle the case when no row is selected
+            JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
+                "No Group Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_viewMemberActionPerformed
+
+    private String[][] getGroupMembers(String groupName) {
+        // Simulated data: Replace this with actual data fetching based on the group name or ID
+        return switch (groupName) {
+            case "Group A" -> new String[][] {
+                {"Bob", "Member"},
+                {"Charlie", "Member"}
+            };
+            case "Group B" -> new String[][] {
+                {"Eva", "Member"}
+            };
+            default -> new String[][] {
+                {"No members found", ""}
+            };
+        };
+    }
+    private void viewAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAdminActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
+
+        // Get the selected row
+        int selectedRow = GroupList.getSelectedRow();
+
+        if (selectedRow != -1) {
+            // Fetch group name or ID from the selected row (assuming it's in column 0)
+            String groupName = (String) model.getValueAt(selectedRow, 0);
+
+            // Fetch members dynamically (replace this with real data fetching logic)
+            String[][] members = getGroupAdmins(groupName); // Replace with actual data
+
+            // Define column names for the table
+            String[] columnNames = {"Member Name", "Role"};
+
+            // Create JTable with members' data
+            JTable membersTable = new JTable(members, columnNames);
+            membersTable.setFillsViewportHeight(true); // Makes it look better when there are few rows
+            membersTable.setRowHeight(30); // Set row height for better readability
+
+            // Add the table to a scroll pane
+            JScrollPane scrollPane = new JScrollPane(membersTable);
+            scrollPane.setPreferredSize(new Dimension(400, 200)); // Set the preferred size
+
+            // Create a custom dialog
+            JDialog dialog = new JDialog((JFrame) null, "List Admins of Group: " + groupName, true);
+            dialog.setLayout(new BorderLayout());
+            dialog.add(scrollPane, BorderLayout.CENTER);
+
+            // Add a Close button
+            JButton closeButton = new JButton("Close");
+            closeButton.addActionListener(e -> dialog.dispose());
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(closeButton);
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Set dialog size and make it visible
+            dialog.setSize(450, 300);
+            dialog.setLocationRelativeTo(this); // Center the dialog relative to the main frame
+            dialog.setVisible(true);
+        } else {
+            // Handle the case when no row is selected
+            JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
+                "No Group Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_viewAdminActionPerformed
+    
+    private DefaultTableModel originalModel;
+    
+    private void filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterActionPerformed
+        // TODO add your handling code here:
+        String filterName = filterByName.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            // Get the table model
+            if (originalModel == null) {
+                // Lưu lại model gốc nếu chưa được lưu
+                originalModel = (DefaultTableModel) GroupList.getModel();
+            }
+
+            // Get the original model for filtering
+            DefaultTableModel model = originalModel;
+
+            // Create a new table model for filtered data
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            // Copy column names
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            // Filter rows
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    // Add matching row to the filtered model
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), // Name
+                        model.getValueAt(i, 1), // Creation Date
+                    });
+                }
+            }
+
+            // Set the filtered model on the table
+            GroupList.setModel(filteredModel);
+        } else {
+            // If the filter field is empty, show an error or reset the table
+            JOptionPane.showMessageDialog(this, "Please enter a valid name to filter.", 
+                "Invalid Input", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_filterActionPerformed
+
+    private void SortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByActionPerformed
+        // TODO add your handling code here:
+         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
+
+        // Tạo TableRowSorter với model hiện tại
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        GroupList.setRowSorter(sorter);
+
+        // Lấy lựa chọn từ JComboBox
+        String selectedOption = (String) SortBy.getSelectedItem();
+        int columnIndex = -1;
+
+        // Xác định chỉ số cột tương ứng với lựa chọn của JComboBox
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 0; // Giả sử cột "Name" là cột 0
+        } else if ("CreationDate".equals(selectedOption)) {
+            columnIndex = 1; // Giả sử cột "CreationDate" là cột 1 (cột này cần phải là kiểu ngày tháng)
+        }
+
+        if (columnIndex != -1) {
+            // Sắp xếp theo cột đã chọn (tăng dần)
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort(); // Thực hiện sắp xếp
+        }
+    }//GEN-LAST:event_SortByActionPerformed
+
+    private String[][] getGroupAdmins(String groupName) {
+        // Simulated data: Replace this with actual data fetching based on the group name or ID
+        return switch (groupName) {
+            case "Group A" -> new String[][] {
+                {"Alice", "Admin"},
+            };
+            case "Group B" -> new String[][] {
+                {"David", "Admin"},
+            };
+            default -> new String[][] {
+                {"No members found", ""}
+            };
+        };
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JTable GroupList;
+    private javax.swing.JComboBox<String> SortBy;
+    private javax.swing.JButton filter;
+    private javax.swing.JTextField filterByName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton viewAdmin;
+    private javax.swing.JButton viewMember;
     // End of variables declaration//GEN-END:variables
 }

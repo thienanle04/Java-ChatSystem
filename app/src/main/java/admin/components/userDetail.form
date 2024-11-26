@@ -91,7 +91,7 @@
                   <Data value="None"/>
                 </Column>
                 <Column editable="true" title="Lock" type="java.lang.Boolean">
-                  <Data value="null"/>
+                  <Data value="true"/>
                   <Data value="true"/>
                 </Column>
               </Table>

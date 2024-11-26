@@ -42,7 +42,7 @@ public class userDetail extends javax.swing.JPanel {
 
         UserDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Nghia", "test1", "1234", "None", "16-09-2004", "Male", "None", null},
+                {"Nghia", "test1", "1234", "None", "16-09-2004", "Male", "None",  new Boolean(true)},
                 {"An", "test2", "1234", "None", "None", "Male", "None",  new Boolean(true)}
             },
             new String [] {
@@ -229,12 +229,12 @@ public class userDetail extends javax.swing.JPanel {
                 String newEmail = emailField.getText();
 
                 // Cập nhật dữ liệu trong mô hình bảng
-                model.setValueAt(newUsername, selectedRow, 0);
-                model.setValueAt(newName, selectedRow, 1);
-                model.setValueAt(newAddress, selectedRow, 2);
-                model.setValueAt(newDOB, selectedRow, 3);
-                model.setValueAt(newGender, selectedRow, 4);
-                model.setValueAt(newEmail, selectedRow, 5);
+                model.setValueAt(newUsername, selectedRow, 1);
+                model.setValueAt(newName, selectedRow, 0);
+                model.setValueAt(newAddress, selectedRow, 3);
+                model.setValueAt(newDOB, selectedRow, 4);
+                model.setValueAt(newGender, selectedRow, 5);
+                model.setValueAt(newEmail, selectedRow, 6);
 
                 JOptionPane.showMessageDialog(this, "User updated successfully!");
             }
@@ -268,7 +268,21 @@ public class userDetail extends javax.swing.JPanel {
     }//GEN-LAST:event_delete_buttonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        // Get the selected row
+        int selectedRow = UserDetails.getSelectedRow();
+
+        // Check if a row is selected
+        if (selectedRow != -1) {
+            // Retrieve the "lock" value from column 6 (assuming it's a Boolean)
+            Boolean lock = (Boolean) model.getValueAt(selectedRow, 7);
+
+            // Toggle the "lock" value
+            model.setValueAt(!lock, selectedRow, 7); // Invert the value and update the model
+        } else {
+            System.out.println("No row selected.");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
