@@ -4,6 +4,15 @@
  */
 package admin.components;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Nghiax
@@ -28,91 +37,94 @@ public class activeList extends javax.swing.JPanel {
 
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jComboBox6 = new javax.swing.JComboBox<>();
+        sortBy = new javax.swing.JComboBox<>();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
+        ActiveList = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        startDate = new javax.swing.JTextField();
+        endDate = new javax.swing.JTextField();
+        filterBy = new javax.swing.JButton();
+        viewChart = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        appOpen = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jComboBox7 = new javax.swing.JComboBox<>();
+        filterByAppOpen = new javax.swing.JComboBox<>();
 
         jLabel12.setText("Start Date (yyyy-mm-dd):");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Sort by:");
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
-        jComboBox6.addActionListener(new java.awt.event.ActionListener() {
+        sortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        sortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox6ActionPerformed(evt);
+                sortByActionPerformed(evt);
             }
         });
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+        ActiveList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {"Nghia",  new Integer(100),  new Integer(200),  new Integer(15), "2018-09-20"},
+                {"An",  new Integer(75),  new Integer(150),  new Integer(10), "2019-09-20"}
             },
             new String [] {
-                "Username", "App Open", "People Chatted", "Group Chatted"
+                "Username", "App Open", "People Chatted", "Group Chatted", "Creation Date"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jScrollPane7.setViewportView(jTable6);
+        jScrollPane7.setViewportView(ActiveList);
 
         jLabel14.setText("End Date (yyyy-mm-dd):");
 
-        jTextField8.addActionListener(new java.awt.event.ActionListener() {
+        startDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField8ActionPerformed(evt);
+                startDateActionPerformed(evt);
             }
         });
 
-        jTextField9.addActionListener(new java.awt.event.ActionListener() {
+        endDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField9ActionPerformed(evt);
+                endDateActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Filter by time");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        filterBy.setText("Filter by time");
+        filterBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                filterByActionPerformed(evt);
             }
         });
 
-        jButton7.setText("View Charts");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        viewChart.setText("View Charts");
+        viewChart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                viewChartActionPerformed(evt);
             }
         });
 
         jLabel17.setText("Filter by app open:");
 
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        appOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                appOpenActionPerformed(evt);
             }
         });
 
         jLabel18.setText("Filter by:");
 
-        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", ">", "<" }));
+        filterByAppOpen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", ">", "<" }));
+        filterByAppOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterByAppOpenActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -128,27 +140,27 @@ public class activeList extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jTextField5)
+                                        .addComponent(appOpen)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel18)))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton6)
+                                        .addComponent(filterBy)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel13)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterByAppOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))))))
-                    .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(viewChart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -162,52 +174,112 @@ public class activeList extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterBy, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(appOpen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(filterByAppOpen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(viewChart, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+    private DefaultTableModel originalModel;
+    private void sortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByActionPerformed
+        DefaultTableModel model = (DefaultTableModel) ActiveList.getModel();
 
-    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox6ActionPerformed
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        ActiveList.setRowSorter(sorter);
 
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
+        String selectedOption = (String) sortBy.getSelectedItem();
+        int columnIndex = -1;
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 0; 
+        } else if ("Creation Date".equals(selectedOption)) {
+            columnIndex = 4; 
+        }
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+        if (columnIndex != -1) {
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort(); // Thực hiện sắp xếp
+        }
+    }//GEN-LAST:event_sortByActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_startDateActionPerformed
+
+    private void endDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_endDateActionPerformed
+    private void filterByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByActionPerformed
+        // TODO add your handling code here:
+        String start = startDate.getText().trim();
+        String end = endDate.getText().trim();
+
+        if (!start.isEmpty() || !end.isEmpty()) {
+            try {
+                LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start);
+                LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end);
+
+                if (originalModel == null) {
+                    originalModel = (DefaultTableModel) ActiveList.getModel();
+                }
+
+                DefaultTableModel model = originalModel;
+
+                DefaultTableModel filteredModel = new DefaultTableModel();
+
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    filteredModel.addColumn(model.getColumnName(i));
+                }
+
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String dateStr = model.getValueAt(i, 4).toString(); 
+                    LocalDate creationDate = LocalDate.parse(dateStr);
+
+                    if ((creationDate.isEqual(_startDate) || creationDate.isAfter(_startDate)) &&
+                        (creationDate.isEqual(_endDate) || creationDate.isBefore(_endDate))) {
+                        filteredModel.addRow(new Object[] {
+                            model.getValueAt(i, 0), // Name
+                            model.getValueAt(i, 1), // Email
+                            model.getValueAt(i, 2), // Creation Date
+                            model.getValueAt(i, 3),
+                            model.getValueAt(i, 4),
+                        });
+                    }
+                }
+
+                ActiveList.setModel(filteredModel);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Please enter dates in the format yyyy-MM-dd.", 
+                    "Invalid Date Format", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            ActiveList.setModel(originalModel);
+        }
+    }//GEN-LAST:event_filterByActionPerformed
+
+    private void viewChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewChartActionPerformed
         org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
         dataset.addValue(50, "Số lượng", "Tháng 1");
         dataset.addValue(75, "Số lượng", "Tháng 2");
         dataset.addValue(120, "Số lượng", "Tháng 3");
 
-        // Tạo biểu đồ
         org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
                 "Biểu đồ số lượng người hoạt động",
                 "Tháng",
@@ -215,39 +287,87 @@ public class activeList extends javax.swing.JPanel {
                 dataset
         );
 
-        // Tạo Panel chứa biểu đồ
         org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
 
-        // Tạo JDialog để hiển thị biểu đồ
         javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
         chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
         chartDialog.setContentPane(chartPanel);
         chartDialog.setSize(800, 600);
         chartDialog.setLocationRelativeTo(this);
 
-        // Hiển thị hộp thoại
         chartDialog.setVisible(true);
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_viewChartActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void appOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appOpenActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+        String directFriend = appOpen.getText().trim();
+        String _filterBy = (String) filterByAppOpen.getSelectedItem();// =, > , < 
+        
+        if (!directFriend.isEmpty()) {
+            try {
+                int directFriendValue = Integer.parseInt(directFriend);
+
+                if (originalModel == null) {
+                    originalModel = (DefaultTableModel) ActiveList.getModel();
+                }
+
+                DefaultTableModel model = originalModel;
+
+                DefaultTableModel filteredModel = new DefaultTableModel();
+
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    filteredModel.addColumn(model.getColumnName(i));
+                }
+
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    int friendsCount = Integer.parseInt(model.getValueAt(i, 1).toString());
+
+                    boolean matches = false;
+                    switch (_filterBy) {
+                        case "=" -> matches = friendsCount == directFriendValue;
+                        case ">" -> matches = friendsCount > directFriendValue;
+                        case "<" -> matches = friendsCount < directFriendValue;
+                    }
+
+                    if (matches) {
+                        Object[] rowData = new Object[model.getColumnCount()];
+                        for (int j = 0; j < model.getColumnCount(); j++) {
+                            rowData[j] = model.getValueAt(i, j);
+                        }
+                        filteredModel.addRow(rowData);
+                    }
+                }
+
+                ActiveList.setModel(filteredModel);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            ActiveList.setModel(originalModel);
+        }
+    }//GEN-LAST:event_appOpenActionPerformed
+
+    private void filterByAppOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByAppOpenActionPerformed
+        // TODO add your handling code here:
+        appOpenActionPerformed(evt);
+    }//GEN-LAST:event_filterByAppOpenActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox6;
-    private javax.swing.JComboBox<String> jComboBox7;
+    private javax.swing.JTable ActiveList;
+    private javax.swing.JTextField appOpen;
+    private javax.swing.JTextField endDate;
+    private javax.swing.JButton filterBy;
+    private javax.swing.JComboBox<String> filterByAppOpen;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable jTable6;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JComboBox<String> sortBy;
+    private javax.swing.JTextField startDate;
+    private javax.swing.JButton viewChart;
     // End of variables declaration//GEN-END:variables
 }

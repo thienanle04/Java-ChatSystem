@@ -143,10 +143,8 @@ public class userDetail extends javax.swing.JPanel {
         addUserPanel.add(new JLabel("Email:"));
         addUserPanel.add(emailField);
 
-        // Hiển thị hộp thoại yêu cầu người dùng nhập thông tin
         int result = JOptionPane.showConfirmDialog(this, addUserPanel, "Add New User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        // Nếu người dùng nhấn OK, lấy dữ liệu và thêm vào bảng
         if (result == JOptionPane.OK_OPTION) {
             String username = usernameField.getText();
             String name = nameField.getText();
@@ -155,13 +153,10 @@ public class userDetail extends javax.swing.JPanel {
             String gender = genderField.getText();
             String email = emailField.getText();
 
-            // Kiểm tra xem tên người dùng và tên có trống không
             if (!username.isEmpty() && !name.isEmpty()) {
-                // Thêm người dùng vào bảng
                 DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
                 model.addRow(new Object[]{username, name, address, dob, gender, email});
 
-                // Xóa các trường nhập liệu sau khi thêm
                 usernameField.setText("");
                 nameField.setText("");
                 addressField.setText("");
@@ -177,15 +172,11 @@ public class userDetail extends javax.swing.JPanel {
     }//GEN-LAST:event_add_buttonActionPerformed
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        // Lấy hàng được chọn
         int selectedRow = UserDetails.getSelectedRow();
 
-        // Kiểm tra xem có hàng nào được chọn không
         if (selectedRow >= 0) {
-            // Lấy thông tin hiện tại từ hàng đã chọn
             String currentUsername = model.getValueAt(selectedRow, 0).toString();
             String currentName = model.getValueAt(selectedRow, 1).toString();
             String currentAddress = model.getValueAt(selectedRow, 2).toString();
@@ -193,7 +184,6 @@ public class userDetail extends javax.swing.JPanel {
             String currentGender = model.getValueAt(selectedRow, 4).toString();
             String currentEmail = model.getValueAt(selectedRow, 5).toString();
 
-            // Tạo các trường để nhập thông tin mới
             JTextField usernameField = new JTextField(currentUsername);
             JTextField nameField = new JTextField(currentName);
             JTextField addressField = new JTextField(currentAddress);
@@ -201,7 +191,6 @@ public class userDetail extends javax.swing.JPanel {
             JTextField genderField = new JTextField(currentGender);
             JTextField emailField = new JTextField(currentEmail);
 
-            // Tạo panel và thêm các trường vào panel
             JPanel updatePanel = new JPanel(new GridLayout(6, 2));
             updatePanel.add(new JLabel("Username:"));
             updatePanel.add(usernameField);
@@ -216,11 +205,9 @@ public class userDetail extends javax.swing.JPanel {
             updatePanel.add(new JLabel("Email:"));
             updatePanel.add(emailField);
 
-            // Hiển thị hộp thoại để nhập thông tin cập nhật
             int result = JOptionPane.showConfirmDialog(this, updatePanel, "Update User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
-                // Lấy dữ liệu mới từ các trường
                 String newUsername = usernameField.getText();
                 String newName = nameField.getText();
                 String newAddress = addressField.getText();
@@ -228,7 +215,6 @@ public class userDetail extends javax.swing.JPanel {
                 String newGender = genderField.getText();
                 String newEmail = emailField.getText();
 
-                // Cập nhật dữ liệu trong mô hình bảng
                 model.setValueAt(newUsername, selectedRow, 1);
                 model.setValueAt(newName, selectedRow, 0);
                 model.setValueAt(newAddress, selectedRow, 3);
@@ -239,7 +225,6 @@ public class userDetail extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "User updated successfully!");
             }
         } else {
-            // Thông báo nếu không có hàng nào được chọn
             JOptionPane.showMessageDialog(this, "Please select a user to update.");
         }
     }//GEN-LAST:event_update_buttonActionPerformed
@@ -248,21 +233,16 @@ public class userDetail extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        // Lấy hàng được chọn
         int selectedRow = UserDetails.getSelectedRow();
 
-        // Kiểm tra xem có hàng nào được chọn không
         if (selectedRow >= 0) {
-            // Hiển thị hộp thoại xác nhận
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                // Xóa hàng khỏi bảng
                 model.removeRow(selectedRow);
                 JOptionPane.showMessageDialog(this, "User deleted successfully!");
             }
         } else {
-            // Thông báo nếu không có hàng nào được chọn
             JOptionPane.showMessageDialog(this, "Please select a user to delete.");
         }
     }//GEN-LAST:event_delete_buttonActionPerformed
@@ -270,16 +250,12 @@ public class userDetail extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
          DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        // Get the selected row
         int selectedRow = UserDetails.getSelectedRow();
 
-        // Check if a row is selected
         if (selectedRow != -1) {
-            // Retrieve the "lock" value from column 6 (assuming it's a Boolean)
             Boolean lock = (Boolean) model.getValueAt(selectedRow, 7);
 
-            // Toggle the "lock" value
-            model.setValueAt(!lock, selectedRow, 7); // Invert the value and update the model
+            model.setValueAt(!lock, selectedRow, 7); 
         } else {
             System.out.println("No row selected.");
         }

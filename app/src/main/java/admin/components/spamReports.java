@@ -148,36 +148,28 @@ public class spamReports extends javax.swing.JPanel {
         String filterName = FilterByName.getText().trim();
 
         if (!filterName.isEmpty()) {
-            // Get the table model
             if (originalModel == null) {
-                // Lưu lại model gốc nếu chưa được lưu
                 originalModel = (DefaultTableModel) SpamReports.getModel();
             }
 
-            // Get the original model for filtering
             DefaultTableModel model = originalModel;
 
-            // Create a new table model for filtered data
             DefaultTableModel filteredModel = new DefaultTableModel();
 
-            // Copy column names
             for (int i = 0; i < model.getColumnCount(); i++) {
                 filteredModel.addColumn(model.getColumnName(i));
             }
 
-            // Filter rows
             for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 1).toString(); // Assuming Name is in column 0
+                String name = model.getValueAt(i, 1).toString(); 
                 if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    // Add matching row to the filtered model
                     filteredModel.addRow(new Object[] {
-                        model.getValueAt(i, 0), // Name
-                        model.getValueAt(i, 1), // Creation Date
+                        model.getValueAt(i, 0),
+                        model.getValueAt(i, 1), 
                     });
                 }
             }
 
-            // Set the filtered model on the table
             SpamReports.setModel(filteredModel);
         } else {
             SpamReports.setModel(originalModel);
@@ -193,36 +185,28 @@ public class spamReports extends javax.swing.JPanel {
         String filterName = FilterByTimeStamp.getText().trim();
 
         if (!filterName.isEmpty()) {
-            // Get the table model
             if (originalModel == null) {
-                // Lưu lại model gốc nếu chưa được lưu
                 originalModel = (DefaultTableModel) SpamReports.getModel();
             }
 
-            // Get the original model for filtering
             DefaultTableModel model = originalModel;
 
-            // Create a new table model for filtered data
             DefaultTableModel filteredModel = new DefaultTableModel();
 
-            // Copy column names
             for (int i = 0; i < model.getColumnCount(); i++) {
                 filteredModel.addColumn(model.getColumnName(i));
             }
 
-            // Filter rows
             for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                String name = model.getValueAt(i, 0).toString(); 
                 if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    // Add matching row to the filtered model
                     filteredModel.addRow(new Object[] {
-                        model.getValueAt(i, 0), // Name
-                        model.getValueAt(i, 1), // Creation Date
+                        model.getValueAt(i, 0), 
+                        model.getValueAt(i, 1),
                     });
                 }
             }
 
-            // Set the filtered model on the table
             SpamReports.setModel(filteredModel);
         } else {
             SpamReports.setModel(originalModel);
@@ -233,15 +217,12 @@ public class spamReports extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
-        // Tạo TableRowSorter với model hiện tại
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         SpamReports.setRowSorter(sorter);
 
-        // Lấy lựa chọn từ JComboBox
         String selectedOption = (String) SortBy.getSelectedItem();
         int columnIndex = -1;
 
-        // Xác định chỉ số cột tương ứng với lựa chọn của JComboBox
         if ("Name".equals(selectedOption)) {
             columnIndex = 1; 
         } else if ("Timestamp".equals(selectedOption)) {
@@ -249,9 +230,8 @@ public class spamReports extends javax.swing.JPanel {
         }
 
         if (columnIndex != -1) {
-            // Sắp xếp theo cột đã chọn (tăng dần)
             sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
-            sorter.sort(); // Thực hiện sắp xếp
+            sorter.sort(); 
         }
     }//GEN-LAST:event_SortByActionPerformed
 

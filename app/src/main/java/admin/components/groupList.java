@@ -129,11 +129,12 @@ public class groupList extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(SortBy))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SortBy, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -149,36 +150,28 @@ public class groupList extends javax.swing.JPanel {
         String filterName = filterByName.getText().trim();
 
         if (!filterName.isEmpty()) {
-            // Get the table model
             if (originalModel == null) {
-                // Lưu lại model gốc nếu chưa được lưu
                 originalModel = (DefaultTableModel) GroupList.getModel();
             }
 
-            // Get the original model for filtering
             DefaultTableModel model = originalModel;
 
-            // Create a new table model for filtered data
             DefaultTableModel filteredModel = new DefaultTableModel();
 
-            // Copy column names
             for (int i = 0; i < model.getColumnCount(); i++) {
                 filteredModel.addColumn(model.getColumnName(i));
             }
 
-            // Filter rows
             for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                String name = model.getValueAt(i, 0).toString(); 
                 if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    // Add matching row to the filtered model
                     filteredModel.addRow(new Object[] {
-                        model.getValueAt(i, 0), // Name
-                        model.getValueAt(i, 1), // Creation Date
+                        model.getValueAt(i, 0), 
+                        model.getValueAt(i, 1),
                     });
                 }
             }
 
-            // Set the filtered model on the table
             GroupList.setModel(filteredModel);
         } else {
             GroupList.setModel(originalModel);
@@ -187,56 +180,45 @@ public class groupList extends javax.swing.JPanel {
 
     private void viewMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewMemberActionPerformed
         // TODO add your handling code here:
-        // Get the table model
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
         // Get the selected row
         int selectedRow = GroupList.getSelectedRow();
 
         if (selectedRow != -1) {
-            // Fetch group name or ID from the selected row (assuming it's in column 0)
             String groupName = (String) model.getValueAt(selectedRow, 0);
 
-            // Fetch members dynamically (replace this with real data fetching logic)
             String[][] members = getGroupMembers(groupName); // Replace with actual data
 
-            // Define column names for the table
             String[] columnNames = {"Member Name", "Role"};
 
-            // Create JTable with members' data
             JTable membersTable = new JTable(members, columnNames);
-            membersTable.setFillsViewportHeight(true); // Makes it look better when there are few rows
-            membersTable.setRowHeight(30); // Set row height for better readability
+            membersTable.setFillsViewportHeight(true); 
+            membersTable.setRowHeight(30); 
 
-            // Add the table to a scroll pane
             JScrollPane scrollPane = new JScrollPane(membersTable);
-            scrollPane.setPreferredSize(new Dimension(400, 200)); // Set the preferred size
+            scrollPane.setPreferredSize(new Dimension(400, 200)); 
 
-            // Create a custom dialog
             JDialog dialog = new JDialog((JFrame) null, "List Members of Group: " + groupName, true);
             dialog.setLayout(new BorderLayout());
             dialog.add(scrollPane, BorderLayout.CENTER);
 
-            // Add a Close button
             JButton closeButton = new JButton("Close");
             closeButton.addActionListener(e -> dialog.dispose());
             JPanel buttonPanel = new JPanel();
             buttonPanel.add(closeButton);
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Set dialog size and make it visible
             dialog.setSize(450, 300);
-            dialog.setLocationRelativeTo(this); // Center the dialog relative to the main frame
+            dialog.setLocationRelativeTo(this); 
             dialog.setVisible(true);
         } else {
-            // Handle the case when no row is selected
             JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
                 "No Group Selected", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_viewMemberActionPerformed
 
     private String[][] getGroupMembers(String groupName) {
-        // Simulated data: Replace this with actual data fetching based on the group name or ID
         return switch (groupName) {
             case "Group A" -> new String[][] {
                 {"Bob", "Member"},
@@ -254,46 +236,36 @@ public class groupList extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
-        // Get the selected row
         int selectedRow = GroupList.getSelectedRow();
 
         if (selectedRow != -1) {
-            // Fetch group name or ID from the selected row (assuming it's in column 0)
             String groupName = (String) model.getValueAt(selectedRow, 0);
 
-            // Fetch members dynamically (replace this with real data fetching logic)
-            String[][] members = getGroupAdmins(groupName); // Replace with actual data
-
-            // Define column names for the table
+            String[][] members = getGroupAdmins(groupName); 
+            
             String[] columnNames = {"Member Name", "Role"};
 
-            // Create JTable with members' data
             JTable membersTable = new JTable(members, columnNames);
-            membersTable.setFillsViewportHeight(true); // Makes it look better when there are few rows
-            membersTable.setRowHeight(30); // Set row height for better readability
+            membersTable.setFillsViewportHeight(true); 
+            membersTable.setRowHeight(30); 
 
-            // Add the table to a scroll pane
             JScrollPane scrollPane = new JScrollPane(membersTable);
-            scrollPane.setPreferredSize(new Dimension(400, 200)); // Set the preferred size
+            scrollPane.setPreferredSize(new Dimension(400, 200)); 
 
-            // Create a custom dialog
             JDialog dialog = new JDialog((JFrame) null, "List Admins of Group: " + groupName, true);
             dialog.setLayout(new BorderLayout());
             dialog.add(scrollPane, BorderLayout.CENTER);
 
-            // Add a Close button
             JButton closeButton = new JButton("Close");
             closeButton.addActionListener(e -> dialog.dispose());
             JPanel buttonPanel = new JPanel();
             buttonPanel.add(closeButton);
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Set dialog size and make it visible
             dialog.setSize(450, 300);
-            dialog.setLocationRelativeTo(this); // Center the dialog relative to the main frame
+            dialog.setLocationRelativeTo(this); 
             dialog.setVisible(true);
         } else {
-            // Handle the case when no row is selected
             JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
                 "No Group Selected", JOptionPane.WARNING_MESSAGE);
         }
@@ -303,30 +275,25 @@ public class groupList extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
-        // Tạo TableRowSorter với model hiện tại
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         GroupList.setRowSorter(sorter);
 
-        // Lấy lựa chọn từ JComboBox
         String selectedOption = (String) SortBy.getSelectedItem();
         int columnIndex = -1;
 
-        // Xác định chỉ số cột tương ứng với lựa chọn của JComboBox
         if ("Name".equals(selectedOption)) {
-            columnIndex = 0; // Giả sử cột "Name" là cột 0
+            columnIndex = 0; 
         } else if ("CreationDate".equals(selectedOption)) {
-            columnIndex = 1; // Giả sử cột "CreationDate" là cột 1 (cột này cần phải là kiểu ngày tháng)
+            columnIndex = 1; 
         }
 
         if (columnIndex != -1) {
-            // Sắp xếp theo cột đã chọn (tăng dần)
             sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
-            sorter.sort(); // Thực hiện sắp xếp
+            sorter.sort();
         }
     }//GEN-LAST:event_SortByActionPerformed
 
     private String[][] getGroupAdmins(String groupName) {
-        // Simulated data: Replace this with actual data fetching based on the group name or ID
         return switch (groupName) {
             case "Group A" -> new String[][] {
                 {"Alice", "Admin"},

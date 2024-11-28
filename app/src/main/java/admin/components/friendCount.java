@@ -4,6 +4,13 @@
  */
 package admin.components;
 
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Nghiax
@@ -27,22 +34,20 @@ public class friendCount extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable5 = new javax.swing.JTable();
+        FriendCount = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        SortBy = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        filterByName = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        DirectFriend = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        filterBy = new javax.swing.JComboBox<>();
 
-        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+        FriendCount.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {"Nghia",  new Integer(5),  new Integer(25), "2018-09-20"},
+                {"An",  new Integer(4),  new Integer(16), "2019-10-20"}
             },
             new String [] {
                 "Username", "Direct Friends Count", "Total Friends Count", "Creation Date"
@@ -56,35 +61,45 @@ public class friendCount extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        jScrollPane6.setViewportView(jTable5);
+        jScrollPane6.setViewportView(FriendCount);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Sort by:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SortByActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Filter by name:");
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        filterByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                filterByNameActionPerformed(evt);
             }
         });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Filter by direct friend:");
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        DirectFriend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                DirectFriendActionPerformed(evt);
             }
         });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Filter by:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", ">", "<" }));
+        filterBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "=", ">", "<" }));
+        filterBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterByActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -97,19 +112,19 @@ public class friendCount extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(DirectFriend, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox3, 0, 1, Short.MAX_VALUE)
+                        .addComponent(filterBy, 0, 42, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -119,41 +134,144 @@ public class friendCount extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel7)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(filterBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(DirectFriend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private DefaultTableModel originalModel;
+    private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+        String filterName = filterByName.getText().trim();
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        if (!filterName.isEmpty()) {
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) FriendCount.getModel();
+            }
+            DefaultTableModel model = originalModel;
+
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 0).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), // Name
+                        model.getValueAt(i, 1), // Creation Date
+                        model.getValueAt(i, 2),
+                        model.getValueAt(i, 3)
+                    });
+                }
+            }
+
+            FriendCount.setModel(filteredModel);
+        } else {
+            FriendCount.setModel(originalModel);
+        }
+    }//GEN-LAST:event_filterByNameActionPerformed
+
+    private void DirectFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DirectFriendActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+        String directFriend = DirectFriend.getText().trim();
+        String _filterBy = (String) filterBy.getSelectedItem();// =, > , < 
+        
+        if (!directFriend.isEmpty()) {
+            try {
+                int directFriendValue = Integer.parseInt(directFriend);
+
+                if (originalModel == null) {
+                    originalModel = (DefaultTableModel) FriendCount.getModel();
+                }
+
+                DefaultTableModel model = originalModel;
+
+                DefaultTableModel filteredModel = new DefaultTableModel();
+
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    filteredModel.addColumn(model.getColumnName(i));
+                }
+
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    int friendsCount = Integer.parseInt(model.getValueAt(i, 1).toString());
+
+                    boolean matches = false;
+                    switch (_filterBy) {
+                        case "=" -> matches = friendsCount == directFriendValue;
+                        case ">" -> matches = friendsCount > directFriendValue;
+                        case "<" -> matches = friendsCount < directFriendValue;
+                    }
+
+                    if (matches) {
+                        Object[] rowData = new Object[model.getColumnCount()];
+                        for (int j = 0; j < model.getColumnCount(); j++) {
+                            rowData[j] = model.getValueAt(i, j);
+                        }
+                        filteredModel.addRow(rowData);
+                    }
+                }
+
+                FriendCount.setModel(filteredModel);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            FriendCount.setModel(originalModel);
+        }
+    }//GEN-LAST:event_DirectFriendActionPerformed
+
+    private void filterByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByActionPerformed
+        // TODO add your handling code here: 
+        DirectFriendActionPerformed(evt);
+    }//GEN-LAST:event_filterByActionPerformed
+
+    private void SortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) FriendCount.getModel();
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        FriendCount.setRowSorter(sorter);
+
+        String selectedOption = (String) SortBy.getSelectedItem();
+        int columnIndex = -1;
+
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 0; 
+        } else if ("Creation Date".equals(selectedOption)) {
+            columnIndex = 2; 
+        }
+
+        if (columnIndex != -1) {
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort();
+        }
+    }//GEN-LAST:event_SortByActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
+    private javax.swing.JTextField DirectFriend;
+    private javax.swing.JTable FriendCount;
+    private javax.swing.JComboBox<String> SortBy;
+    private javax.swing.JComboBox<String> filterBy;
+    private javax.swing.JTextField filterByName;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTable jTable5;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }

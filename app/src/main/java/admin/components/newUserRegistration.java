@@ -4,6 +4,15 @@
  */
 package admin.components;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author Nghiax
@@ -27,24 +36,23 @@ public class newUserRegistration extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        NewUserRegistation = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        SortBy = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
+        startDate = new javax.swing.JTextField();
+        endDate = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jButton8 = new javax.swing.JButton();
-        jTextField12 = new javax.swing.JTextField();
+        FilterByTime = new javax.swing.JButton();
+        filterByName = new javax.swing.JTextField();
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        NewUserRegistation.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {"2018-09-18", "nghia", "124"},
+                {"2018-10-20", "an", "123"},
+                {"2019-11-24", "hoang", "125"}
             },
             new String [] {
                 "Creation Date", "Username", "Password"
@@ -58,12 +66,17 @@ public class newUserRegistration extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(jTable4);
+        jScrollPane5.setViewportView(NewUserRegistation);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Sort by:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SortByActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Filter by name:");
 
@@ -76,30 +89,30 @@ public class newUserRegistration extends javax.swing.JPanel {
 
         jLabel15.setText("Start Date (yyyy-mm-dd):");
 
-        jTextField10.addActionListener(new java.awt.event.ActionListener() {
+        startDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField10ActionPerformed(evt);
+                startDateActionPerformed(evt);
             }
         });
 
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        endDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                endDateActionPerformed(evt);
             }
         });
 
         jLabel16.setText("End Date (yyyy-mm-dd):");
 
-        jButton8.setText("Filter by time");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        FilterByTime.setText("Filter by time");
+        FilterByTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                FilterByTimeActionPerformed(evt);
             }
         });
 
-        jTextField12.addActionListener(new java.awt.event.ActionListener() {
+        filterByName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField12ActionPerformed(evt);
+                filterByNameActionPerformed(evt);
             }
         });
 
@@ -121,16 +134,16 @@ public class newUserRegistration extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton8)))
+                                        .addComponent(FilterByTime)))
                                 .addGap(147, 147, 147)
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -140,20 +153,20 @@ public class newUserRegistration extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel8)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
-                            .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(FilterByTime, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(1, 1, 1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16)
-                            .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -168,7 +181,6 @@ public class newUserRegistration extends javax.swing.JPanel {
         dataset.addValue(75, "Số lượng", "Tháng 2");
         dataset.addValue(120, "Số lượng", "Tháng 3");
 
-        // Tạo biểu đồ
         org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
                 "Biểu đồ số lượng người đăng ký",
                 "Tháng",
@@ -176,49 +188,142 @@ public class newUserRegistration extends javax.swing.JPanel {
                 dataset
         );
 
-        // Tạo Panel chứa biểu đồ
         org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
 
-        // Tạo JDialog để hiển thị biểu đồ
         javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
         chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
         chartDialog.setContentPane(chartPanel);
         chartDialog.setSize(800, 600);
         chartDialog.setLocationRelativeTo(this);
 
-        // Hiển thị hộp thoại
         chartDialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
+    private DefaultTableModel originalModel;
+    private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField10ActionPerformed
+    }//GEN-LAST:event_startDateActionPerformed
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void endDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_endDateActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void FilterByTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FilterByTimeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+        String start = startDate.getText().trim();
+        String end = endDate.getText().trim();
 
-    private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
+        if (!start.isEmpty() || !end.isEmpty()) {
+            try {
+                LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start);
+                LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end);
+
+                if (originalModel == null) {
+                    originalModel = (DefaultTableModel) NewUserRegistation.getModel();
+                }
+
+                DefaultTableModel model = originalModel;
+
+                DefaultTableModel filteredModel = new DefaultTableModel();
+
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    filteredModel.addColumn(model.getColumnName(i));
+                }
+
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String dateStr = model.getValueAt(i, 0).toString(); 
+                    LocalDate creationDate = LocalDate.parse(dateStr);
+
+                    if ((creationDate.isEqual(_startDate) || creationDate.isAfter(_startDate)) &&
+                        (creationDate.isEqual(_endDate) || creationDate.isBefore(_endDate))) {
+                        filteredModel.addRow(new Object[] {
+                            model.getValueAt(i, 0), 
+                            model.getValueAt(i, 1), 
+                            model.getValueAt(i, 2), 
+                        });
+                    }
+                }
+
+                NewUserRegistation.setModel(filteredModel);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Please enter dates in the format yyyy-MM-dd.", 
+                    "Invalid Date Format", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            NewUserRegistation.setModel(originalModel);
+        }
+    }//GEN-LAST:event_FilterByTimeActionPerformed
+
+    private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField12ActionPerformed
+        String filterName = filterByName.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) NewUserRegistation.getModel();
+            }
+
+            DefaultTableModel model = originalModel;
+
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 1).toString(); // Assuming Name is in column 0
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), 
+                        model.getValueAt(i, 1), 
+                        model.getValueAt(i, 2)
+                    });
+                }
+            }
+
+            NewUserRegistation.setModel(filteredModel);
+        } else {
+            NewUserRegistation.setModel(originalModel);
+        }
+    }//GEN-LAST:event_filterByNameActionPerformed
+
+    private void SortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) NewUserRegistation.getModel();
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        NewUserRegistation.setRowSorter(sorter);
+
+        String selectedOption = (String) SortBy.getSelectedItem();
+        int columnIndex = -1;
+
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 1; 
+        } else if ("Creation Date".equals(selectedOption)) {
+            columnIndex = 0; 
+        }
+
+        if (columnIndex != -1) {
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort(); 
+        }
+    }//GEN-LAST:event_SortByActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton FilterByTime;
+    private javax.swing.JTable NewUserRegistation;
+    private javax.swing.JComboBox<String> SortBy;
+    private javax.swing.JTextField endDate;
+    private javax.swing.JTextField filterByName;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
+    private javax.swing.JTextField startDate;
     // End of variables declaration//GEN-END:variables
 }
