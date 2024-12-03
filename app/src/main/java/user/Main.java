@@ -11,6 +11,12 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.EventQueue;
 import java.awt.Font;
 import javax.swing.UIManager;
+import javax.swing.Icon;
+
+import user.event.EventMain;
+import user.event.PublicEvent;
+import user.model.Model_User_Account;
+import user.service.Service;
 
 public class Main extends JFrame {
     public Main() {
