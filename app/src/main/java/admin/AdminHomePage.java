@@ -33,7 +33,7 @@ public class AdminHomePage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        AdminHomePage = new javax.swing.JTabbedPane();
         userDetail1 = new admin.components.userDetail();
         loginHistory1 = new admin.components.loginHistory();
         groupList1 = new admin.components.groupList();
@@ -45,13 +45,13 @@ public class AdminHomePage extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Admin");
 
-        jTabbedPane1.addTab("User Detail", userDetail1);
-        jTabbedPane1.addTab("Logged In History", loginHistory1);
-        jTabbedPane1.addTab("Group List", groupList1);
-        jTabbedPane1.addTab("Spam Reports", spamReports1);
-        jTabbedPane1.addTab("New User Registration", newUserRegistration1);
-        jTabbedPane1.addTab("Friend Count", friendCount1);
-        jTabbedPane1.addTab("Active List", activeList1);
+        AdminHomePage.addTab("User Detail", userDetail1);
+        AdminHomePage.addTab("Logged In History", loginHistory1);
+        AdminHomePage.addTab("Group List", groupList1);
+        AdminHomePage.addTab("Spam Reports", spamReports1);
+        AdminHomePage.addTab("New User Registration", newUserRegistration1);
+        AdminHomePage.addTab("Friend Count", friendCount1);
+        AdminHomePage.addTab("Active List", activeList1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -59,14 +59,14 @@ public class AdminHomePage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AdminHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AdminHomePage, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -109,10 +109,10 @@ public class AdminHomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane AdminHomePage;
     private admin.components.activeList activeList1;
     private admin.components.friendCount friendCount1;
     private admin.components.groupList groupList1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private admin.components.loginHistory loginHistory1;
     private admin.components.newUserRegistration newUserRegistration1;
     private admin.components.spamReports spamReports1;
