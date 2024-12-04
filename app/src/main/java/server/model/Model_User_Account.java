@@ -18,35 +18,26 @@ public class Model_User_Account {
         this.userName = userName;
     }
 
-    public String getGender() {
-        return gender;
+    public String getEmail() {
+        return email;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public boolean isStatus() {
+    public String isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Model_User_Account(int userID, String userName, String gender, String image, boolean status) {
+    public Model_User_Account(int userID, String userName, String email, String status) {
         this.userID = userID;
         this.userName = userName;
-        this.gender = gender;
-        this.image = image;
+        this.email = email;
         this.status = status;
     }
 
@@ -55,7 +46,6 @@ public class Model_User_Account {
 
     private int userID;
     private String userName;
-    private String gender;
-    private String image;
-    private boolean status;
+    private String email;
+    private String status;
 }

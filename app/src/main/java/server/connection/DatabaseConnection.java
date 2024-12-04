@@ -10,7 +10,7 @@ public class DatabaseConnection {
     private Connection connection;
     private final String server = "localhost";
     private final String port = "3306";
-    private final String database = "chat_application";
+    private final String database = "chatsystem";
     private final String userName = "JavaChatSystem";
     private final String password = "javachatsystem";
 

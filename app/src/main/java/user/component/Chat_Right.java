@@ -1,6 +1,7 @@
 package user.component;
 
 import java.awt.Color;
+import javax.swing.Icon;
 
 public class Chat_Right extends javax.swing.JLayeredPane {
 
@@ -10,10 +11,16 @@ public class Chat_Right extends javax.swing.JLayeredPane {
     }
 
     public void setText(String text) {
+        if (text.equals("")) {
+            txt.hideText();
+        } else {
             txt.setText(text);
-            txt.setTime("10:40 PM");
-            txt.sendSuccess();
-            txt.seen();
+        }
+        txt.seen();
+    }
+
+    public void setTime() {
+        txt.setTime("10:30 PM");    //  Testing
     }
 
     @SuppressWarnings("unchecked")
@@ -32,9 +39,7 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

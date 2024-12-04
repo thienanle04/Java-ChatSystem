@@ -21,35 +21,29 @@ public class Model_User_Account {
         this.userName = userName;
     }
 
-    public String getGender() {
-        return gender;
+    public String getEmail() {
+        return email;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Model_User_Account(int userID, String userName, String gender, String image, boolean status) {
+    public boolean isOnline() {
+        return status.equals("online");
+    }
+    
+    public Model_User_Account(int userID, String userName, String status) {
         this.userID = userID;
         this.userName = userName;
-        this.gender = gender;
-        this.image = image;
         this.status = status;
     }
 
@@ -58,9 +52,8 @@ public class Model_User_Account {
         try {
             userID = obj.getInt("userID");
             userName = obj.getString("userName");
-            gender = obj.getString("gender");
-            image = obj.getString("image");
-            status = obj.getBoolean("status");
+            email = obj.getString("email");
+            status = obj.getString("status");
         } catch (JSONException e) {
             System.err.println(e);
         }
@@ -68,7 +61,6 @@ public class Model_User_Account {
 
     private int userID;
     private String userName;
-    private String gender;
-    private String image;
-    private boolean status;
+    private String email;
+    private String status;
 }

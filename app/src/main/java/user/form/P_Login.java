@@ -2,6 +2,7 @@ package user.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import user.event.PublicEvent;
+import user.model.Model_Login;
 
 public class P_Login extends javax.swing.JPanel {
 
@@ -9,7 +10,7 @@ public class P_Login extends javax.swing.JPanel {
         initComponents();
         lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+17;");
-        cmdResetPassword.putClientProperty(FlatClientProperties.STYLE, ""
+        cmdRegister.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:-2;");
     }
 
@@ -23,20 +24,21 @@ public class P_Login extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         txtPass = new javax.swing.JPasswordField();
         cmdLogin = new javax.swing.JButton();
-        cmdResetPassword = new javax.swing.JButton();
         cmdRegister = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(281, 328));
-        setMinimumSize(new java.awt.Dimension(281, 328));
 
         lbTitle.setForeground(new java.awt.Color(87, 87, 87));
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Log in");
+        lbTitle.setText("Login");
 
         jLabel1.setText("User Name");
 
+        txtUser.setText("lethienan1106@gmail.com");
+
         jLabel2.setText("Password");
+
+        txtPass.setText("lethienan1106@gmail.com");
 
         cmdLogin.setText("Login");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -45,22 +47,10 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
-        cmdResetPassword.setForeground(new java.awt.Color(15, 128, 206));
-        cmdResetPassword.setText("Forgot password?");
-        cmdResetPassword.setToolTipText("");
-        cmdResetPassword.setContentAreaFilled(false);
-        cmdResetPassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        cmdResetPassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        cmdResetPassword.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        cmdResetPassword.setIconTextGap(0);
-        cmdResetPassword.setMargin(new java.awt.Insets(3, 0, 3, 0));
-        cmdResetPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdResetPasswordActionPerformed(evt);
-            }
-        });
-
-        cmdRegister.setText("Haven't got an account yet? Sign up");
+        cmdRegister.setForeground(new java.awt.Color(15, 128, 206));
+        cmdRegister.setText("Register");
+        cmdRegister.setContentAreaFilled(false);
+        cmdRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRegisterActionPerformed(evt);
@@ -75,15 +65,12 @@ public class P_Login extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cmdRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cmdLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtPass)
                     .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(cmdRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(cmdResetPassword)))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -101,30 +88,24 @@ public class P_Login extends javax.swing.JPanel {
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cmdLogin)
-                .addGap(0, 0, 0)
-                .addComponent(cmdResetPassword)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdRegister)
-                .addGap(0, 90, Short.MAX_VALUE))
+                .addGap(0, 108, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cmdResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdResetPasswordActionPerformed
-        PublicEvent.getInstance().getEventLogin().goResetPassword();
-    }//GEN-LAST:event_cmdResetPasswordActionPerformed
-
-    private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
-    }//GEN-LAST:event_cmdLoginActionPerformed
 
     private void cmdRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRegisterActionPerformed
         PublicEvent.getInstance().getEventLogin().goRegister();
     }//GEN-LAST:event_cmdRegisterActionPerformed
 
+    private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
+        PublicEvent.getInstance().getEventLogin().login(new Model_Login(txtUser.getText(), String.valueOf(txtPass.getPassword())));
+    }//GEN-LAST:event_cmdLoginActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLogin;
     private javax.swing.JButton cmdRegister;
-    private javax.swing.JButton cmdResetPassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbTitle;

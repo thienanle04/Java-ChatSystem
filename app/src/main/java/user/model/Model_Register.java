@@ -21,9 +21,18 @@ public class Model_Register {
         this.password = password;
     }
 
-    public Model_Register(String userName, String password) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Model_Register(String userName, String password, String email) {
         this.userName = userName;
         this.password = password;
+        this.email = email;
     }
 
     public Model_Register() {
@@ -31,12 +40,14 @@ public class Model_Register {
 
     private String userName;
     private String password;
+    private String email;
 
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
             json.put("userName", userName);
             json.put("password", password);
+            json.put("email", email);
             return json;
         } catch (JSONException e) {
             return null;

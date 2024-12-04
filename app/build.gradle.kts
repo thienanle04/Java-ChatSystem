@@ -33,7 +33,7 @@ dependencies {
     implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("org.slf4j:slf4j-api:2.0.9")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.9")
-
+    implementation("org.json:json:20210307")
     implementation("org.jfree:jfreechart:1.5.3")
 
     // FlatLaf
@@ -72,9 +72,5 @@ sourceSets {
     main {
         java.srcDirs("src/main/java")
         resources.srcDirs("src/main/resources")
-    }
-    test {
-        java.srcDirs("src/test/java")
-        resources.srcDirs("src/test/resources")
     }
 }
