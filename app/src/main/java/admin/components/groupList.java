@@ -6,6 +6,11 @@ package admin.components;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -51,10 +56,7 @@ public class groupList extends javax.swing.JPanel {
         viewAdmin = new javax.swing.JButton();
 
         GroupList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Group B", "11-11-2024"},
-                {"Group A", "12-11-2024"}
-            },
+            new Object [][] {},
             new String [] {
                 "Group Name", "Creation Date"
             }
@@ -67,6 +69,48 @@ public class groupList extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn dữ liệu
+            String query = """
+                SELECT 
+                    group_name AS GroupName, 
+                    created_at AS CreationDate 
+                FROM 
+                    chat_group
+            """;
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            // Lấy model từ bảng
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) GroupList.getModel();
+
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+
+            // Thêm dữ liệu từ ResultSet vào bảng
+            while (rs.next()) {
+                Object[] row = new Object[]{
+                        rs.getString("GroupName"),
+                        rs.getTimestamp("CreationDate")
+                };
+                model.addRow(row);
+            }
+
+            // Đóng kết nối
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
         jScrollPane3.setViewportView(GroupList);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -188,30 +232,75 @@ public class groupList extends javax.swing.JPanel {
         if (selectedRow != -1) {
             String groupName = (String) model.getValueAt(selectedRow, 0);
 
-            String[][] members = getGroupMembers(groupName); // Replace with actual data
+            try {
+                // Kết nối đến database
+                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+                String user = "admin";
+                String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+                Connection conn = DriverManager.getConnection(url, user, password);
 
-            String[] columnNames = {"Member Name", "Role"};
+                // Truy vấn dữ liệu
+                String query = """
+                    SELECT 
+                        u.username AS Username,
+                        u.name AS MemberName, 
+                        gm.role AS Role 
+                    FROM 
+                        group_members gm 
+                    JOIN 
+                        chat_group cg 
+                    ON 
+                        gm.group_id = cg.group_id 
+                    JOIN 
+                        users u 
+                    ON 
+                        gm.user_id = u.user_id 
+                    WHERE 
+                        cg.group_name = ? AND gm.role = 'member'
+                """;
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, groupName);
+                ResultSet rs = stmt.executeQuery();
 
-            JTable membersTable = new JTable(members, columnNames);
-            membersTable.setFillsViewportHeight(true); 
-            membersTable.setRowHeight(30); 
+                // Chuẩn bị dữ liệu cho JTable
+                java.util.List<Object[]> data = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    data.add(new Object[]{rs.getString("Username"), rs.getString("MemberName"), rs.getString("Role")});
+                }
 
-            JScrollPane scrollPane = new JScrollPane(membersTable);
-            scrollPane.setPreferredSize(new Dimension(400, 200)); 
+                Object[][] members = data.toArray(new Object[0][]);
+                String[] columnNames = {"Username", "Member Name", "Role"};
 
-            JDialog dialog = new JDialog((JFrame) null, "List Members of Group: " + groupName, true);
-            dialog.setLayout(new BorderLayout());
-            dialog.add(scrollPane, BorderLayout.CENTER);
+                JTable membersTable = new JTable(members, columnNames);
+                membersTable.setFillsViewportHeight(true); 
+                membersTable.setRowHeight(30); 
 
-            JButton closeButton = new JButton("Close");
-            closeButton.addActionListener(e -> dialog.dispose());
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.add(closeButton);
-            dialog.add(buttonPanel, BorderLayout.SOUTH);
+                JScrollPane scrollPane = new JScrollPane(membersTable);
+                scrollPane.setPreferredSize(new Dimension(400, 200)); 
 
-            dialog.setSize(450, 300);
-            dialog.setLocationRelativeTo(this); 
-            dialog.setVisible(true);
+                JDialog dialog = new JDialog((JFrame) null, "List Members of Group: " + groupName, true);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(scrollPane, BorderLayout.CENTER);
+
+                JButton closeButton = new JButton("Close");
+                closeButton.addActionListener(e -> dialog.dispose());
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(closeButton);
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(450, 300);
+                dialog.setLocationRelativeTo(this); 
+                dialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching data: " + e.getMessage(), "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
                 "No Group Selected", JOptionPane.WARNING_MESSAGE);
@@ -236,35 +325,81 @@ public class groupList extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
+        // Get the selected row
         int selectedRow = GroupList.getSelectedRow();
 
         if (selectedRow != -1) {
             String groupName = (String) model.getValueAt(selectedRow, 0);
 
-            String[][] members = getGroupAdmins(groupName); 
-            
-            String[] columnNames = {"Member Name", "Role"};
+            try {
+                // Kết nối đến database
+                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+                String user = "admin";
+                String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+                Connection conn = DriverManager.getConnection(url, user, password);
 
-            JTable membersTable = new JTable(members, columnNames);
-            membersTable.setFillsViewportHeight(true); 
-            membersTable.setRowHeight(30); 
+                // Truy vấn dữ liệu
+                String query = """
+                    SELECT 
+                        u.username AS Username,
+                        u.name AS MemberName, 
+                        gm.role AS Role 
+                    FROM 
+                        group_members gm 
+                    JOIN 
+                        chat_group cg 
+                    ON 
+                        gm.group_id = cg.group_id 
+                    JOIN 
+                        users u 
+                    ON 
+                        gm.user_id = u.user_id 
+                    WHERE 
+                        cg.group_name = ? AND gm.role = 'admin'
+                """;
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, groupName);
+                ResultSet rs = stmt.executeQuery();
 
-            JScrollPane scrollPane = new JScrollPane(membersTable);
-            scrollPane.setPreferredSize(new Dimension(400, 200)); 
+                // Chuẩn bị dữ liệu cho JTable
+                java.util.List<Object[]> data = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    data.add(new Object[]{rs.getString("Username"), rs.getString("MemberName"), rs.getString("Role")});
+                }
 
-            JDialog dialog = new JDialog((JFrame) null, "List Admins of Group: " + groupName, true);
-            dialog.setLayout(new BorderLayout());
-            dialog.add(scrollPane, BorderLayout.CENTER);
+                Object[][] members = data.toArray(new Object[0][]);
+                String[] columnNames = {"Username", "Member Name", "Role"};
 
-            JButton closeButton = new JButton("Close");
-            closeButton.addActionListener(e -> dialog.dispose());
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.add(closeButton);
-            dialog.add(buttonPanel, BorderLayout.SOUTH);
+                JTable membersTable = new JTable(members, columnNames);
+                membersTable.setFillsViewportHeight(true); 
+                membersTable.setRowHeight(30); 
 
-            dialog.setSize(450, 300);
-            dialog.setLocationRelativeTo(this); 
-            dialog.setVisible(true);
+                JScrollPane scrollPane = new JScrollPane(membersTable);
+                scrollPane.setPreferredSize(new Dimension(400, 200)); 
+
+                JDialog dialog = new JDialog((JFrame) null, "List Members of Group: " + groupName, true);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(scrollPane, BorderLayout.CENTER);
+
+                JButton closeButton = new JButton("Close");
+                closeButton.addActionListener(e -> dialog.dispose());
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(closeButton);
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(450, 300);
+                dialog.setLocationRelativeTo(this); 
+                dialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching data: " + e.getMessage(), "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a group to view its members.", 
                 "No Group Selected", JOptionPane.WARNING_MESSAGE);
