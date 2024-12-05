@@ -46,17 +46,6 @@ public class Chat_Body extends javax.swing.JPanel {
         body.revalidate();
     }
 
-    public void addItemFile(String text, String user, String fileName) {
-        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(text);
-        item.setTime();
-        item.setUserProfile(user);
-        body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-    }
-
     public void addItemRight(Model_Send_Message data) {
         Chat_Right item = new Chat_Right();
         item.setText(data.getText());
@@ -135,4 +124,5 @@ public class Chat_Body extends javax.swing.JPanel {
     private javax.swing.JPanel body;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables
+
 }

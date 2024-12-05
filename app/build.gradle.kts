@@ -26,8 +26,6 @@ dependencies {
     implementation(libs.guava)
 
     implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.hibernate:hibernate-core:6.2.10.Final")
-    implementation("org.hibernate:hibernate-tools:5.6.15.Final") // Hibernate Tools
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
     implementation("javax.persistence:javax.persistence-api:2.2")

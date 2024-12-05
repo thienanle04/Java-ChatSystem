@@ -3,7 +3,7 @@ package user.component;
 import com.formdev.flatlaf.FlatClientProperties;
 import user.event.PublicEvent;
 import user.model.Model_Send_Message;
-import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
 import user.service.Service;
 import user.swing.JIMSendTextPane;
 import java.awt.Color;
@@ -23,15 +23,15 @@ import net.miginfocom.swing.MigLayout;
 
 public class Chat_Bottom extends javax.swing.JPanel {
 
-    public Model_User_Account getUser() {
-        return user;
+    public Model_Group_Chat getChat() {
+        return chat;
     }
 
-    public void setUser(Model_User_Account user) {
-        this.user = user;
+    public void setChat(Model_Group_Chat chat) {
+        this.chat = chat;
     }
 
-    private Model_User_Account user;
+    private Model_Group_Chat chat;
 
     public Chat_Bottom() {
         initComponents();
@@ -94,7 +94,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     private void eventSend(JIMSendTextPane txt) {
         String text = txt.getText().trim();
         if (!text.equals("")) {
-            Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUserID(), user.getUserID(), text);
+            Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUserID(), chat.getGroupId(), text);
             send(message);
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");

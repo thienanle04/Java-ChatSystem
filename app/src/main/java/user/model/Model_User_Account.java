@@ -38,6 +38,9 @@ public class Model_User_Account {
     }
 
     public boolean isOnline() {
+        if (this.status == null) {
+            return false;
+        }
         return status.equals("online");
     }
     

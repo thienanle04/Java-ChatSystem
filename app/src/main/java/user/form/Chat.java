@@ -9,7 +9,7 @@ import user.event.PublicEvent;
 
 import user.model.Model_Receive_Message;
 import user.model.Model_Send_Message;
-import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
 
 public class Chat extends javax.swing.JPanel {
     public Chat() {
@@ -19,9 +19,6 @@ public class Chat extends javax.swing.JPanel {
 
     private void init() {
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, fill]0[shrink 0]0"));
-        chat_Title1 = new Chat_Title();
-        chatBody = new Chat_Body();
-        chatBottom = new Chat_Bottom();
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(Model_Send_Message data) {
@@ -30,7 +27,7 @@ public class Chat extends javax.swing.JPanel {
 
             @Override
             public void receiveMessage(Model_Receive_Message data) {
-                if (chat_Title1.getUser().getUserID() == data.getFromUserID()) {
+                if (chat_Title1.getChat().getGroupId() == data.getFromUserID()) {
                     chatBody.addItemLeft(data);
                 }
             }
@@ -40,14 +37,14 @@ public class Chat extends javax.swing.JPanel {
         add(chatBottom, "h ::50%");
     }
 
-    public void setUser(Model_User_Account user) {
-        chat_Title1.setUserName(user);
-        chatBottom.setUser(user);
+    public void setChat(Model_Group_Chat groupChat) {
+        chat_Title1.setChatName(groupChat);
+        chatBottom.setChat(groupChat);
         chatBody.clearChat();
     }
 
-    public void updateUser(Model_User_Account user) {
-        chat_Title1.updateUser(user);
+    public void updateUser(Model_Group_Chat groupChat) {
+        chat_Title1.updateUser(groupChat);
     }
 
     /**
@@ -58,48 +55,23 @@ public class Chat extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        chatBottom = new user.component.Chat_Bottom();
-        chatBody = new user.component.Chat_Body();
-        chat_Title1 = new user.component.Chat_Title();
-
+        chat_Title1 = new Chat_Title();
+        chatBody = new Chat_Body();
+        chatBottom = new Chat_Bottom();
+        
         setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout chatBottomLayout = new javax.swing.GroupLayout(chatBottom);
-        chatBottom.setLayout(chatBottomLayout);
-        chatBottomLayout.setHorizontalGroup(
-            chatBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 550, Short.MAX_VALUE)
-        );
-        chatBottomLayout.setVerticalGroup(
-            chatBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
-        );
-
-        chatBody.setBackground(new java.awt.Color(245, 245, 245));
-
-        chat_Title1.setBackground(new java.awt.Color(249, 249, 249));
-        chat_Title1.setMinimumSize(new java.awt.Dimension(180, 42));
-        chat_Title1.setPreferredSize(new java.awt.Dimension(400, 42));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(chatBottom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(chatBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(chat_Title1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 727, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(chat_Title1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(chatBody, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(chatBottom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 681, Short.MAX_VALUE)
         );
+
     }// </editor-fold>//GEN-END:initComponents
 
 

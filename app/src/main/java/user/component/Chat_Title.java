@@ -1,16 +1,18 @@
 package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
 import java.awt.Color;
+
+import user.app.GroupType;
 
 public class Chat_Title extends javax.swing.JPanel {
 
-    public Model_User_Account getUser() {
-        return user;
+    public Model_Group_Chat getChat() {
+        return chat;
     }
 
-    private Model_User_Account user;
+    private Model_Group_Chat chat;
 
     public Chat_Title() {
         initComponents();
@@ -18,23 +20,27 @@ public class Chat_Title extends javax.swing.JPanel {
                 + "font:+1 bold;");
     }
 
-    public void setUserName(Model_User_Account user) {
-        this.user = user;
-        lbName.setText(user.getUserName());
-        if (user.isOnline()) {
+    public void setChatName(Model_Group_Chat chat) {
+        this.chat = chat;
+        lbName.setText(chat.getName());
+        if (chat.isOnline()) {
             statusActive();
         } else {
-            setStatusText("Offline");
+            if (chat.getGroupType() == GroupType.TWO) {
+                setStatusText("Offline");
+            }
         }
     }
 
-    public void updateUser(Model_User_Account user) {
-        if (this.user == user) {
-            lbName.setText(user.getUserName());
-            if (user.isOnline()) {
+    public void updateUser(Model_Group_Chat groupChat) {
+        if (this.chat == groupChat) {
+            lbName.setText(groupChat.getName());
+            if (groupChat.isOnline()) {
                 statusActive();
             } else {
-                setStatusText("Offline");
+                if (groupChat.getGroupType() == GroupType.TWO) {
+                    setStatusText("Offline");
+                }
             }
         }
     }
@@ -74,9 +80,9 @@ public class Chat_Title extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(2, 2, 2)
                 .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(406, Short.MAX_VALUE))
+                .addContainerGap(410, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

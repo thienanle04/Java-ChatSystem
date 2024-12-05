@@ -1,6 +1,6 @@
 package user.form;
 
-import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
 import net.miginfocom.swing.MigLayout;
 
 public class Home extends javax.swing.JLayeredPane {
@@ -20,13 +20,13 @@ public class Home extends javax.swing.JLayeredPane {
         chat.setVisible(false);
     }
 
-    public void setUser(Model_User_Account user) {
-        chat.setUser(user);
+    public void setChat(Model_Group_Chat groupChat) {
+        chat.setChat(groupChat);
         chat.setVisible(true);
     }
 
-    public void updateUser(Model_User_Account user) {
-        chat.updateUser(user);
+    public void updateChat(Model_Group_Chat groupChat) {
+        chat.updateUser(groupChat);
     }
 
     @SuppressWarnings("unchecked")

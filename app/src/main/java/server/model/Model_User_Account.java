@@ -26,7 +26,7 @@ public class Model_User_Account {
         this.email = email;
     }
 
-    public String isStatus() {
+    public String getStatus() {
         return status;
     }
 

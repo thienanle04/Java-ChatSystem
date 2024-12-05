@@ -13,7 +13,6 @@ public class P_Verify extends javax.swing.JPanel {
                 + "font:-2;");
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

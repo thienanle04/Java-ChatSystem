@@ -7,13 +7,16 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+
 import server.model.Model_Client;
+import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Receive_Message;
 import server.model.Model_Register;
 import server.model.Model_Send_Message;
 import server.model.Model_User_Account;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ public class Service {
     
     private static Service instance;
     private SocketIOServer server;
+    private ServiceMessage serviceMessage;
     private ServiceUser serviceUser;
     private final List<Model_Client> listClient;
     private final int PORT_NUMBER = 9999;
@@ -36,6 +40,7 @@ public class Service {
     
     private Service() {
         serviceUser = new ServiceUser();
+        serviceMessage = new ServiceMessage();
         listClient = Collections.synchronizedList(new ArrayList<>());
     }
     
@@ -74,12 +79,12 @@ public class Service {
                 }
             }
         });
-        server.addEventListener("list_user", Integer.class, new DataListener<Integer>() {
+        server.addEventListener("list_chat", Integer.class, new DataListener<Integer>() {
             @Override
             public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
                 try {
-                    List<Model_User_Account> list = serviceUser.getUser(userID);
-                    sioc.sendEvent("list_user", list.toArray());
+                    List<Model_Group_Chat> list = serviceMessage.getChatListId(userID);
+                    sioc.sendEvent("list_chat", list.toArray());
                 } catch (SQLException e) {
                     System.err.println(e);
                 }

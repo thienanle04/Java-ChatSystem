@@ -83,7 +83,14 @@ public class ServiceUser {
             int userID = r.getInt(1);
             String userName = r.getString(2);
             String email = r.getString(3);
-            data = new Model_User_Account(userID, userName, email, "online");
+            String status = "online";
+            data = new Model_User_Account(userID, userName, email, status);
+
+            // Set Status Online
+            p = con.prepareStatement(SET_STATUS);
+            p.setString(1, "online");
+            p.setInt(2, userID);
+            p.execute();
         }
         r.close();
         p.close();
@@ -99,26 +106,18 @@ public class ServiceUser {
             int userID = r.getInt(1);
             String userName = r.getString(2);
             String email = r.getString(3);
-            list.add(new Model_User_Account(userID, userName, email, checkUserStatus(userID)));
+            String status = r.getString(4);
+            list.add(new Model_User_Account(userID, userName, email, status));
         }
         r.close();
         p.close();
         return list;
     }
 
-    private String checkUserStatus(int userID) {
-        List<Model_Client> clients = Service.getInstance().getListClient();
-        for (Model_Client c : clients) {
-            if (c.getUser().getUserID() == userID) {
-                return "online";
-            }
-        }
-        return "offline";
-    }
-
     //  SQL
     private final String LOGIN = "select user_id, username, email from users where username=BINARY(?) and password_hash=BINARY(?)";
-    private final String SELECT_USER_ACCOUNT = "select user_id, username, email from users where status='online' and user_id<>?";
+    private final String SET_STATUS = "update users set status=? where user_id=?";
+    private final String SELECT_USER_ACCOUNT = "select user_id, username, email, status from users where user_id<>?";
     private final String INSERT_USER = "insert into users (username, password_hash, email) values (?,?,?)";
     private final String CHECK_USER = "select user_id from users where username =? limit 1";
     //  Instance
