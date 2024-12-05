@@ -5,6 +5,15 @@
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
+<<<<<<< HEAD
+=======
+    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[281, 328]"/>
+    </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[281, 328]"/>
+    </Property>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
   </Properties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -25,12 +34,24 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
+<<<<<<< HEAD
                   <Component id="cmdRegister" max="32767" attributes="0"/>
+=======
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
                   <Component id="cmdLogin" max="32767" attributes="0"/>
                   <Component id="txtPass" max="32767" attributes="0"/>
                   <Component id="txtUser" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+<<<<<<< HEAD
                   <Component id="jLabel2" alignment="0" pref="228" max="32767" attributes="0"/>
+=======
+                  <Component id="jLabel2" alignment="0" pref="241" max="32767" attributes="0"/>
+                  <Component id="cmdRegister" alignment="1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="cmdResetPassword" min="-2" max="-2" attributes="0"/>
+                  </Group>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
               </Group>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
@@ -51,9 +72,17 @@
               <Component id="txtPass" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="cmdLogin" min="-2" max="-2" attributes="0"/>
+<<<<<<< HEAD
               <EmptySpace max="-2" attributes="0"/>
               <Component id="cmdRegister" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="108" max="32767" attributes="0"/>
+=======
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="cmdResetPassword" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="cmdRegister" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="90" max="32767" attributes="0"/>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,7 +94,11 @@
           <Color blue="57" green="57" red="57" type="rgb"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
+<<<<<<< HEAD
         <Property name="text" type="java.lang.String" value="Login"/>
+=======
+        <Property name="text" type="java.lang.String" value="Log in"/>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
@@ -74,9 +107,12 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtUser">
+<<<<<<< HEAD
       <Properties>
         <Property name="text" type="java.lang.String" value="lethienan1106@gmail.com"/>
       </Properties>
+=======
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -84,9 +120,12 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtPass">
+<<<<<<< HEAD
       <Properties>
         <Property name="text" type="java.lang.String" value="123"/>
       </Properties>
+=======
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
     </Component>
     <Component class="javax.swing.JButton" name="cmdLogin">
       <Properties>
@@ -96,16 +135,42 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdLoginActionPerformed"/>
       </Events>
     </Component>
+<<<<<<< HEAD
     <Component class="javax.swing.JButton" name="cmdRegister">
+=======
+    <Component class="javax.swing.JButton" name="cmdResetPassword">
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ce" green="80" red="f" type="rgb"/>
         </Property>
+<<<<<<< HEAD
         <Property name="text" type="java.lang.String" value="Register"/>
+=======
+        <Property name="text" type="java.lang.String" value="Forgot password?"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
         <Property name="contentAreaFilled" type="boolean" value="false"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Hand Cursor"/>
         </Property>
+<<<<<<< HEAD
+=======
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="iconTextGap" type="int" value="0"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[3, 0, 3, 0]"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdResetPasswordActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="cmdRegister">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Haven&apos;t got an account yet? Sign up"/>
+>>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdRegisterActionPerformed"/>
