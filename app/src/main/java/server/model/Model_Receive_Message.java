@@ -2,12 +2,12 @@ package server.model;
 
 public class Model_Receive_Message {
 
-    public int getMessageType() {
-        return messageType;
+    public int getGroupID() {
+        return groupID;
     }
 
-    public void setMessageType(int messageType) {
-        this.messageType = messageType;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getFromUserID() {
@@ -26,8 +26,8 @@ public class Model_Receive_Message {
         this.text = text;
     }
 
-    public Model_Receive_Message(int messageType, int fromUserID, String text) {
-        this.messageType = messageType;
+    public Model_Receive_Message(int groupID, int fromUserID, String text) {
+        this.groupID = groupID;
         this.fromUserID = fromUserID;
         this.text = text;
     }
@@ -35,7 +35,7 @@ public class Model_Receive_Message {
     public Model_Receive_Message() {
     }
 
-    private int messageType;
+    private int groupID;
     private int fromUserID;
     private String text;
 }

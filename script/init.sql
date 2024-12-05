@@ -34,6 +34,7 @@ CREATE TABLE User_Friends (
 CREATE TABLE Chat_Group (
     group_id INT PRIMARY KEY AUTO_INCREMENT,
     group_name VARCHAR(100) NOT NULL,
+    group_type INT DEFAULT 2,
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_encrypted BOOLEAN DEFAULT FALSE,

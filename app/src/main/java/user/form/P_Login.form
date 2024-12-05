@@ -75,7 +75,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtUser">
       <Properties>
-        <Property name="text" type="java.lang.String" value="lethienan1106@gmail.com"/>
+        <Property name="text" type="java.lang.String" value="ltan22"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">

@@ -21,23 +21,12 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-<<<<<<< HEAD
           <Component id="txt" min="-2" max="-2" attributes="0"/>
-=======
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="txt" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-          </Group>
->>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-<<<<<<< HEAD
     <Component class="com.raven.component.Chat_Item" name="txt">
-=======
-    <Component class="user.component.Chat_Item" name="txt">
->>>>>>> 1d68c4a579ffe0f6ce8fa55061e267fea4855116
     </Component>
   </SubComponents>
 </Form>

@@ -23,12 +23,21 @@ public class Item_People extends javax.swing.JPanel {
         lb.setText(chat.getName());
         lbStatus.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:-1 italic;");
-        activeStatus.setActive(chat.isOnline());
+        updateStatus();
         init();
     }
 
     public void updateStatus() {
-        activeStatus.setActive(chat.isOnline());
+        if (chat.getGroupType() == user.app.GroupType.TWO) {
+            activeStatus.setActive(chat.isOnline());
+            if (chat.isOnline()) {
+                lbStatus.setText("Online");
+                lbStatus.setForeground(new Color(40, 147, 59));
+            } else {
+                lbStatus.setText("Offline");
+                lbStatus.setForeground(new Color(160, 160, 160));
+            }
+        }
     }
 
     private void init() {
@@ -54,7 +63,6 @@ public class Item_People extends javax.swing.JPanel {
         });
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -71,7 +79,7 @@ public class Item_People extends javax.swing.JPanel {
         lb.setText("Name");
 
         lbStatus.setForeground(new java.awt.Color(117, 117, 117));
-        lbStatus.setText("New User");
+        lbStatus.setText("");
 
         activeStatus.setActive(true);
 

@@ -28,15 +28,15 @@ public class Model_Group_Chat {
         this.status = status;
     }
 
-    public GroupType getGroupType() {
+    public int getGroupType() {
         return groupType;
     }
 
-    public void setGroupType(GroupType groupType) {
+    public void setGroupType(int groupType) {
         this.groupType = groupType;
     }
 
-    public Model_Group_Chat(int groupId, String name, String status, GroupType groupType) {
+    public Model_Group_Chat(int groupId, String name, String status, int groupType) {
         this.groupId = groupId;
         this.name = name;
         this.status = status;
@@ -46,5 +46,5 @@ public class Model_Group_Chat {
     private int groupId;
     private String name;
     private String status;
-    private GroupType groupType;
+    private int groupType;
 }

@@ -72,7 +72,6 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setVisible(false);
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

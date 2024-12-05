@@ -1,7 +1,6 @@
 package server.service;
 
 import server.connection.DatabaseConnection;
-import server.model.Model_Client;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
@@ -10,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ListFormat.Style;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +93,15 @@ public class ServiceUser {
         r.close();
         p.close();
         return data;
+    }
+
+    // Return list of private chat (2 person chat) of user
+    public void userDisconnect(int userID) throws SQLException {
+        PreparedStatement p = con.prepareStatement(SET_STATUS);
+        p.setString(1, "offline");
+        p.setInt(2, userID);
+        p.execute();
+        p.close();
     }
 
     public List<Model_User_Account> getUser(int exitUser) throws SQLException {

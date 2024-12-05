@@ -2,12 +2,12 @@ package server.model;
 
 public class Model_Send_Message {
 
-    public int getMessageType() {
-        return messageType;
+    public int getGroupID() {
+        return groupID;
     }
 
-    public void setMessageType(int messageType) {
-        this.messageType = messageType;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getFromUserID() {
@@ -18,14 +18,6 @@ public class Model_Send_Message {
         this.fromUserID = fromUserID;
     }
 
-    public int getToUserID() {
-        return toUserID;
-    }
-
-    public void setToUserID(int toUserID) {
-        this.toUserID = toUserID;
-    }
-
     public String getText() {
         return text;
     }
@@ -34,18 +26,16 @@ public class Model_Send_Message {
         this.text = text;
     }
 
-    public Model_Send_Message(int messageType, int fromUserID, int toUserID, String text) {
-        this.messageType = messageType;
+    public Model_Send_Message(int groupID, int fromUserID, String text) {
+        this.groupID = groupID;
         this.fromUserID = fromUserID;
-        this.toUserID = toUserID;
         this.text = text;
     }
 
     public Model_Send_Message() {
     }
 
-    private int messageType;
+    private int groupID;
     private int fromUserID;
-    private int toUserID;
     private String text;
 }

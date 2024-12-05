@@ -46,9 +46,7 @@ public class Menu_Left extends javax.swing.JPanel {
             public void userConnect(int groupChatId) {
                 for (Model_Group_Chat u : chats) {
                     if (u.getGroupId() == groupChatId) {
-                        if (u.getGroupType() == GroupType.TWO) {
-                            u.setStatus("online");
-                        }
+                        u.setStatus("online");
                         PublicEvent.getInstance().getEventMain().updateChat(u);
                         break;
                     }
@@ -68,9 +66,7 @@ public class Menu_Left extends javax.swing.JPanel {
             public void userDisconnect(int groupChatId) {
                 for (Model_Group_Chat u : chats) {
                     if (u.getGroupId() == groupChatId) {
-                        if (u.getGroupType() == GroupType.TWO) {
-                            u.setStatus("offline");
-                        }
+                        u.setStatus("offline");
                         PublicEvent.getInstance().getEventMain().updateChat(u);
                         break;
                     }

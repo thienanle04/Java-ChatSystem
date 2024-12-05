@@ -14,7 +14,6 @@ public class P_Login extends javax.swing.JPanel {
                 + "font:-2;");
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -34,11 +33,11 @@ public class P_Login extends javax.swing.JPanel {
 
         jLabel1.setText("User Name");
 
-        txtUser.setText("lethienan1106@gmail.com");
+        txtUser.setText("ltan22");
 
         jLabel2.setText("Password");
 
-        txtPass.setText("lethienan1106@gmail.com");
+        txtPass.setText("ltan22");
 
         cmdLogin.setText("Login");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {

@@ -1,12 +1,10 @@
 package user.component;
 
-import com.formdev.flatlaf.FlatClientProperties;
 public class SearchBar extends javax.swing.JPanel {
     public SearchBar() {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

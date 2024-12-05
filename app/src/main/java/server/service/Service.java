@@ -61,7 +61,6 @@ public class Service {
                 ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
                 if (message.isAction()) {
                     System.out.println("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "\n");
-                    server.getBroadcastOperations().sendEvent("list_user", (Model_User_Account) message.getData());
                     addClient(sioc, (Model_User_Account) message.getData());
                 }
             }
@@ -93,7 +92,20 @@ public class Service {
         server.addEventListener("send_to_user", Model_Send_Message.class, new DataListener<Model_Send_Message>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Send_Message t, AckRequest ar) throws Exception {
-                sendToClient(t, ar);
+                try {
+                    // Get the list of users in the group chat
+                    List<Integer> list = serviceMessage.getUserListInGroupChat(t.getGroupID());
+
+                    // Send the message to the user
+                    for (Model_Client c : listClient) {
+                        if (list.contains(c.getUser().getUserID())) {
+                            c.getClient().sendEvent("receive_ms", new Model_Receive_Message(t.getGroupID(), t.getFromUserID(), t.getText()));
+                            break;
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
             }
         });
         server.addDisconnectListener(new DisconnectListener() {
@@ -111,24 +123,32 @@ public class Service {
     }
     
     private void userConnect(int userID) {
-        server.getBroadcastOperations().sendEvent("user_status", userID, true);
+        try {
+            List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
+            for (Integer chatId : chatIds) {
+                server.getBroadcastOperations().sendEvent("user_status", chatId, true);
+            }
+        }
+        catch (SQLException e) {
+            System.err.println(e);
+        }
     }
     
     private void userDisconnect(int userID) {
-        server.getBroadcastOperations().sendEvent("user_status", userID, false);
+        try {
+            List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
+            for (Integer chatId : chatIds) {
+                server.getBroadcastOperations().sendEvent("user_status", chatId, false);
+                serviceUser.userDisconnect(userID);
+            }
+        }
+        catch (SQLException e) {
+            System.err.println(e);
+        }
     }
     
     private void addClient(SocketIOClient client, Model_User_Account user) {
         listClient.add(new Model_Client(client, user));
-    }
-    
-    private void sendToClient(Model_Send_Message data, AckRequest ar) {
-        for (Model_Client c : listClient) {
-            if (c.getUser().getUserID() == data.getToUserID()) {
-                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText()));
-                break;
-            }
-        }
     }
     
     public int removeClient(SocketIOClient client) {

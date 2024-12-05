@@ -23,24 +23,28 @@ public class Chat_Title extends javax.swing.JPanel {
     public void setChatName(Model_Group_Chat chat) {
         this.chat = chat;
         lbName.setText(chat.getName());
-        if (chat.isOnline()) {
-            statusActive();
-        } else {
-            if (chat.getGroupType() == GroupType.TWO) {
+        if (chat.getGroupType() == GroupType.TWO) {
+            if (chat.isOnline()) {
+                statusActive();
+            } else {
                 setStatusText("Offline");
             }
+        } else {
+            setStatusText("");
         }
     }
 
     public void updateUser(Model_Group_Chat groupChat) {
         if (this.chat == groupChat) {
             lbName.setText(groupChat.getName());
-            if (groupChat.isOnline()) {
-                statusActive();
-            } else {
-                if (groupChat.getGroupType() == GroupType.TWO) {
+            if (groupChat.getGroupType() == GroupType.TWO) {
+                if (groupChat.isOnline()) {
+                    statusActive();
+                } else {
                     setStatusText("Offline");
                 }
+            } else {
+                setStatusText("");
             }
         }
     }
@@ -55,7 +59,6 @@ public class Chat_Title extends javax.swing.JPanel {
         lbStatus.setForeground(new Color(160, 160, 160));
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -72,7 +75,7 @@ public class Chat_Title extends javax.swing.JPanel {
         layer.add(lbName);
 
         lbStatus.setForeground(new java.awt.Color(40, 147, 59));
-        lbStatus.setText("Active now");
+        lbStatus.setText("");
         layer.add(lbStatus);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
