@@ -4,9 +4,17 @@
  */
 package admin.components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -64,11 +72,10 @@ public class activeList extends javax.swing.JPanel {
 
         ActiveList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Nghia",  new Integer(100),  new Integer(200),  new Integer(15), "2018-09-20"},
-                {"An",  new Integer(75),  new Integer(150),  new Integer(10), "2019-09-20"}
+
             },
             new String [] {
-                "Username", "App Open", "People Chatted", "Group Chatted", "Chat Date"
+                "Username", "App Open", "People Chatted", "Group Chatted", "Creation Date"
             }
         ) {
             Class[] types = new Class [] {
@@ -79,6 +86,131 @@ public class activeList extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004";
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn số lần ứng dụng mở
+            String appOpenQuery = """
+                SELECT 
+                    subquery.user_id,
+                    subquery.username AS Username,
+                    COUNT(subquery.logged_in_at) AS AppOpen,
+                    DATE_FORMAT(subquery.created_at, '%Y-%m-%d') AS LastChatDate
+                FROM (
+                    SELECT 
+                        u.user_id,
+                        u.username,
+                        l.logged_in_at,
+                        u.created_at,
+                        ROW_NUMBER() OVER (PARTITION BY u.user_id ORDER BY l.logged_in_at DESC) AS row_num
+                    FROM 
+                        users u
+                    LEFT JOIN 
+                        login_history l ON u.user_id = l.user_id
+                ) AS subquery
+                WHERE 
+                    subquery.row_num = 1
+                GROUP BY 
+                    subquery.user_id, subquery.username, subquery.logged_in_at
+            """;
+
+
+
+            // Truy vấn số nhóm đã trò chuyện
+            String groupChattedQuery = """
+                SELECT 
+                    gm.sender_id AS UserID,
+                    COUNT(DISTINCT gm.group_id) AS GroupChatted
+                FROM 
+                    group_messages gm
+                GROUP BY 
+                    gm.sender_id
+            """;
+
+            // Truy vấn số người đã trò chuyện
+            String peopleChattedQuery = """
+                SELECT 
+                    gm.sender_id AS UserID,
+                    SUM(gm.message_count * (gm.group_member_count - 1)) AS PeopleChatted
+                FROM (
+                    SELECT 
+                        gm.sender_id,
+                        gm.group_id,
+                        COUNT(gm.message_id) AS message_count,
+                        (SELECT COUNT(*) FROM group_members WHERE group_id = gm.group_id) AS group_member_count
+                    FROM 
+                        group_messages gm
+                    GROUP BY 
+                        gm.sender_id, gm.group_id
+                ) gm
+                GROUP BY 
+                    gm.sender_id
+            """;
+
+            // Thực thi truy vấn
+            PreparedStatement appOpenStmt = conn.prepareStatement(appOpenQuery);
+            PreparedStatement groupChattedStmt = conn.prepareStatement(groupChattedQuery);
+            PreparedStatement peopleChattedStmt = conn.prepareStatement(peopleChattedQuery);
+
+            ResultSet appOpenRs = appOpenStmt.executeQuery();
+            ResultSet groupChattedRs = groupChattedStmt.executeQuery();
+            ResultSet peopleChattedRs = peopleChattedStmt.executeQuery();
+
+            // Lưu kết quả GroupChatted và PeopleChatted vào Map
+            Map<Integer, Integer> groupChattedMap = new HashMap<>();
+            Map<Integer, Integer> peopleChattedMap = new HashMap<>();
+
+            while (groupChattedRs.next()) {
+                groupChattedMap.put(groupChattedRs.getInt("UserID"), groupChattedRs.getInt("GroupChatted"));
+            }
+
+            while (peopleChattedRs.next()) {
+                peopleChattedMap.put(peopleChattedRs.getInt("UserID"), peopleChattedRs.getInt("PeopleChatted"));
+            }
+
+            // Lấy model từ bảng
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) ActiveList.getModel();
+
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+
+            // Thêm dữ liệu từ ResultSet appOpen vào bảng
+            while (appOpenRs.next()) {
+                int userId = appOpenRs.getInt("user_id");
+                String username = appOpenRs.getString("Username");
+                int appOpen = appOpenRs.getInt("AppOpen");
+                String lastChatDate = appOpenRs.getString("LastChatDate");
+
+                int groupChatted = groupChattedMap.getOrDefault(userId, 0);
+                int peopleChatted = peopleChattedMap.getOrDefault(userId, 0);
+
+                Object[] row = new Object[]{
+                    username,
+                    appOpen,
+                    peopleChatted,
+                    groupChatted,
+                    lastChatDate
+                };
+                model.addRow(row);
+            }
+
+            // Đóng kết nối
+            appOpenRs.close();
+            groupChattedRs.close();
+            peopleChattedRs.close();
+            appOpenStmt.close();
+            groupChattedStmt.close();
+            peopleChattedStmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
         jScrollPane7.setViewportView(ActiveList);
 
         jLabel14.setText("End Date (yyyy-mm-dd):");
@@ -162,10 +294,9 @@ public class activeList extends javax.swing.JPanel {
                                         .addGap(0, 0, Short.MAX_VALUE))))))
                     .addComponent(viewChart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel17)
+                        .addGap(0, 591, Short.MAX_VALUE))
+                    .addComponent(jScrollPane7))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
