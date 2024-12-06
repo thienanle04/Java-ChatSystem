@@ -10,6 +10,7 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 
@@ -29,8 +30,9 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         layer.setBorder(new EmptyBorder(10, 10, 0, 10));
         JButton cmd = new JButton(user);
+        cmd.setHorizontalAlignment(SwingConstants.LEFT);
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cmd.setBorder(null);
+        cmd.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         cmd.setContentAreaFilled(false);
         cmd.setFocusable(false);
         cmd.setForeground(new Color(30, 121, 213));
@@ -50,6 +52,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         layer.setBorder(new EmptyBorder(0, 5, 10, 5));
         label = new JLabel(time);
+        label.setFont(new java.awt.Font(label.getFont().getName(), 0, 10));
         label.setForeground(new Color(110, 110, 110));
         label.setHorizontalTextPosition(JLabel.LEFT);
         layer.add(label);

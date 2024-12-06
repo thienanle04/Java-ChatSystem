@@ -1,6 +1,9 @@
 package user.form;
 
 import net.miginfocom.swing.MigLayout;
+
+import java.util.List;
+
 import user.component.Chat_Body;
 import user.component.Chat_Bottom;
 import user.component.Chat_Title;
@@ -10,6 +13,7 @@ import user.event.PublicEvent;
 import user.model.Model_Receive_Message;
 import user.model.Model_Send_Message;
 import user.model.Model_Group_Chat;
+import user.model.Model_User_Account;
 
 public class Chat extends javax.swing.JPanel {
     public Chat() {
@@ -27,7 +31,7 @@ public class Chat extends javax.swing.JPanel {
 
             @Override
             public void receiveMessage(Model_Receive_Message data) {
-                if (chat_Title1.getChat().getGroupId() == data.getFromUserID()) {
+                if (chat_Title1.getChat().getGroupId() == data.getGroupID()) {
                     chatBody.addItemLeft(data);
                 }
             }

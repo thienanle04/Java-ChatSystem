@@ -5,12 +5,18 @@ import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
 import server.model.Model_User_Account;
+import server.model.Model_User_Profile;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.cj.protocol.Resultset;
+
+import io.netty.handler.codec.http.HttpContentEncoder.Result;
 
 public class ServiceUser {
 
@@ -55,7 +61,7 @@ public class ServiceUser {
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Account(userID, data.getUserName(), data.getEmail(), "online"));
+                message.setData(new Model_User_Account(userID, data.getUserName()));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -80,14 +86,17 @@ public class ServiceUser {
         if (r.next()) {
             int userID = r.getInt(1);
             String userName = r.getString(2);
-            String email = r.getString(3);
-            String status = "online";
-            data = new Model_User_Account(userID, userName, email, status);
+            data = new Model_User_Account(userID, userName);
 
             // Set Status Online
             p = con.prepareStatement(SET_STATUS);
             p.setString(1, "online");
             p.setInt(2, userID);
+            p.execute();
+
+            // Set Login History
+            p = con.prepareStatement("insert into login_history (user_id) values (?)");
+            p.setInt(1, userID);
             p.execute();
         }
         r.close();
@@ -104,21 +113,18 @@ public class ServiceUser {
         p.close();
     }
 
-    public List<Model_User_Account> getUser(int exitUser) throws SQLException {
-        List<Model_User_Account> list = new ArrayList<>();
-        PreparedStatement p = con.prepareStatement(SELECT_USER_ACCOUNT);
-        p.setInt(1, exitUser);
-        ResultSet r = p.executeQuery();
-        while (r.next()) {
-            int userID = r.getInt(1);
-            String userName = r.getString(2);
-            String email = r.getString(3);
-            String status = r.getString(4);
-            list.add(new Model_User_Account(userID, userName, email, status));
+    // Get user profile (all information)
+    public Model_User_Profile getUserProfile (int userId) throws SQLException {
+        Model_User_Profile profile = null;
+        PreparedStatement p = con.prepareStatement("SELECT username, email FROM users where user_id=?");
+        p.setInt(1, userId);
+        ResultSet rs = p.executeQuery();
+        if (rs.next()) {
+            String userName = rs.getString(1);
+            String email = rs.getString(2);
+            return new Model_User_Profile(userId, userName, email);
         }
-        r.close();
-        p.close();
-        return list;
+        return profile;
     }
 
     //  SQL

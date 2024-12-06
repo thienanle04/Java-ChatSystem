@@ -48,8 +48,8 @@ public class Chat_Bottom extends javax.swing.JPanel {
             @Override
             public void keyTyped(KeyEvent ke) {
                 refresh();
-                if (ke.getKeyChar() == 10 && ke.isControlDown()) {
-                    //  user press controll + enter
+                if (ke.getKeyChar() == 10) {
+                    //  user press enter
                     eventSend(txt);
                 }
             }
@@ -94,7 +94,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     private void eventSend(JIMSendTextPane txt) {
         String text = txt.getText().trim();
         if (!text.equals("")) {
-            Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUserID(), chat.getGroupId(), text);
+            Model_Send_Message message = new Model_Send_Message(chat.getGroupId(), Service.getInstance().getUser().getUserID(), text);
             send(message);
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");

@@ -28,7 +28,7 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        txt.setTime("10:30");    //  Testing
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -41,10 +41,9 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         IaImage.setBorderSize(0);
-        IaImage.setImage(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
+        IaImage.setImage(new javax.swing.ImageIcon(getClass().getResource("/user/default_avatar.png"))); // NOI18N
         IaImage.setMaximumSize(new java.awt.Dimension(31, 31));
         IaImage.setMinimumSize(new java.awt.Dimension(31, 31));
-        IaImage.setPreferredSize(new java.awt.Dimension(31, 31));
 
         jLayeredPane1.setLayer(IaImage, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -53,8 +52,8 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(IaImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(IaImage, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

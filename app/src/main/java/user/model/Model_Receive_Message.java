@@ -13,12 +13,12 @@ public class Model_Receive_Message {
         this.fromUserID = fromUserID;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public int getGroupID() {
+        return groupID;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setGroupID(int groupId) {
+        this.groupID = groupId;
     }
     
     public String getUserName() {
@@ -42,7 +42,7 @@ public class Model_Receive_Message {
         try {
             fromUserID = obj.getInt("fromUserID");
             userName = obj.getString("userName");
-            groupId = obj.getInt("groupId");
+            groupID = obj.getInt("groupID");
             text = obj.getString("text");
         } catch (JSONException e) {
             System.err.println(e);
@@ -51,7 +51,7 @@ public class Model_Receive_Message {
 
     private int fromUserID;
     private String userName;
-    private int groupId;
+    private int groupID;
     private String text;
 
     public JSONObject toJsonObject() {
@@ -59,7 +59,7 @@ public class Model_Receive_Message {
             JSONObject json = new JSONObject();
             json.put("fromUserID", fromUserID);
             json.put("userName", userName);
-            json.put("groupId", groupId);
+            json.put("groupID", groupID);
             json.put("text", text);
             return json;
         } catch (JSONException e) {

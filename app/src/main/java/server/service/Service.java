@@ -95,11 +95,15 @@ public class Service {
                 try {
                     // Get the list of users in the group chat
                     List<Integer> list = serviceMessage.getUserListInGroupChat(t.getGroupID());
-
+                    String userName = serviceUser.getUserProfile(t.getFromUserID()).getUserName();
+                    
                     // Send the message to the user
                     for (Model_Client c : listClient) {
                         if (list.contains(c.getUser().getUserID())) {
-                            c.getClient().sendEvent("receive_ms", new Model_Receive_Message(t.getGroupID(), t.getFromUserID(), t.getText()));
+                            if (c.getUser().getUserID() == t.getFromUserID()) {
+                                continue;
+                            }
+                            c.getClient().sendEvent("receive_ms", new Model_Receive_Message(t.getGroupID(), t.getFromUserID(),userName, t.getText()));
                             break;
                         }
                     }

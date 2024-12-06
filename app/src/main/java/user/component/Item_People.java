@@ -24,6 +24,7 @@ public class Item_People extends javax.swing.JPanel {
         lbStatus.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:-1 italic;");
         updateStatus();
+        activeStatus.setActive(chat.isOnline());
         init();
     }
 

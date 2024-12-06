@@ -1,6 +1,6 @@
 package server.model;
 
-public class Model_User_Account {
+public class Model_User_Profile{
 
     public int getUserID() {
         return userID;
@@ -18,14 +18,24 @@ public class Model_User_Account {
         this.userName = userName;
     }
 
-    public Model_User_Account(int userID, String userName) {
-        this.userID = userID;
-        this.userName = userName;
+    public String getEmail() {
+        return email;
     }
 
-    public Model_User_Account() {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Model_User_Profile(int userID, String userName, String email) {
+        this.userID = userID;
+        this.userName = userName;
+        this.email = email;
+    }
+
+    public Model_User_Profile() {
     }
 
     private int userID;
     private String userName;
+    private String email;
 }

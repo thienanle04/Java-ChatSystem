@@ -13,12 +13,12 @@ public class Model_Send_Message {
         this.fromUserID = fromUserID;
     }
 
-    public int getToUserID() {
-        return toUserID;
+    public int getGroupID() {
+        return this.groupID;
     }
 
-    public void setToUserID(int toUserID) {
-        this.toUserID = toUserID;
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public String getText() {
@@ -29,24 +29,24 @@ public class Model_Send_Message {
         this.text = text;
     }
 
-    public Model_Send_Message(int fromUserID, int toUserID, String text) {
+    public Model_Send_Message(int groupID, int fromUserID, String text) {
+        this.groupID = groupID;
         this.fromUserID = fromUserID;
-        this.toUserID = toUserID;
         this.text = text;
     }
 
     public Model_Send_Message() {
     }
 
+    private int groupID;
     private int fromUserID;
-    private int toUserID;
     private String text;
 
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
+            json.put("groupID", groupID);
             json.put("fromUserID", fromUserID);
-            json.put("toUserID", toUserID);
                 json.put("text", text);
             return json;
         } catch (JSONException e) {

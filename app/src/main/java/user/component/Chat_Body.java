@@ -27,30 +27,20 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     public void addItemLeft(Model_Receive_Message data) {
-        Chat_Left item = new Chat_Left();
+        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(data.getText());
         item.setTime();
-        body.add(item, "wrap, w 100::80%");
+        item.setUserProfile(data.getUserName());
+        body.add(item, "wrap, w 100::60%");
         repaint();
         revalidate();
-    }
-
-    public void addItemLeft(String text, String user, String[] image) {
-        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(text);
-        item.setTime();
-        item.setUserProfile(user);
-        body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
     }
 
     public void addItemRight(Model_Send_Message data) {
         Chat_Right item = new Chat_Right();
         item.setText(data.getText());
         item.setTime();
-        body.add(item, "wrap, al right, w 100::80%");
+        body.add(item, "wrap, al right, w 100::60%");
         repaint();
         revalidate();
         scrollToBottom();
