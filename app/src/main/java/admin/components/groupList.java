@@ -56,7 +56,10 @@ public class groupList extends javax.swing.JPanel {
         viewAdmin = new javax.swing.JButton();
 
         GroupList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
+            new Object [][] {
+                {"Group B", "11-11-2024"},
+                {"Group A", "12-11-2024"}
+            },
             new String [] {
                 "Group Name", "Creation Date"
             }
@@ -69,48 +72,6 @@ public class groupList extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "admin";
-            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
-
-            // Truy vấn dữ liệu
-            String query = """
-                SELECT 
-                    group_name AS GroupName, 
-                    created_at AS CreationDate 
-                FROM 
-                    chat_group
-            """;
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-
-            // Lấy model từ bảng
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) GroupList.getModel();
-
-            // Xóa dữ liệu cũ nếu có
-            model.setRowCount(0);
-
-            // Thêm dữ liệu từ ResultSet vào bảng
-            while (rs.next()) {
-                Object[] row = new Object[]{
-                        rs.getString("GroupName"),
-                        rs.getTimestamp("CreationDate")
-                };
-                model.addRow(row);
-            }
-
-            // Đóng kết nối
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
         jScrollPane3.setViewportView(GroupList);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -173,13 +134,13 @@ public class groupList extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SortBy, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addComponent(SortBy))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

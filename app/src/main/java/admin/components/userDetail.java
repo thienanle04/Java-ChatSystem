@@ -12,13 +12,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.sql.ResultSet;
+import java.util.Collections;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -49,55 +53,82 @@ public class userDetail extends javax.swing.JPanel {
         update_button = new javax.swing.JButton();
         delete_button = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        UpdatePassword = new javax.swing.JButton();
+        filterByName = new javax.swing.JTextField();
+        filterByUsername = new javax.swing.JTextField();
+        status = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        sortBy = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         UserDetails.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] {
-                        "Name", "Username", "Password", "Address", "Date-of-birth", "Gender", "Email", "Lock"
-                }) {
-            Class[] types = new Class[] {
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
-                    java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Username", "Password", "Address", "Date-of-birth", "Gender", "Email", "Status", "Lock", "Creation Date"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
+                return types [columnIndex];
             }
         });
-
+        
         try {
             // Kết nối đến database
             String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
             String user = "admin";
             String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
             Connection conn = DriverManager.getConnection(url, user, password);
-
+    
             // Truy vấn dữ liệu
-            String query = "SELECT name, username, password_hash, address, date_of_birth, gender, email, is_locked FROM Users";
+            String query = """
+                SELECT 
+                    name AS Name,
+                    username AS Username,
+                    password_hash AS Password,
+                    address AS Address,
+                    date_of_birth AS DateOfBirth,
+                    gender AS Gender,
+                    email AS Email,
+                    status AS Status,
+                    is_locked AS `Lock`,
+                    created_at AS CreationDate
+                FROM 
+                    users
+            """;
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
-
+    
             // Lấy model từ bảng
             javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) UserDetails.getModel();
-
+    
             // Xóa dữ liệu cũ nếu có
             model.setRowCount(0);
-
+    
             // Thêm dữ liệu từ ResultSet vào bảng
             while (rs.next()) {
-                Object[] row = new Object[] {
-                        rs.getString("name"),
-                        rs.getString("username"),
-                        rs.getString("password_hash"),
-                        rs.getString("address"),
-                        rs.getDate("date_of_birth"),
-                        rs.getString("gender"),
-                        rs.getString("email"),
-                        rs.getBoolean("is_locked")
+                Object[] row = new Object[]{
+                    rs.getString("Name"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getString("Address"),
+                    rs.getDate("DateOfBirth"),
+                    rs.getString("Gender"),
+                    rs.getString("Email"),
+                    rs.getString("Status"), // Chuyển đổi boolean thành chuỗi
+                    rs.getBoolean("Lock"),
+                    rs.getTimestamp("CreationDate")
                 };
                 model.addRow(row);
             }
-
+    
             // Đóng kết nối
             rs.close();
             stmt.close();
@@ -107,7 +138,7 @@ public class userDetail extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-
+    
         jScrollPane1.setViewportView(UserDetails);
 
         add_button.setText("Add");
@@ -138,41 +169,311 @@ public class userDetail extends javax.swing.JPanel {
             }
         });
 
+        UpdatePassword.setText("Update Password");
+        UpdatePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpdatePasswordActionPerformed(evt);
+            }
+        });
+
+        filterByName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterByNameActionPerformed(evt);
+            }
+        });
+
+        filterByUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterByUsernameActionPerformed(evt);
+            }
+        });
+
+        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "online", "offline" }));
+        status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Status");
+
+        jLabel2.setText("Sort By");
+
+        sortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Creation Date" }));
+        sortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortByActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Filter By Username");
+
+        jLabel4.setText("Filter By Name");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 697,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 195,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton1)))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(UpdatePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(filterByUsername)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10,
-                                        Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(delete_button)
-                                        .addComponent(update_button)
-                                        .addComponent(add_button)
-                                        .addComponent(jButton1))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterByUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(delete_button)
+                        .addComponent(update_button)
+                        .addComponent(UpdatePassword)
+                        .addComponent(add_button)))
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
+    private DefaultTableModel originalModel;
+    private void UpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdatePasswordActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        int selectedRow = UserDetails.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            String currentPassword = model.getValueAt(selectedRow, 2).toString();
+            String currentUsername = model.getValueAt(selectedRow, 1).toString();
+    
+            JTextField passwordField = new JTextField(currentPassword);
+            
+            JPanel updatePanel = new JPanel(new GridLayout(1, 2));
+            updatePanel.add(new JLabel("Password:"));
+            updatePanel.add(passwordField);
+
+            int result = JOptionPane.showConfirmDialog(this, updatePanel, "Update Password", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                String newPassword = passwordField.getText();
+
+                model.setValueAt(newPassword, selectedRow, 2);
+
+                // Cập nhật dữ liệu vào cơ sở dữ liệu
+                String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
+                try (
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "admin", "*Nghia1692004");
+                    PreparedStatement pstmt = conn.prepareStatement(updateSQL)
+                ) {
+                    // Gán giá trị cho câu lệnh
+                    pstmt.setString(1, newPassword);
+                    pstmt.setString(2, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
+
+                    // Thực thi câu lệnh SQL
+                    int rowsAffected = pstmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(this, "User updated successfully!");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error updating user.");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a user to update.");
+        }
+    }//GEN-LAST:event_UpdatePasswordActionPerformed
+
+    private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
+        // TODO add your handling code here:
+        String selectedOption = (String) status.getSelectedItem();
+
+        if (selectedOption == null || selectedOption.isEmpty()) {
+            // If no option is selected, reset to the original model
+            UserDetails.setModel(originalModel);
+            return;
+        }
+
+        if (originalModel == null) {
+            // Store the original model for later use
+            originalModel = (DefaultTableModel) UserDetails.getModel();
+        }
+
+        // Create a new model for filtered data
+        DefaultTableModel filteredModel = new DefaultTableModel();
+
+        // Copy column structure from the original model
+        for (int i = 0; i < originalModel.getColumnCount(); i++) {
+            filteredModel.addColumn(originalModel.getColumnName(i));
+        }
+
+        // Get the index of the status column
+        int statusColumnIndex = 7; // Assuming the "Status" column is the third column (index 2)
+
+        // Iterate through the rows of the original model
+        for (int i = 0; i < originalModel.getRowCount(); i++) {
+            // Lấy giá trị của cột Status dưới dạng String
+            String status = (String) originalModel.getValueAt(i, statusColumnIndex);
+
+            // Check if the row matches the selected filter
+            if (("online".equals(selectedOption) && "online".equals(status)) ||
+                ("offline".equals(selectedOption) && "offline".equals(status))) {
+
+                // Add the matching row to the filtered model
+                Object[] row = new Object[originalModel.getColumnCount()];
+                for (int j = 0; j < originalModel.getColumnCount(); j++) {
+                    row[j] = originalModel.getValueAt(i, j);
+                }
+                filteredModel.addRow(row);
+            }
+        }
+
+        // Update the table with the filtered model
+        UserDetails.setModel(filteredModel);
+    }//GEN-LAST:event_statusActionPerformed
+
+    private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByNameActionPerformed
+        // TODO add your handling code here:
+        String filterName = filterByName.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) UserDetails.getModel();
+            }
+
+            DefaultTableModel model = originalModel;
+
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 0).toString(); 
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), 
+                        model.getValueAt(i, 1),
+                        model.getValueAt(i, 2),
+                        model.getValueAt(i, 3),
+                        model.getValueAt(i, 4),
+                        model.getValueAt(i, 5),
+                        model.getValueAt(i, 6),
+                        model.getValueAt(i, 7),
+                        model.getValueAt(i, 8),
+                    });
+                }
+            }
+
+            UserDetails.setModel(filteredModel);
+        } else {
+            UserDetails.setModel(originalModel);
+        }
+    }//GEN-LAST:event_filterByNameActionPerformed
+
+    private void filterByUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterByUsernameActionPerformed
+        // TODO add your handling code here:
+        String filterName = filterByUsername.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) UserDetails.getModel();
+            }
+
+            DefaultTableModel model = originalModel;
+
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String name = model.getValueAt(i, 1).toString(); 
+                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                    filteredModel.addRow(new Object[] {
+                        model.getValueAt(i, 0), 
+                        model.getValueAt(i, 1),
+                        model.getValueAt(i, 2),
+                        model.getValueAt(i, 3),
+                        model.getValueAt(i, 4),
+                        model.getValueAt(i, 5),
+                        model.getValueAt(i, 6),
+                        model.getValueAt(i, 7),
+                        model.getValueAt(i, 8),
+                    });
+                }
+            }
+
+            UserDetails.setModel(filteredModel);
+        } else {
+            UserDetails.setModel(originalModel);
+        }
+    }//GEN-LAST:event_filterByUsernameActionPerformed
+
+    private void sortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        UserDetails.setRowSorter(sorter);
+
+        String selectedOption = (String) sortBy.getSelectedItem();
+        int columnIndex = -1;
+
+        if ("Name".equals(selectedOption)) {
+            columnIndex = 0; 
+        } else if ("CreationDate".equals(selectedOption)) {
+            columnIndex = 1; 
+        }
+
+        if (columnIndex != -1) {
+            sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
+            sorter.sort();
+        }
+    }//GEN-LAST:event_sortByActionPerformed
 
     private void add_buttonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_add_buttonActionPerformed
         // TODO add your handling code here:
@@ -257,7 +558,6 @@ public class userDetail extends javax.swing.JPanel {
 
         if (selectedRow >= 0) {
             String currentUsername = model.getValueAt(selectedRow, 1).toString();
-            String currentPassword = model.getValueAt(selectedRow, 2).toString();
             String currentName = model.getValueAt(selectedRow, 0).toString();
             String currentAddress = model.getValueAt(selectedRow, 3).toString();
             String currentDOB = model.getValueAt(selectedRow, 4).toString();
@@ -265,18 +565,15 @@ public class userDetail extends javax.swing.JPanel {
             String currentEmail = model.getValueAt(selectedRow, 6).toString();
 
             JTextField usernameField = new JTextField(currentUsername);
-            JTextField passwordField = new JTextField(currentPassword);
             JTextField nameField = new JTextField(currentName);
             JTextField addressField = new JTextField(currentAddress);
             JTextField dobField = new JTextField(currentDOB);
             JTextField genderField = new JTextField(currentGender);
             JTextField emailField = new JTextField(currentEmail);
 
-            JPanel updatePanel = new JPanel(new GridLayout(7, 2));
+            JPanel updatePanel = new JPanel(new GridLayout(6, 2));
             updatePanel.add(new JLabel("Username:"));
             updatePanel.add(usernameField);
-            updatePanel.add(new JLabel("Password:"));
-            updatePanel.add(passwordField);
             updatePanel.add(new JLabel("Name:"));
             updatePanel.add(nameField);
             updatePanel.add(new JLabel("Address:"));
@@ -293,7 +590,6 @@ public class userDetail extends javax.swing.JPanel {
 
             if (result == JOptionPane.OK_OPTION) {
                 String newUsername = usernameField.getText();
-                String newPassword = passwordField.getText();
                 String newName = nameField.getText();
                 String newAddress = addressField.getText();
                 String newDOB = dobField.getText();
@@ -301,7 +597,6 @@ public class userDetail extends javax.swing.JPanel {
                 String newEmail = emailField.getText();
 
                 model.setValueAt(newUsername, selectedRow, 1);
-                model.setValueAt(newPassword, selectedRow, 2);
                 model.setValueAt(newName, selectedRow, 0);
                 model.setValueAt(newAddress, selectedRow, 3);
                 model.setValueAt(newDOB, selectedRow, 4);
@@ -309,7 +604,7 @@ public class userDetail extends javax.swing.JPanel {
                 model.setValueAt(newEmail, selectedRow, 6);
 
                 // Cập nhật dữ liệu vào cơ sở dữ liệu
-                String updateSQL = "UPDATE Users SET username = ?, name = ?, address = ?, date_of_birth = ?, gender = ?, email = ?, password_hash = ? WHERE username = ?";
+                String updateSQL = "UPDATE Users SET username = ?, name = ?, address = ?, date_of_birth = ?, gender = ?, email = ? WHERE username = ?";
                 try (
                     Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "admin", "*Nghia1692004");
                     PreparedStatement pstmt = conn.prepareStatement(updateSQL)
@@ -321,8 +616,7 @@ public class userDetail extends javax.swing.JPanel {
                     pstmt.setString(4, newDOB);
                     pstmt.setString(5, newGender);
                     pstmt.setString(6, newEmail);
-                    pstmt.setString(7, newPassword);
-                    pstmt.setString(8, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
+                    pstmt.setString(7, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
 
                     // Thực thi câu lệnh SQL
                     int rowsAffected = pstmt.executeUpdate();
@@ -417,11 +711,20 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton UpdatePassword;
     private javax.swing.JTable UserDetails;
     private javax.swing.JButton add_button;
     private javax.swing.JButton delete_button;
+    private javax.swing.JTextField filterByName;
+    private javax.swing.JTextField filterByUsername;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox<String> sortBy;
+    private javax.swing.JComboBox<String> status;
     private javax.swing.JButton update_button;
     // End of variables declaration//GEN-END:variables
 }

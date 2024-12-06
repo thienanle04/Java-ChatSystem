@@ -68,7 +68,7 @@ public class activeList extends javax.swing.JPanel {
                 {"An",  new Integer(75),  new Integer(150),  new Integer(10), "2019-09-20"}
             },
             new String [] {
-                "Username", "App Open", "People Chatted", "Group Chatted", "Creation Date"
+                "Username", "App Open", "People Chatted", "Group Chatted", "Chat Date"
             }
         ) {
             Class[] types = new Class [] {
