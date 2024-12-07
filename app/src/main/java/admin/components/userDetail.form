@@ -20,13 +20,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="update_button" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="update_button" min="-2" pref="135" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="UpdatePassword" min="-2" pref="150" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="delete_button" min="-2" pref="141" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="add_button" min="-2" pref="195" max="-2" attributes="0"/>
+                      <Component id="resetPassword" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="delete_button" min="-2" pref="113" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="add_button" min="-2" pref="112" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -77,6 +79,7 @@
                       <Component id="update_button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="UpdatePassword" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="add_button" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="resetPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -270,6 +273,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Filter By Name"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="resetPassword">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Reset Password"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetPasswordActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

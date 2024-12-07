@@ -4,25 +4,30 @@
  */
 package admin.components;
 
+import io.socket.engineio.client.Transport;
 import java.awt.GridLayout;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.sql.ResultSet;
 import java.util.Collections;
+import java.util.Properties;
+import java.util.Random;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
-import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.sql.ResultSet;
 
 /**
  *
@@ -62,6 +67,7 @@ public class userDetail extends javax.swing.JPanel {
         sortBy = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        resetPassword = new javax.swing.JButton();
 
         UserDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -79,7 +85,6 @@ public class userDetail extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        
         try {
             // Kết nối đến database
             String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
@@ -138,7 +143,6 @@ public class userDetail extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-    
         jScrollPane1.setViewportView(UserDetails);
 
         add_button.setText("Add");
@@ -210,6 +214,13 @@ public class userDetail extends javax.swing.JPanel {
 
         jLabel4.setText("Filter By Name");
 
+        resetPassword.setText("Reset Password");
+        resetPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetPasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -218,13 +229,15 @@ public class userDetail extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(UpdatePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(resetPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -268,7 +281,8 @@ public class userDetail extends javax.swing.JPanel {
                         .addComponent(delete_button)
                         .addComponent(update_button)
                         .addComponent(UpdatePassword)
-                        .addComponent(add_button)))
+                        .addComponent(add_button)
+                        .addComponent(resetPassword)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -474,6 +488,94 @@ public class userDetail extends javax.swing.JPanel {
             sorter.sort();
         }
     }//GEN-LAST:event_sortByActionPerformed
+
+    private void resetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPasswordActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        int selectedRow = UserDetails.getSelectedRow();
+
+        String email = model.getValueAt(selectedRow, 6).toString();
+        String currentUsername = model.getValueAt(selectedRow, 1).toString();
+
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter your email.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Tạo mật khẩu mới ngẫu nhiên
+        int length = 8; // Độ dài mật khẩu
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder passwordBuilder = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            passwordBuilder.append(characters.charAt(index));
+        }
+        String newPassword = passwordBuilder.toString();
+
+        // Gửi email với mật khẩu mới
+        try {
+            // Thông tin email
+            String fromEmail = "javamailtest22294@gmail.com";
+            String password = "jizzkjmwxrnwzftp";
+            String host = "smtp.gmail.com";
+
+            // Cấu hình mail server
+            Properties properties = System.getProperties();
+            properties.put("mail.smtp.host", host);
+            properties.put("mail.smtp.port", "587");
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+
+            // Xác thực tài khoản email
+            Session session = Session.getInstance(properties, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(fromEmail, password);
+                }
+            });
+
+            // Tạo nội dung email
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(fromEmail));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            message.setSubject("Reset Password");
+            message.setText("Your new password is: " + newPassword);
+
+            // Gửi email
+            javax.mail.Transport.send(message);
+            
+            model.setValueAt(newPassword, selectedRow, 2);
+
+            // Cập nhật dữ liệu vào cơ sở dữ liệu
+            String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
+            try (
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "admin", "*Nghia1692004");
+                PreparedStatement pstmt = conn.prepareStatement(updateSQL)
+            ) {
+                // Gán giá trị cho câu lệnh
+                pstmt.setString(1, newPassword);
+                pstmt.setString(2, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
+
+                // Thực thi câu lệnh SQL
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "A new password has been sent to your email.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error updating user.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to send email. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_resetPasswordActionPerformed
 
     private void add_buttonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_add_buttonActionPerformed
         // TODO add your handling code here:
@@ -723,6 +825,7 @@ public class userDetail extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton resetPassword;
     private javax.swing.JComboBox<String> sortBy;
     private javax.swing.JComboBox<String> status;
     private javax.swing.JButton update_button;
