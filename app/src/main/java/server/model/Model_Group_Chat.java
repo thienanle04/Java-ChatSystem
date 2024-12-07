@@ -1,7 +1,5 @@
 package server.model;
 
-import server.app.GroupType;
-
 public class Model_Group_Chat {
 
     public int getGroupId() {

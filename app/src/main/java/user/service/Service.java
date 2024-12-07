@@ -1,17 +1,23 @@
 package user.service;
 
 import user.event.PublicEvent;
-import user.model.Model_Receive_Message;
+import user.model.Model_Chat_Message;
 import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import user.model.Model_Group_Chat;
-
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.LinkedList;
+import java.util.Iterator;
 
 public class Service {
 
@@ -46,6 +52,30 @@ public class Service {
                     PublicEvent.getInstance().getEventMenuLeft().newChat(chats);
                 }
             });
+
+            client.on("get_all_chats", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    HashMap<Integer, LinkedList<Model_Chat_Message>> chats = new HashMap<>();
+                    JSONObject obj = (JSONObject) os[0];
+                    Iterator<String> keys = obj.keys();
+                    while (keys.hasNext()) {
+                        int key = Integer.valueOf(keys.next());
+                        try {
+                            chats.put(key, new LinkedList<>());
+                            for (Object o : obj.getJSONArray(String.valueOf(key))) {
+                                Model_Chat_Message message = new Model_Chat_Message(o);
+                                chats.get(key).add(message);
+                            }
+                        } catch (JSONException e) {
+                            error(e);
+                        }
+
+                    }
+                    PublicEvent.getInstance().getEventChat().initAllChat(chats);
+                }
+            });
+
             client.on("user_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
@@ -63,7 +93,7 @@ public class Service {
             client.on("receive_ms", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
-                    Model_Receive_Message message = new Model_Receive_Message(os[0]);
+                    Model_Chat_Message message = new Model_Chat_Message(os[0]);
                     PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
             });

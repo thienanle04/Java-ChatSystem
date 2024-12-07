@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.HashMap;
+
 
 import server.connection.DatabaseConnection;
 import server.model.Model_Group_Chat;
-import server.model.Model_Receive_Message;
-import server.model.Model_Send_Message;
+import server.model.Model_Chat_Message;
 import server.app.GroupType;
 
 public class ServiceMessage {
@@ -87,28 +89,58 @@ public class ServiceMessage {
     }
 
     // Save the message to the database
-    public Model_Receive_Message saveMessage(Model_Send_Message message) throws SQLException {
-        Model_Receive_Message receive_Message = null;
+    public Model_Chat_Message saveMessage(Model_Chat_Message message) throws SQLException {
+        Model_Chat_Message receive_Message = null;
         PreparedStatement p = con.prepareStatement("insert into group_messages (group_id, sender_id, message) values (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         p.setInt(1, message.getGroupID());
-        p.setInt(2, message.getFromUserID());
-        p.setString(3, message.getText());
+        p.setInt(2, message.getSenderID());
+        p.setString(3, message.getMessage());
         p.executeUpdate();
         ResultSet r = p.getGeneratedKeys();
 
         PreparedStatement p2 = con.prepareStatement("select u.username from users u where u.user_id = ?");
-        p2.setInt(1, message.getFromUserID());
+        p2.setInt(1, message.getSenderID());
         ResultSet r2 = p2.executeQuery();
         r2.next();
         String userName = r2.getString(1);
 
         if (r.next()) {
             int messageID = r.getInt(1);
-            receive_Message = new Model_Receive_Message(messageID, message.getGroupID(), message.getFromUserID(), userName, message.getText());
+            receive_Message = new Model_Chat_Message(messageID, message.getGroupID(), message.getSenderID(), userName, message.getMessage());
         }
         r.close();
         p.close();
         return receive_Message;
+    }
+
+    // Get all chat messages
+    public HashMap<Integer, LinkedList<Model_Chat_Message>> getAllChat(int userId) throws SQLException {
+        HashMap<Integer, LinkedList<Model_Chat_Message>> data = new HashMap<>();
+        List<Model_Group_Chat> list = getChatListId(userId);
+        for (Model_Group_Chat group : list) {
+            LinkedList<Model_Chat_Message> messages = new LinkedList<>();
+            PreparedStatement p = con.prepareStatement("select gm.message_id, sender_id, message, visibility_status from group_messages gm join message_visibility mv on gm.message_id = mv.message_id where gm.group_id = ? and mv.user_id = ?");
+            p.setInt(1, group.getGroupId());
+            p.setInt(2, userId);
+            ResultSet r = p.executeQuery();
+            while (r.next()) {
+                int messageID = r.getInt(1);
+                int senderID = r.getInt(2);
+                String message = r.getString(3);
+                String visibility = r.getString(4);
+                if (visibility.equals("hidden")) {
+                    message = "This message was deleted";
+                }
+                PreparedStatement p2 = con.prepareStatement("select u.username from users u where u.user_id = ? limit 1");
+                p2.setInt(1, senderID);
+                ResultSet r2 = p2.executeQuery();
+                r2.next();
+                String userName = r2.getString(1);
+                messages.add(new Model_Chat_Message(messageID, group.getGroupId(), senderID, userName, message));
+            }
+            data.put(group.getGroupId(), messages);
+        }
+        return data;
     }
 
     private final String SELECT_USER_ACCOUNT = "select cg.group_id, cg.group_name, cg.group_type from chat_group cg join group_members gm on cg.group_id = gm.group_id where gm.user_id = ?";

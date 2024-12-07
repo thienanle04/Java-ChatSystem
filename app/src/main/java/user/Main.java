@@ -41,6 +41,7 @@ public class Main extends javax.swing.JFrame {
                 home.setVisible(true);
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_chat", Service.getInstance().getUser().getUserID());
+                Service.getInstance().getClient().emit("get_all_chats", Service.getInstance().getUser().getUserID());
             }
 
             @Override

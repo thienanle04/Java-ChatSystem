@@ -11,12 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mysql.cj.protocol.Resultset;
-
-import io.netty.handler.codec.http.HttpContentEncoder.Result;
 
 public class ServiceUser {
 
@@ -130,7 +124,6 @@ public class ServiceUser {
     //  SQL
     private final String LOGIN = "select user_id, username, email from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";
-    private final String SELECT_USER_ACCOUNT = "select user_id, username, email, status from users where user_id<>?";
     private final String INSERT_USER = "insert into users (username, password_hash, email) values (?,?,?)";
     private final String CHECK_USER = "select user_id from users where username =? limit 1";
     //  Instance

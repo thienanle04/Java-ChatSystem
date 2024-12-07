@@ -12,14 +12,15 @@ import server.model.Model_Client;
 import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
-import server.model.Model_Receive_Message;
 import server.model.Model_Register;
-import server.model.Model_Send_Message;
 import server.model.Model_User_Account;
+import server.model.Model_Chat_Message;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Collections;
 
 public class Service {
@@ -90,12 +91,24 @@ public class Service {
             }
         });
 
-        server.addEventListener("send_to_user", Model_Send_Message.class, new DataListener<Model_Send_Message>() {
+        server.addEventListener("get_all_chats", Integer.class, new DataListener<Integer>() {
             @Override
-            public void onData(SocketIOClient sioc, Model_Send_Message t, AckRequest ar) throws Exception {
+            public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
+                try {
+                    HashMap<Integer, LinkedList<Model_Chat_Message>> data = serviceMessage.getAllChat(userID);
+                    sioc.sendEvent("get_all_chats", data);
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        });
+
+        server.addEventListener("send_to_user", Model_Chat_Message.class, new DataListener<Model_Chat_Message>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Chat_Message t, AckRequest ar) throws Exception {
                 try {
                     // Save the message to the database
-                    Model_Receive_Message receive_Message = serviceMessage.saveMessage(t);
+                    Model_Chat_Message receive_Message = serviceMessage.saveMessage(t);
 
                     if (receive_Message != null) {
                         ar.sendAckData(true, receive_Message.getMessageID());
@@ -106,7 +119,7 @@ public class Service {
                         // Send the message to the user
                         for (Model_Client c : listClient) {
                             if (list.contains(c.getUser().getUserID())) {
-                                if (c.getUser().getUserID() == t.getFromUserID()) {
+                                if (c.getUser().getUserID() == t.getSenderID()) {
                                     continue;
                                 }
                                 c.getClient().sendEvent("receive_ms", receive_Message);

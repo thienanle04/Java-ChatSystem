@@ -12,14 +12,9 @@ import user.component.Chat_Title;
 import user.event.EventChat;
 import user.event.PublicEvent;
 
-import user.model.Model_Receive_Message;
-import user.model.Model_Send_Message;
-import user.model.Model_User_Account;
 import user.service.Service;
 import user.model.Model_Group_Chat;
 import user.model.Model_Chat_Message;
-
-import user.app.MessageType;
 
 public class Chat extends javax.swing.JPanel {
     HashMap<Integer, LinkedList<Model_Chat_Message>> chats_data;
@@ -30,27 +25,25 @@ public class Chat extends javax.swing.JPanel {
     }
 
     private void init() {
-        chats_data = new HashMap<>();
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, fill]0[shrink 0]0"));
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
-            public void sendMessage(Model_Send_Message data) {
+            public void sendMessage(Model_Chat_Message message) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Service.getInstance().getClient().emit("send_to_user", data.toJsonObject(), new Ack() {
+                        Service.getInstance().getClient().emit("send_to_user", message.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... os) {
                                 if (os.length > 0) {
                                     boolean action = (Boolean) os[0];
-                                    int ID = 0;
                                     
                                     if (action) {
-                                        ID = (int) os[1];
+                                        message.setMessageID((int) os[1]);
+                                    } else {
+                                        message.setMessage("Failed to send message");
                                     }
 
-                                    Model_Chat_Message message = new Model_Chat_Message(ID, chat_Title1.getChat().getGroupId(), Service.getInstance().getUser().getUserName(), data.getText(), MessageType.SEND);
-                                        
                                     if (chats_data.containsKey(chat_Title1.getChat().getGroupId())) {
                                         // Add message to chat data of this group
                                         chats_data.get(chat_Title1.getChat().getGroupId()).add(message);
@@ -72,23 +65,27 @@ public class Chat extends javax.swing.JPanel {
             }
 
             @Override
-            public void receiveMessage(Model_Receive_Message data) {
-                Model_Chat_Message message = new Model_Chat_Message(data.getMessageID(), data.getGroupID(), data.getUserName(), data.getText(), MessageType.RECEIVE);
+            public void receiveMessage(Model_Chat_Message message) {
                 // Check is chat title null
                 if (chat_Title1.getChat() != null) {
-                    if (chat_Title1.getChat().getGroupId() == data.getGroupID()) {
+                    if (chat_Title1.getChat().getGroupId() == message.getGroupID()) {
                         chatBody.addItemLeft(message);
                     }
                 }
 
-                if (chats_data.containsKey(data.getGroupID())) {
+                if (chats_data.containsKey(message.getGroupID())) {
                     // Add message to chat data of this group
-                    chats_data.get(data.getGroupID()).add(message);
+                    chats_data.get(message.getGroupID()).add(message);
                 } else {
                     // Create new chat data of this group
-                    chats_data.put(data.getGroupID(), new LinkedList<>());
-                    chats_data.get(data.getGroupID()).add(message);
+                    chats_data.put(message.getGroupID(), new LinkedList<>());
+                    chats_data.get(message.getGroupID()).add(message);
                 }
+            }
+
+            @Override
+            public void initAllChat(HashMap<Integer, LinkedList<Model_Chat_Message>> data) {
+                chats_data = data;
             }
         });
         add(chat_Title1, "wrap");
@@ -104,7 +101,7 @@ public class Chat extends javax.swing.JPanel {
         if (chats_data.containsKey(groupChat.getGroupId())) {
             LinkedList<Model_Chat_Message> messages = chats_data.get(groupChat.getGroupId());
             for (Model_Chat_Message message : messages) {
-                if (message.getType() == MessageType.SEND) {
+                if (message.getSenderID() == Service.getInstance().getUser().getUserID()) {
                     chatBody.addItemRight(message);
                 } else {
                     chatBody.addItemLeft(message);

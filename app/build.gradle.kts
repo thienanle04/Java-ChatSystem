@@ -31,7 +31,7 @@ dependencies {
     implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("org.slf4j:slf4j-api:2.0.9")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.9")
-    implementation("org.json:json:20210307")
+    implementation("org.json:json:20240303")
     implementation("org.jfree:jfreechart:1.5.3")
 
     // FlatLaf

@@ -1,9 +1,12 @@
-package user.model;
+package server.model;
+
+import java.io.Serializable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Model_Chat_Message {
+public class Model_Chat_Message implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public int getMessageID() {
         return messageID;
@@ -37,19 +40,19 @@ public class Model_Chat_Message {
         this.userName = userName;
     }
 
-    public Model_Chat_Message(int messageID, int groupID, int senderID, String userName, String message) {
-        this.messageID = messageID;
-        this.groupID = groupID;
-        this.senderID = senderID;
-        this.userName = userName;
-        this.message = message;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Model_Chat_Message(int messageID, int groupID, int senderID, String userName, String message) {
+        this.messageID = messageID;
+        this.groupID = groupID;
+        this.senderID = senderID;
+        this.userName = userName;
         this.message = message;
     }
 

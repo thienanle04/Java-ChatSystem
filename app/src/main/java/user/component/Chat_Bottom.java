@@ -2,10 +2,12 @@ package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import user.event.PublicEvent;
-import user.model.Model_Send_Message;
 import user.model.Model_Group_Chat;
+import user.model.Model_Chat_Message;
 import user.service.Service;
+
 import user.swing.JIMSendTextPane;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -94,7 +96,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     private void eventSend(JIMSendTextPane txt) {
         String text = txt.getText().trim();
         if (!text.equals("")) {
-            Model_Send_Message message = new Model_Send_Message(chat.getGroupId(), Service.getInstance().getUser().getUserID(), text);
+            Model_Chat_Message message = new Model_Chat_Message(0, chat.getGroupId(), Service.getInstance().getUser().getUserID(), "", text);
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");
             txt.grabFocus();
