@@ -433,14 +433,12 @@ public class activeList extends javax.swing.JPanel {
         // TODO add your handling code here:
         String directFriend = appOpen.getText().trim();
         String _filterBy = (String) filterByAppOpen.getSelectedItem();// =, > , < 
-        
+        if (originalModel == null) {
+            originalModel = (DefaultTableModel) ActiveList.getModel();
+        }
         if (!directFriend.isEmpty()) {
             try {
                 int directFriendValue = Integer.parseInt(directFriend);
-
-                if (originalModel == null) {
-                    originalModel = (DefaultTableModel) ActiveList.getModel();
-                }
 
                 DefaultTableModel model = originalModel;
 

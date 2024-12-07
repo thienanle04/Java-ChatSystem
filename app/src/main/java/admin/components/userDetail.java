@@ -57,7 +57,7 @@ public class userDetail extends javax.swing.JPanel {
         add_button = new javax.swing.JButton();
         update_button = new javax.swing.JButton();
         delete_button = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        lock = new javax.swing.JButton();
         UpdatePassword = new javax.swing.JButton();
         filterByName = new javax.swing.JTextField();
         filterByUsername = new javax.swing.JTextField();
@@ -166,10 +166,10 @@ public class userDetail extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setText("Lock/ Unlock");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        lock.setText("Lock/ Unlock");
+        lock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                lockActionPerformed(evt);
             }
         });
 
@@ -239,7 +239,7 @@ public class userDetail extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(lock))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 802, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -276,7 +276,7 @@ public class userDetail extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(lock)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(delete_button)
                         .addComponent(update_button)
@@ -772,15 +772,15 @@ public class userDetail extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_delete_buttonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
+    private void lockActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         int selectedRow = UserDetails.getSelectedRow();
 
         if (selectedRow != -1) {
-            Boolean lock = (Boolean) model.getValueAt(selectedRow, 7);
+            Boolean lock = (Boolean) model.getValueAt(selectedRow, 8);
             Boolean newLock = !lock;
-            model.setValueAt(newLock, selectedRow, 7);
+            model.setValueAt(newLock, selectedRow, 8);
 
             // Get the username for database identification
             String username = model.getValueAt(selectedRow, 1).toString();
@@ -819,12 +819,12 @@ public class userDetail extends javax.swing.JPanel {
     private javax.swing.JButton delete_button;
     private javax.swing.JTextField filterByName;
     private javax.swing.JTextField filterByUsername;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton lock;
     private javax.swing.JButton resetPassword;
     private javax.swing.JComboBox<String> sortBy;
     private javax.swing.JComboBox<String> status;
