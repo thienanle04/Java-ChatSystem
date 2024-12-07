@@ -2,8 +2,10 @@ package user.form;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.util.List;
+import java.util.LinkedList;
+import java.util.HashMap;
 
+import io.socket.client.Ack;
 import user.component.Chat_Body;
 import user.component.Chat_Bottom;
 import user.component.Chat_Title;
@@ -12,27 +14,80 @@ import user.event.PublicEvent;
 
 import user.model.Model_Receive_Message;
 import user.model.Model_Send_Message;
-import user.model.Model_Group_Chat;
 import user.model.Model_User_Account;
+import user.service.Service;
+import user.model.Model_Group_Chat;
+import user.model.Model_Chat_Message;
+
+import user.app.MessageType;
 
 public class Chat extends javax.swing.JPanel {
+    HashMap<Integer, LinkedList<Model_Chat_Message>> chats_data;
+
     public Chat() {
         initComponents();
         init();
     }
 
     private void init() {
+        chats_data = new HashMap<>();
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, fill]0[shrink 0]0"));
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(Model_Send_Message data) {
-                chatBody.addItemRight(data);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("send_to_user", data.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    int ID = 0;
+                                    
+                                    if (action) {
+                                        ID = (int) os[1];
+                                    }
+
+                                    Model_Chat_Message message = new Model_Chat_Message(ID, chat_Title1.getChat().getGroupId(), Service.getInstance().getUser().getUserName(), data.getText(), MessageType.SEND);
+                                        
+                                    if (chats_data.containsKey(chat_Title1.getChat().getGroupId())) {
+                                        // Add message to chat data of this group
+                                        chats_data.get(chat_Title1.getChat().getGroupId()).add(message);
+                                    } else {
+                                        // Create new chat data of this group
+                                        chats_data.put(chat_Title1.getChat().getGroupId(), new LinkedList<>());
+                                        chats_data.get(chat_Title1.getChat().getGroupId()).add(message);
+                                    }
+
+                                    chatBody.addItemRight(message);
+                                } else {
+                                    // Send message failed
+                                }
+                            }
+                        });
+
+                    }
+                }).start();
             }
 
             @Override
             public void receiveMessage(Model_Receive_Message data) {
-                if (chat_Title1.getChat().getGroupId() == data.getGroupID()) {
-                    chatBody.addItemLeft(data);
+                Model_Chat_Message message = new Model_Chat_Message(data.getMessageID(), data.getGroupID(), data.getUserName(), data.getText(), MessageType.RECEIVE);
+                // Check is chat title null
+                if (chat_Title1.getChat() != null) {
+                    if (chat_Title1.getChat().getGroupId() == data.getGroupID()) {
+                        chatBody.addItemLeft(message);
+                    }
+                }
+
+                if (chats_data.containsKey(data.getGroupID())) {
+                    // Add message to chat data of this group
+                    chats_data.get(data.getGroupID()).add(message);
+                } else {
+                    // Create new chat data of this group
+                    chats_data.put(data.getGroupID(), new LinkedList<>());
+                    chats_data.get(data.getGroupID()).add(message);
                 }
             }
         });
@@ -45,6 +100,17 @@ public class Chat extends javax.swing.JPanel {
         chat_Title1.setChatName(groupChat);
         chatBottom.setChat(groupChat);
         chatBody.clearChat();
+
+        if (chats_data.containsKey(groupChat.getGroupId())) {
+            LinkedList<Model_Chat_Message> messages = chats_data.get(groupChat.getGroupId());
+            for (Model_Chat_Message message : messages) {
+                if (message.getType() == MessageType.SEND) {
+                    chatBody.addItemRight(message);
+                } else {
+                    chatBody.addItemLeft(message);
+                }
+            }
+        }
     }
 
     public void updateUser(Model_Group_Chat groupChat) {
@@ -56,27 +122,25 @@ public class Chat extends javax.swing.JPanel {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         chat_Title1 = new Chat_Title();
         chatBody = new Chat_Body();
         chatBottom = new Chat_Bottom();
-        
+
         setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 727, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 727, Short.MAX_VALUE));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 681, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 681, Short.MAX_VALUE));
 
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private user.component.Chat_Body chatBody;

@@ -5,6 +5,14 @@ import org.json.JSONObject;
 
 public class Model_Receive_Message {
 
+    public int getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+
     public int getFromUserID() {
         return fromUserID;
     }
@@ -40,6 +48,7 @@ public class Model_Receive_Message {
     public Model_Receive_Message(Object json) {
         JSONObject obj = (JSONObject) json;
         try {
+            
             fromUserID = obj.getInt("fromUserID");
             userName = obj.getString("userName");
             groupID = obj.getInt("groupID");
@@ -49,6 +58,7 @@ public class Model_Receive_Message {
         }
     }
 
+    private int messageID;
     private int fromUserID;
     private String userName;
     private int groupID;
@@ -57,6 +67,7 @@ public class Model_Receive_Message {
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
+            json.put("messageID", messageID);
             json.put("fromUserID", fromUserID);
             json.put("userName", userName);
             json.put("groupID", groupID);

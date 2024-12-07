@@ -95,7 +95,6 @@ public class Chat_Bottom extends javax.swing.JPanel {
         String text = txt.getText().trim();
         if (!text.equals("")) {
             Model_Send_Message message = new Model_Send_Message(chat.getGroupId(), Service.getInstance().getUser().getUserID(), text);
-            send(message);
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");
             txt.grabFocus();
@@ -103,10 +102,6 @@ public class Chat_Bottom extends javax.swing.JPanel {
         } else {
             txt.grabFocus();
         }
-    }
-
-    private void send(Model_Send_Message data) {
-        Service.getInstance().getClient().emit("send_to_user", data.toJsonObject());
     }
 
     private void refresh() {

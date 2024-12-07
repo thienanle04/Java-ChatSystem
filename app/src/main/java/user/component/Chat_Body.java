@@ -1,13 +1,13 @@
 package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import user.model.Model_Receive_Message;
-import user.model.Model_Send_Message;
 import java.awt.Adjustable;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
+
+import user.model.Model_Chat_Message;
 
 public class Chat_Body extends javax.swing.JPanel {
 
@@ -26,9 +26,9 @@ public class Chat_Body extends javax.swing.JPanel {
         sp.getVerticalScrollBar().setUnitIncrement(10);
     }
 
-    public void addItemLeft(Model_Receive_Message data) {
+    public void addItemLeft(Model_Chat_Message data) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(data.getText());
+        item.setText(data.getMessage());
         item.setTime();
         item.setUserProfile(data.getUserName());
         body.add(item, "wrap, w 100::60%");
@@ -36,9 +36,9 @@ public class Chat_Body extends javax.swing.JPanel {
         revalidate();
     }
 
-    public void addItemRight(Model_Send_Message data) {
+    public void addItemRight(Model_Chat_Message data) {
         Chat_Right item = new Chat_Right();
-        item.setText(data.getText());
+        item.setText(data.getMessage());
         item.setTime();
         body.add(item, "wrap, al right, w 100::60%");
         repaint();

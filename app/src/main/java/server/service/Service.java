@@ -89,29 +89,40 @@ public class Service {
                 }
             }
         });
+
         server.addEventListener("send_to_user", Model_Send_Message.class, new DataListener<Model_Send_Message>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Send_Message t, AckRequest ar) throws Exception {
                 try {
-                    // Get the list of users in the group chat
-                    List<Integer> list = serviceMessage.getUserListInGroupChat(t.getGroupID());
-                    String userName = serviceUser.getUserProfile(t.getFromUserID()).getUserName();
-                    
-                    // Send the message to the user
-                    for (Model_Client c : listClient) {
-                        if (list.contains(c.getUser().getUserID())) {
-                            if (c.getUser().getUserID() == t.getFromUserID()) {
-                                continue;
+                    // Save the message to the database
+                    Model_Receive_Message receive_Message = serviceMessage.saveMessage(t);
+
+                    if (receive_Message != null) {
+                        ar.sendAckData(true, receive_Message.getMessageID());
+
+                        // Get the list of users in the group chat
+                        List<Integer> list = serviceMessage.getUserListInGroupChat(t.getGroupID());
+                        
+                        // Send the message to the user
+                        for (Model_Client c : listClient) {
+                            if (list.contains(c.getUser().getUserID())) {
+                                if (c.getUser().getUserID() == t.getFromUserID()) {
+                                    continue;
+                                }
+                                c.getClient().sendEvent("receive_ms", receive_Message);
+                                break;
                             }
-                            c.getClient().sendEvent("receive_ms", new Model_Receive_Message(t.getGroupID(), t.getFromUserID(),userName, t.getText()));
-                            break;
                         }
+                        
+                    } else {
+                        ar.sendAckData(false);
                     }
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
             }
         });
+        
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient sioc) {

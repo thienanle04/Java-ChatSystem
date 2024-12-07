@@ -9,7 +9,8 @@ import java.util.List;
 
 import server.connection.DatabaseConnection;
 import server.model.Model_Group_Chat;
-import server.model.Model_User_Account;
+import server.model.Model_Receive_Message;
+import server.model.Model_Send_Message;
 import server.app.GroupType;
 
 public class ServiceMessage {
@@ -83,6 +84,31 @@ public class ServiceMessage {
         r.close();
         p.close();
         return list;
+    }
+
+    // Save the message to the database
+    public Model_Receive_Message saveMessage(Model_Send_Message message) throws SQLException {
+        Model_Receive_Message receive_Message = null;
+        PreparedStatement p = con.prepareStatement("insert into group_messages (group_id, sender_id, message) values (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        p.setInt(1, message.getGroupID());
+        p.setInt(2, message.getFromUserID());
+        p.setString(3, message.getText());
+        p.executeUpdate();
+        ResultSet r = p.getGeneratedKeys();
+
+        PreparedStatement p2 = con.prepareStatement("select u.username from users u where u.user_id = ?");
+        p2.setInt(1, message.getFromUserID());
+        ResultSet r2 = p2.executeQuery();
+        r2.next();
+        String userName = r2.getString(1);
+
+        if (r.next()) {
+            int messageID = r.getInt(1);
+            receive_Message = new Model_Receive_Message(messageID, message.getGroupID(), message.getFromUserID(), userName, message.getText());
+        }
+        r.close();
+        p.close();
+        return receive_Message;
     }
 
     private final String SELECT_USER_ACCOUNT = "select cg.group_id, cg.group_name, cg.group_type from chat_group cg join group_members gm on cg.group_id = gm.group_id where gm.user_id = ?";

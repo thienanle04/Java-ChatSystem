@@ -12,7 +12,6 @@ import user.component.Friend_Search;
 import user.component.Item_People;
 import user.event.EventMenuLeft;
 import user.event.PublicEvent;
-import user.app.GroupType;
 
 public class Menu_Left extends javax.swing.JPanel {
 

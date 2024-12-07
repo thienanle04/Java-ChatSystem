@@ -2,6 +2,14 @@ package server.model;
 
 public class Model_Receive_Message {
 
+    public int getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+
     public int getGroupID() {
         return groupID;
     }
@@ -34,7 +42,8 @@ public class Model_Receive_Message {
         this.text = text;
     }
 
-    public Model_Receive_Message(int groupID, int fromUserID, String userName, String text) {
+    public Model_Receive_Message(int messageID, int groupID, int fromUserID, String userName, String text) {
+        this.messageID = messageID;
         this.groupID = groupID;
         this.fromUserID = fromUserID;
         this.userName = userName;
@@ -44,6 +53,7 @@ public class Model_Receive_Message {
     public Model_Receive_Message() {
     }
 
+    private int messageID;
     private int groupID;
     private int fromUserID;
     private String userName;
