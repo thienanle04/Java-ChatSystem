@@ -87,135 +87,6 @@ public class activeList extends javax.swing.JPanel {
                 return types[columnIndex];
             }
         });
-        try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "admin";
-            String password = "*Nghia1692004";
-            Connection conn = DriverManager.getConnection(url, user, password);
-
-            // Truy vấn số lần ứng dụng mở
-            String appOpenQuery = """
-                        SELECT
-                            subquery.user_id,
-                            subquery.username AS Username,
-                            COUNT(subquery.logged_in_at) AS AppOpen,
-                            DATE_FORMAT(subquery.created_at, '%Y-%m-%d') AS LastChatDate
-                        FROM (
-                            SELECT
-                                u.user_id,
-                                u.username,
-                                l.logged_in_at,
-                                u.created_at,
-                                ROW_NUMBER() OVER (PARTITION BY u.user_id ORDER BY l.logged_in_at DESC) AS row_num
-                            FROM
-                                users u
-                            LEFT JOIN
-                                login_history l ON u.user_id = l.user_id
-                        ) AS subquery
-                        WHERE
-                            subquery.row_num = 1
-                        GROUP BY
-                            subquery.user_id, subquery.username, subquery.logged_in_at
-                    """;
-
-            // Truy vấn số nhóm đã trò chuyện
-            String groupChattedQuery = """
-                        SELECT
-                            gm.sender_id AS UserID,
-                            COUNT(DISTINCT gm.group_id) AS GroupChatted
-                        FROM
-                            group_messages gm
-                        JOIN
-                            chat_group cg
-                        ON
-                            gm.group_id = cg.group_id
-                        WHERE
-                            cg.group_type != 2
-                        GROUP BY
-                            gm.sender_id;
-                    """;
-
-            // Truy vấn số người đã trò chuyện
-            String peopleChattedQuery = """
-                        SELECT
-                            gm.sender_id AS UserID,
-                            SUM(gm.message_count * (gm.group_member_count - 1)) AS PeopleChatted
-                        FROM (
-                            SELECT
-                                gm.sender_id,
-                                gm.group_id,
-                                COUNT(gm.message_id) AS message_count,
-                                (SELECT COUNT(*) FROM group_members WHERE group_id = gm.group_id) AS group_member_count
-                            FROM
-                                group_messages gm
-                            GROUP BY
-                                gm.sender_id, gm.group_id
-                        ) gm
-                        GROUP BY
-                            gm.sender_id
-                    """;
-
-            // Thực thi truy vấn
-            PreparedStatement appOpenStmt = conn.prepareStatement(appOpenQuery);
-            PreparedStatement groupChattedStmt = conn.prepareStatement(groupChattedQuery);
-            PreparedStatement peopleChattedStmt = conn.prepareStatement(peopleChattedQuery);
-
-            ResultSet appOpenRs = appOpenStmt.executeQuery();
-            ResultSet groupChattedRs = groupChattedStmt.executeQuery();
-            ResultSet peopleChattedRs = peopleChattedStmt.executeQuery();
-
-            // Lưu kết quả GroupChatted và PeopleChatted vào Map
-            Map<Integer, Integer> groupChattedMap = new HashMap<>();
-            Map<Integer, Integer> peopleChattedMap = new HashMap<>();
-
-            while (groupChattedRs.next()) {
-                groupChattedMap.put(groupChattedRs.getInt("UserID"), groupChattedRs.getInt("GroupChatted"));
-            }
-
-            while (peopleChattedRs.next()) {
-                peopleChattedMap.put(peopleChattedRs.getInt("UserID"), peopleChattedRs.getInt("PeopleChatted"));
-            }
-
-            // Lấy model từ bảng
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) ActiveList.getModel();
-
-            // Xóa dữ liệu cũ nếu có
-            model.setRowCount(0);
-
-            // Thêm dữ liệu từ ResultSet appOpen vào bảng
-            while (appOpenRs.next()) {
-                int userId = appOpenRs.getInt("user_id");
-                String username = appOpenRs.getString("Username");
-                int appOpen = appOpenRs.getInt("AppOpen");
-                String lastChatDate = appOpenRs.getString("LastChatDate");
-
-                int groupChatted = groupChattedMap.getOrDefault(userId, 0);
-                int peopleChatted = peopleChattedMap.getOrDefault(userId, 0);
-
-                Object[] row = new Object[] {
-                        username,
-                        appOpen,
-                        peopleChatted,
-                        groupChatted,
-                        lastChatDate
-                };
-                model.addRow(row);
-            }
-
-            // Đóng kết nối
-            appOpenRs.close();
-            groupChattedRs.close();
-            peopleChattedRs.close();
-            appOpenStmt.close();
-            groupChattedStmt.close();
-            peopleChattedStmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
         jScrollPane7.setViewportView(ActiveList);
 
         jLabel14.setText("End Date (yyyy-mm-dd):");
@@ -405,49 +276,167 @@ public class activeList extends javax.swing.JPanel {
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
 
-        if (!start.isEmpty() || !end.isEmpty()) {
+        try {
+            LocalDate _startDate = start.isEmpty() ? LocalDate.of(1900, 1, 1) : LocalDate.parse(start);
+            LocalDate _endDate = end.isEmpty() ? LocalDate.of(2030, 12, 31) : LocalDate.parse(end);
+
+
+            java.sql.Date sqlStartDate = java.sql.Date.valueOf(_startDate);
+            java.sql.Date sqlEndDate = java.sql.Date.valueOf(_endDate);
+
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) ActiveList.getModel();
+            }
+
             try {
-                LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start);
-                LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end);
+                // Kết nối đến database
+                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+                String user = "admin";
+                String password = "*Nghia1692004";
+                Connection conn = DriverManager.getConnection(url, user, password);
 
-                if (originalModel == null) {
-                    originalModel = (DefaultTableModel) ActiveList.getModel();
+                // Truy vấn số lần ứng dụng mở
+                String appOpenQuery = """
+                            SELECT
+                                subquery.user_id,
+                                subquery.username AS Username,
+                                COUNT(subquery.logged_in_at) AS AppOpen,
+                                DATE_FORMAT(subquery.created_at, '%Y-%m-%d') AS LastChatDate
+                            FROM (
+                                SELECT
+                                    u.user_id,
+                                    u.username,
+                                    l.logged_in_at,
+                                    u.created_at,
+                                    ROW_NUMBER() OVER (PARTITION BY u.user_id ORDER BY l.logged_in_at DESC) AS row_num
+                                FROM
+                                    users u
+                                LEFT JOIN
+                                    login_history l ON u.user_id = l.user_id
+                                WHERE
+                                    l.logged_in_at BETWEEN ? AND ?
+                            ) AS subquery
+                            WHERE
+                                subquery.row_num = 1
+                            GROUP BY
+                                subquery.user_id, subquery.username, subquery.logged_in_at;
+                        """;
+
+                // Truy vấn số nhóm đã trò chuyện
+                String groupChattedQuery = """
+                            SELECT
+                                gm.sender_id AS UserID,
+                                COUNT(DISTINCT gm.group_id) AS GroupChatted
+                            FROM
+                                group_messages gm
+                            JOIN
+                                chat_group cg ON gm.group_id = cg.group_id
+                            WHERE
+                                cg.group_type != 2
+                                AND gm.sent_at BETWEEN ? AND ?
+                            GROUP BY
+                                gm.sender_id;
+                        """;
+
+                // Truy vấn số người đã trò chuyện
+                String peopleChattedQuery = """
+                            SELECT
+                                gm.sender_id AS UserID,
+                                SUM(gm.message_count * (gm.group_member_count - 1)) AS PeopleChatted
+                            FROM (
+                                SELECT
+                                    gm.sender_id,
+                                    gm.group_id,
+                                    COUNT(gm.message_id) AS message_count,
+                                    (SELECT COUNT(*) FROM group_members WHERE group_id = gm.group_id) AS group_member_count
+                                FROM
+                                    group_messages gm
+                                WHERE
+                                    gm.sent_at BETWEEN ? AND ?
+                                GROUP BY
+                                    gm.sender_id, gm.group_id
+                            ) gm
+                            GROUP BY
+                                gm.sender_id;
+                        """;
+
+                // Thực thi truy vấn
+                PreparedStatement appOpenStmt = conn.prepareStatement(appOpenQuery);
+                appOpenStmt.setDate(1, sqlStartDate);
+                appOpenStmt.setDate(2, sqlEndDate);
+
+                PreparedStatement groupChattedStmt = conn.prepareStatement(groupChattedQuery);
+                groupChattedStmt.setDate(1, sqlStartDate);
+                groupChattedStmt.setDate(2, sqlEndDate);
+
+                PreparedStatement peopleChattedStmt = conn.prepareStatement(peopleChattedQuery);
+                peopleChattedStmt.setDate(1, sqlStartDate);
+                peopleChattedStmt.setDate(2, sqlEndDate);
+
+                ResultSet appOpenRs = appOpenStmt.executeQuery();
+                ResultSet groupChattedRs = groupChattedStmt.executeQuery();
+                ResultSet peopleChattedRs = peopleChattedStmt.executeQuery();
+
+                // Lưu kết quả GroupChatted và PeopleChatted vào Map
+                Map<Integer, Integer> groupChattedMap = new HashMap<>();
+                Map<Integer, Integer> peopleChattedMap = new HashMap<>();
+
+                while (groupChattedRs.next()) {
+                    groupChattedMap.put(groupChattedRs.getInt("UserID"), groupChattedRs.getInt("GroupChatted"));
                 }
 
-                DefaultTableModel model = originalModel;
-
-                DefaultTableModel filteredModel = new DefaultTableModel();
-
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    filteredModel.addColumn(model.getColumnName(i));
+                while (peopleChattedRs.next()) {
+                    peopleChattedMap.put(peopleChattedRs.getInt("UserID"), peopleChattedRs.getInt("PeopleChatted"));
                 }
 
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    String dateStr = model.getValueAt(i, 4).toString();
-                    LocalDate creationDate = LocalDate.parse(dateStr);
+                // Lấy model từ bảng
+                javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) ActiveList
+                        .getModel();
 
-                    if ((creationDate.isEqual(_startDate) || creationDate.isAfter(_startDate)) &&
-                            (creationDate.isEqual(_endDate) || creationDate.isBefore(_endDate))) {
-                        filteredModel.addRow(new Object[] {
-                                model.getValueAt(i, 0), // Name
-                                model.getValueAt(i, 1), // Email
-                                model.getValueAt(i, 2), // Creation Date
-                                model.getValueAt(i, 3),
-                                model.getValueAt(i, 4),
-                        });
-                    }
+                // Xóa dữ liệu cũ nếu có
+                model.setRowCount(0);
+
+                // Thêm dữ liệu từ ResultSet appOpen vào bảng
+                while (appOpenRs.next()) {
+                    int userId = appOpenRs.getInt("user_id");
+                    String username = appOpenRs.getString("Username");
+                    int appOpen = appOpenRs.getInt("AppOpen");
+                    String lastChatDate = appOpenRs.getString("LastChatDate");
+
+                    int groupChatted = groupChattedMap.getOrDefault(userId, 0);
+                    int peopleChatted = peopleChattedMap.getOrDefault(userId, 0);
+
+                    Object[] row = new Object[] {
+                            username,
+                            appOpen,
+                            peopleChatted,
+                            groupChatted,
+                            lastChatDate
+                    };
+                    model.addRow(row);
                 }
 
-                ActiveList.setModel(filteredModel);
-            } catch (DateTimeParseException e) {
-                JOptionPane.showMessageDialog(this,
-                        "Please enter dates in the format yyyy-MM-dd.",
-                        "Invalid Date Format",
+                // Đóng kết nối
+                appOpenRs.close();
+                groupChattedRs.close();
+                peopleChattedRs.close();
+                appOpenStmt.close();
+                groupChattedStmt.close();
+                peopleChattedStmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            ActiveList.setModel(originalModel);
+
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter dates in the format yyyy-MM-dd.",
+                    "Invalid Date Format",
+                    JOptionPane.ERROR_MESSAGE);
         }
+
     }// GEN-LAST:event_filterByActionPerformed
 
     private void viewChartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewChartActionPerformed

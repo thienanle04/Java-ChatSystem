@@ -253,10 +253,18 @@ public class newUserRegistration extends javax.swing.JPanel {
 
                 // Chuẩn bị dữ liệu cho biểu đồ
                 org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
+
+                // Khởi tạo mảng giá trị mặc định cho 12 tháng
+                int[] userCounts = new int[12];
                 while (rs.next()) {
                     int month = rs.getInt("Month");
                     int userCount = rs.getInt("UserCount");
-                    dataset.addValue(userCount, "Số lượng", "Tháng " + month);
+                    userCounts[month - 1] = userCount; // Lưu giá trị cho tháng tương ứng
+                }
+
+                // Thêm dữ liệu vào dataset, đảm bảo đủ 12 cột
+                for (int i = 0; i < 12; i++) {
+                    dataset.addValue(userCounts[i], "Số lượng", "Tháng " + (i + 1));
                 }
 
                 // Tạo biểu đồ cột
@@ -273,7 +281,7 @@ public class newUserRegistration extends javax.swing.JPanel {
                 javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
                 chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
                 chartDialog.setContentPane(chartPanel);
-                chartDialog.setSize(800, 600);
+                chartDialog.setSize(1200, 600);
                 chartDialog.setLocationRelativeTo(this);
 
                 chartDialog.setVisible(true);
