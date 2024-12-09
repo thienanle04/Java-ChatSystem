@@ -28,6 +28,7 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.ResultSet;
+import admin.components.sendRandomPasswordToEmail;
 
 /**
  *
@@ -91,66 +92,7 @@ public class userDetail extends javax.swing.JPanel {
                 return types[columnIndex];
             }
         });
-        try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "admin";
-            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
-
-            // Truy vấn dữ liệu
-            String query = """
-                        SELECT
-                            name AS Name,
-                            username AS Username,
-                            password_hash AS Password,
-                            address AS Address,
-                            date_of_birth AS DateOfBirth,
-                            gender AS Gender,
-                            email AS Email,
-                            status AS Status,
-                            is_locked AS `Lock`,
-                            created_at AS CreationDate,
-                            role
-                        FROM
-                            users
-                    """;
-            PreparedStatement stmt = conn.prepareStatement(query);
-            ResultSet rs = stmt.executeQuery();
-
-            // Lấy model từ bảng
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) UserDetails.getModel();
-
-            // Xóa dữ liệu cũ nếu có
-            model.setRowCount(0);
-
-            // Thêm dữ liệu từ ResultSet vào bảng
-            while (rs.next()) {
-                Object[] row = new Object[] {
-                        rs.getString("Name"),
-                        rs.getString("Username"),
-                        rs.getString("Password"),
-                        rs.getString("Address"),
-                        rs.getDate("DateOfBirth"),
-                        rs.getString("Gender"),
-                        rs.getString("Email"),
-                        rs.getString("Status"), // Chuyển đổi boolean thành chuỗi
-                        rs.getBoolean("Lock"),
-                        rs.getString("role"),
-                        rs.getTimestamp("CreationDate")
-                };
-                model.addRow(row);
-            }
-
-            // Đóng kết nối
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        reloadUserDetail();
         jScrollPane1.setViewportView(UserDetails);
 
         add_button.setText("Add");
@@ -325,6 +267,69 @@ public class userDetail extends javax.swing.JPanel {
                                         .addComponent(lock))
                                 .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void reloadUserDetail() {
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn dữ liệu
+            String query = """
+                        SELECT
+                            name AS Name,
+                            username AS Username,
+                            password_hash AS Password,
+                            address AS Address,
+                            date_of_birth AS DateOfBirth,
+                            gender AS Gender,
+                            email AS Email,
+                            status AS Status,
+                            is_locked AS `Lock`,
+                            created_at AS CreationDate,
+                            role
+                        FROM
+                            users
+                    """;
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            // Lấy model từ bảng
+            DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+
+            // Thêm dữ liệu từ ResultSet vào bảng
+            while (rs.next()) {
+                Object[] row = new Object[] {
+                        rs.getString("Name"),
+                        rs.getString("Username"),
+                        rs.getString("Password"),
+                        rs.getString("Address"),
+                        rs.getDate("DateOfBirth"),
+                        rs.getString("Gender"),
+                        rs.getString("Email"),
+                        rs.getString("Status"),
+                        rs.getBoolean("Lock"),
+                        rs.getString("role"),
+                        rs.getTimestamp("CreationDate")
+                };
+                model.addRow(row);
+            }
+
+            // Đóng kết nối
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void setRoleAdminActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setRoleAdminActionPerformed
         // TODO add your handling code here:
@@ -592,7 +597,6 @@ public class userDetail extends javax.swing.JPanel {
     private void resetPasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetPasswordActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
-
         int selectedRow = UserDetails.getSelectedRow();
 
         String email = model.getValueAt(selectedRow, 6).toString();
@@ -603,79 +607,18 @@ public class userDetail extends javax.swing.JPanel {
             return;
         }
 
-        // Tạo mật khẩu mới ngẫu nhiên
-        int length = 8; // Độ dài mật khẩu
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuilder passwordBuilder = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            passwordBuilder.append(characters.charAt(index));
-        }
-        String newPassword = passwordBuilder.toString();
-
-        // Gửi email với mật khẩu mới
         try {
-            // Thông tin email
-            String fromEmail = "javamailtest22294@gmail.com";
-            String password = "jizzkjmwxrnwzftp";
-            String host = "smtp.gmail.com";
+            // Gửi email và tự động cập nhật password trong database
+            sendRandomPasswordToEmail.sendEmailWithGeneratedPassword(email, currentUsername);
 
-            // Cấu hình mail server
-            Properties properties = System.getProperties();
-            properties.put("mail.smtp.host", host);
-            properties.put("mail.smtp.port", "587");
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.starttls.enable", "true");
-
-            // Xác thực tài khoản email
-            Session session = Session.getInstance(properties, new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(fromEmail, password);
-                }
-            });
-
-            // Tạo nội dung email
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("Reset Password");
-            message.setText("Your new password is: " + newPassword);
-
-            // Gửi email
-            javax.mail.Transport.send(message);
-
-            model.setValueAt(newPassword, selectedRow, 2);
-
-            // Cập nhật dữ liệu vào cơ sở dữ liệu
-            String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
-            try (
-                    Connection conn = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "admin",
-                            "*Nghia1692004");
-                    PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
-                // Gán giá trị cho câu lệnh
-                pstmt.setString(1, newPassword);
-                pstmt.setString(2, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
-
-                // Thực thi câu lệnh SQL
-                int rowsAffected = pstmt.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    JOptionPane.showMessageDialog(this, "A new password has been sent to your email.", "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error updating user.");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
-            }
+            // Cập nhật giao diện
+            reloadUserDetail();
+            JOptionPane.showMessageDialog(this, "A new password has been sent to your email.", "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to send email. Please try again.", "Error",
+            JOptionPane.showMessageDialog(this, "Failed to reset password: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }// GEN-LAST:event_resetPasswordActionPerformed
@@ -752,66 +695,7 @@ public class userDetail extends javax.swing.JPanel {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Error adding user: " + e.getMessage());
                 }
-                try {
-                    // Kết nối đến database
-                    String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                    String user = "admin";
-                    password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
-                    Connection conn = DriverManager.getConnection(url, user, password);
-
-                    // Truy vấn dữ liệu
-                    String query = """
-                                SELECT
-                                    name AS Name,
-                                    username AS Username,
-                                    password_hash AS Password,
-                                    address AS Address,
-                                    date_of_birth AS DateOfBirth,
-                                    gender AS Gender,
-                                    email AS Email,
-                                    status AS Status,
-                                    is_locked AS `Lock`,
-                                    created_at AS CreationDate,
-                                    role
-                                FROM
-                                    users
-                            """;
-                    PreparedStatement stmt = conn.prepareStatement(query);
-                    ResultSet rs = stmt.executeQuery();
-
-                    // Lấy model từ bảng
-                    model = (javax.swing.table.DefaultTableModel) UserDetails.getModel();
-
-                    // Xóa dữ liệu cũ nếu có
-                    model.setRowCount(0);
-
-                    // Thêm dữ liệu từ ResultSet vào bảng
-                    while (rs.next()) {
-                        Object[] row = new Object[] {
-                                rs.getString("Name"),
-                                rs.getString("Username"),
-                                rs.getString("Password"),
-                                rs.getString("Address"),
-                                rs.getDate("DateOfBirth"),
-                                rs.getString("Gender"),
-                                rs.getString("Email"),
-                                rs.getString("Status"),
-                                rs.getBoolean("Lock"),
-                                rs.getString("role"),
-                                rs.getTimestamp("CreationDate")
-                        };
-                        model.addRow(row);
-                    }
-
-                    // Đóng kết nối
-                    rs.close();
-                    stmt.close();
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+                reloadUserDetail();
             } else {
                 JOptionPane.showMessageDialog(this, "Username and Name are required.");
             }
