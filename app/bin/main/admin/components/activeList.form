@@ -42,7 +42,7 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="filterBy" min="-2" max="-2" attributes="0"/>
+                                      <Component id="filterByTime" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -74,7 +74,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="startDate" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="filterBy" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="filterByTime" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                   <Component id="sortBy" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -198,12 +198,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="endDateActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="filterBy">
+    <Component class="javax.swing.JButton" name="filterByTime">
       <Properties>
         <Property name="text" type="java.lang.String" value="Filter by time"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="filterByActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="filterByTimeActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="viewChart">

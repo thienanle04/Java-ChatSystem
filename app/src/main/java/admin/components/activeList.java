@@ -41,6 +41,7 @@ public class activeList extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -52,7 +53,7 @@ public class activeList extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         startDate = new javax.swing.JTextField();
         endDate = new javax.swing.JTextField();
-        filterBy = new javax.swing.JButton();
+        filterByTime = new javax.swing.JButton();
         viewChart = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
         appOpen = new javax.swing.JTextField();
@@ -87,6 +88,7 @@ public class activeList extends javax.swing.JPanel {
                 return types[columnIndex];
             }
         });
+        filterByTimeActionPerformed(null);
         jScrollPane7.setViewportView(ActiveList);
 
         jLabel14.setText("End Date (yyyy-mm-dd):");
@@ -103,10 +105,10 @@ public class activeList extends javax.swing.JPanel {
             }
         });
 
-        filterBy.setText("Filter by time");
-        filterBy.addActionListener(new java.awt.event.ActionListener() {
+        filterByTime.setText("Filter by time");
+        filterByTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterByActionPerformed(evt);
+                filterByTimeActionPerformed(evt);
             }
         });
 
@@ -173,7 +175,7 @@ public class activeList extends javax.swing.JPanel {
                                                                 .addGroup(layout.createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(filterBy)
+                                                                                .addComponent(filterByTime)
                                                                                 .addPreferredGap(
                                                                                         javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -208,7 +210,7 @@ public class activeList extends javax.swing.JPanel {
                                         .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(filterBy, javax.swing.GroupLayout.PREFERRED_SIZE, 22,
+                                        .addComponent(filterByTime, javax.swing.GroupLayout.PREFERRED_SIZE, 22,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -271,7 +273,7 @@ public class activeList extends javax.swing.JPanel {
         // TODO add your handling code here:
     }// GEN-LAST:event_endDateActionPerformed
 
-    private void filterByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByActionPerformed
+    private void filterByTimeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByActionPerformed
         // TODO add your handling code here:
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
@@ -279,7 +281,6 @@ public class activeList extends javax.swing.JPanel {
         try {
             LocalDate _startDate = start.isEmpty() ? LocalDate.of(1900, 1, 1) : LocalDate.parse(start);
             LocalDate _endDate = end.isEmpty() ? LocalDate.of(2030, 12, 31) : LocalDate.parse(end);
-
 
             java.sql.Date sqlStartDate = java.sql.Date.valueOf(_startDate);
             java.sql.Date sqlEndDate = java.sql.Date.valueOf(_endDate);
@@ -570,8 +571,8 @@ public class activeList extends javax.swing.JPanel {
     private javax.swing.JTable ActiveList;
     private javax.swing.JTextField appOpen;
     private javax.swing.JTextField endDate;
-    private javax.swing.JButton filterBy;
     private javax.swing.JComboBox<String> filterByAppOpen;
+    private javax.swing.JButton filterByTime;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
