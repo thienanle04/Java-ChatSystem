@@ -13,7 +13,7 @@ import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
-import server.model.Model_User_Account;
+import server.model.Model_User_Profile;
 import server.model.Model_Chat_Message;
 
 import java.sql.SQLException;
@@ -62,14 +62,14 @@ public class Service {
                 ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
                 if (message.isAction()) {
                     System.out.println("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "\n");
-                    addClient(sioc, (Model_User_Account) message.getData());
+                    addClient(sioc, (Model_User_Profile) message.getData());
                 }
             }
         });
         server.addEventListener("login", Model_Login.class, new DataListener<Model_Login>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Login t, AckRequest ar) throws Exception {
-                Model_User_Account login = serviceUser.login(t);
+                Model_User_Profile login = serviceUser.login(t);
                 if (login != null) {
                     ar.sendAckData(true, login);
                     addClient(sioc, login);
@@ -79,6 +79,20 @@ public class Service {
                 }
             }
         });
+        server.addEventListener("update_profile", Object.class, new DataListener<Object>() {
+            @Override
+            public void onData(SocketIOClient sioc, Object t, AckRequest ar) throws Exception {
+                try {
+                    Model_User_Profile newUserInfo = new Model_User_Profile(t);
+                    boolean ok = serviceUser.updateProfile(newUserInfo);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
         server.addEventListener("list_chat", Integer.class, new DataListener<Integer>() {
             @Override
             public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
@@ -175,7 +189,7 @@ public class Service {
         }
     }
     
-    private void addClient(SocketIOClient client, Model_User_Account user) {
+    private void addClient(SocketIOClient client, Model_User_Profile user) {
         listClient.add(new Model_Client(client, user));
     }
     

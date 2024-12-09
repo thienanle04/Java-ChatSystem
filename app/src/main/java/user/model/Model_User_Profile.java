@@ -1,10 +1,8 @@
-package server.model;
+package user.model;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 public class Model_User_Profile {
 
@@ -36,6 +34,10 @@ public class Model_User_Profile {
         return address;
     }
 
+    public LocalDate getLocalDateDob() {
+        return dob;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -65,15 +67,10 @@ public class Model_User_Profile {
         this.dob = dob;
     }
 
-    @SuppressWarnings("unchecked")
     public Model_User_Profile(Object json) {
-        JSONObject obj = null;
+        JSONObject obj = (JSONObject) json;
+
         try {
-            if (json instanceof LinkedHashMap) {
-                obj = new JSONObject((LinkedHashMap<String, Object>) json);
-            } else {
-                obj = new JSONObject(json);
-            }
             this.userID = obj.getInt("userID");
             this.userName = obj.getString("userName");
             this.email = obj.getString("email");
@@ -83,6 +80,21 @@ public class Model_User_Profile {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public JSONObject toJsonObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("userID", String.valueOf(this.userID));
+            obj.put("userName", this.userName);
+            obj.put("email", this.email);
+            obj.put("address", this.address);
+            obj.put("dob", this.dob.toString());
+            obj.put("gender", this.gender);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     public Model_User_Profile() {

@@ -12,15 +12,15 @@ public class Model_Client {
         this.client = client;
     }
 
-    public Model_User_Account getUser() {
+    public Model_User_Profile getUser() {
         return user;
     }
 
-    public void setUser(Model_User_Account user) {
+    public void setUser(Model_User_Profile user) {
         this.user = user;
     }
 
-    public Model_Client(SocketIOClient client, Model_User_Account user) {
+    public Model_Client(SocketIOClient client, Model_User_Profile user) {
         this.client = client;
         this.user = user;
     }
@@ -29,5 +29,5 @@ public class Model_Client {
     }
 
     private SocketIOClient client;
-    private Model_User_Account user;
+    private Model_User_Profile user;
 }

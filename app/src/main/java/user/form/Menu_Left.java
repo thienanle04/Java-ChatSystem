@@ -95,7 +95,7 @@ public class Menu_Left extends javax.swing.JPanel {
 
     }
     
-    private void showGroup() {
+    private void showFriend() {
         menuList.removeAll();
         searchBar1.setVisible(false);
         menuList.add(new Friend_Search(), "wrap");
@@ -104,8 +104,8 @@ public class Menu_Left extends javax.swing.JPanel {
         refreshMenuList();
     }
     
-    private void showBox() {
-        searchBar1.setVisible(false);
+    private void showProfile() {
+        PublicEvent.getInstance().getEventMain().editProfile();
     }
     
     private void refreshMenuList() {
@@ -123,8 +123,8 @@ public class Menu_Left extends javax.swing.JPanel {
 
         menu = new javax.swing.JLayeredPane();
         menuMessage = new user.component.MenuButton();
-        menuGroup = new user.component.MenuButton();
-        menuBox = new user.component.MenuButton();
+        menuFriend = new user.component.MenuButton();
+        menuProfile = new user.component.MenuButton();
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
         searchBar1 = new user.component.SearchBar();
@@ -149,34 +149,34 @@ public class Menu_Left extends javax.swing.JPanel {
         });
         menu.add(menuMessage);
 
-        menuGroup.setBackground(new java.awt.Color(242, 242, 242));
-        menuGroup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group.png"))); // NOI18N
-        menuGroup.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group.png"))); // NOI18N
-        menuGroup.setMaximumSize(new java.awt.Dimension(42, 42));
-        menuGroup.setMinimumSize(new java.awt.Dimension(42, 42));
-        menuGroup.setPreferredSize(new java.awt.Dimension(42, 42));
-        menuGroup.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group_selected.png"))); // NOI18N
-        menuGroup.addActionListener(new java.awt.event.ActionListener() {
+        menuFriend.setBackground(new java.awt.Color(242, 242, 242));
+        menuFriend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group.png"))); // NOI18N
+        menuFriend.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group.png"))); // NOI18N
+        menuFriend.setMaximumSize(new java.awt.Dimension(42, 42));
+        menuFriend.setMinimumSize(new java.awt.Dimension(42, 42));
+        menuFriend.setPreferredSize(new java.awt.Dimension(42, 42));
+        menuFriend.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/group_selected.png"))); // NOI18N
+        menuFriend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuGroupActionPerformed(evt);
+                menuFriendActionPerformed(evt);
             }
         });
-        menu.add(menuGroup);
+        menu.add(menuFriend);
 
-        menuBox.setBackground(new java.awt.Color(242, 242, 242));
-        menuBox.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
-        menuBox.setDefaultCapable(false);
-        menuBox.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
-        menuBox.setMaximumSize(new java.awt.Dimension(42, 42));
-        menuBox.setMinimumSize(new java.awt.Dimension(42, 42));
-        menuBox.setPreferredSize(new java.awt.Dimension(42, 42));
-        menuBox.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_selected.png"))); // NOI18N
-        menuBox.addActionListener(new java.awt.event.ActionListener() {
+        menuProfile.setBackground(new java.awt.Color(242, 242, 242));
+        menuProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
+        menuProfile.setDefaultCapable(false);
+        menuProfile.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_default.png"))); // NOI18N
+        menuProfile.setMaximumSize(new java.awt.Dimension(42, 42));
+        menuProfile.setMinimumSize(new java.awt.Dimension(42, 42));
+        menuProfile.setPreferredSize(new java.awt.Dimension(42, 42));
+        menuProfile.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/user/profile_selected.png"))); // NOI18N
+        menuProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuBoxActionPerformed(evt);
+                menuProfileActionPerformed(evt);
             }
         });
-        menu.add(menuBox);
+        menu.add(menuProfile);
 
         sp.setBackground(new java.awt.Color(249, 249, 249));
         sp.setBorder(null);
@@ -223,37 +223,32 @@ public class Menu_Left extends javax.swing.JPanel {
     private void menuMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMessageActionPerformed
         if (!menuMessage.isSelected()) {
             menuMessage.setSelected(true);
-            menuGroup.setSelected(false);
-            menuBox.setSelected(false);
+            menuFriend.setSelected(false);
             showMessage();
         }
     }//GEN-LAST:event_menuMessageActionPerformed
 
-    private void menuGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGroupActionPerformed
-        if (!menuGroup.isSelected()) {
+    private void menuFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFriendActionPerformed
+        if (!menuFriend.isSelected()) {
             menuMessage.setSelected(false);
-            menuGroup.setSelected(true);
-            menuBox.setSelected(false);
-            showGroup();
+            menuFriend.setSelected(true);
+            showFriend();
         }
-    }//GEN-LAST:event_menuGroupActionPerformed
+    }//GEN-LAST:event_menuFriendActionPerformed
 
-    private void menuBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBoxActionPerformed
-        if (!menuBox.isSelected()) {
-            menuMessage.setSelected(false);
-            menuGroup.setSelected(false);
-            menuBox.setSelected(true);
-            showBox();
+    private void menuProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuProfileActionPerformed
+        if (!menuProfile.isSelected()) {
+            showProfile();
         }
-    }//GEN-LAST:event_menuBoxActionPerformed
+    }//GEN-LAST:event_menuProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane menu;
-    private user.component.MenuButton menuBox;
-    private user.component.MenuButton menuGroup;
+    private user.component.MenuButton menuFriend;
     private javax.swing.JLayeredPane menuList;
     private user.component.MenuButton menuMessage;
+    private user.component.MenuButton menuProfile;
     private user.component.SearchBar searchBar1;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables

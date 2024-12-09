@@ -2,7 +2,7 @@ package user.service;
 
 import user.event.PublicEvent;
 import user.model.Model_Chat_Message;
-import user.model.Model_User_Account;
+import user.model.Model_User_Profile;
 import user.model.Model_Group_Chat;
 
 import io.socket.client.IO;
@@ -25,7 +25,7 @@ public class Service {
     private Socket client;
     private final int PORT_NUMBER = 9999;
     private final String IP = "localhost";
-    private Model_User_Account user;
+    private Model_User_Profile user;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -107,11 +107,11 @@ public class Service {
         return client;
     }
 
-    public Model_User_Account getUser() {
+    public Model_User_Profile getUser() {
         return user;
     }
 
-    public void setUser(Model_User_Account user) {
+    public void setUser(Model_User_Profile user) {
         this.user = user;
     }
 

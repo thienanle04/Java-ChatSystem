@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
+import io.socket.client.Ack;
 import user.model.Model_Group_Chat;
 import user.event.EventMain;
 import user.event.PublicEvent;
@@ -11,10 +12,22 @@ import user.service.Service;
 import java.awt.EventQueue;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import user.form.UpdateProfile;
+import user.model.Model_User_Profile;
 
 public class Main extends javax.swing.JFrame {
-
+    UpdateProfile updateProfile;
+    
     public Main() {
         initComponents();
         init();
@@ -22,6 +35,8 @@ public class Main extends javax.swing.JFrame {
 
     private void init() {
         setIconImage(new ImageIcon(getClass().getResource("/user/icon.png")).getImage());
+        updateProfile = new UpdateProfile(this);
+        updateProfile.setVisible(false);
         login.setVisible(true);
         loading.setVisible(false);
         home.setVisible(false);
@@ -42,6 +57,7 @@ public class Main extends javax.swing.JFrame {
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_chat", Service.getInstance().getUser().getUserID());
                 Service.getInstance().getClient().emit("get_all_chats", Service.getInstance().getUser().getUserID());
+                updateProfile.setUser(Service.getInstance().getUser());
             }
 
             @Override
@@ -53,9 +69,73 @@ public class Main extends javax.swing.JFrame {
             public void updateChat(Model_Group_Chat chat) {
                 home.updateChat(chat);
             }
+            
+            @Override
+            public void editProfile() {
+                updateProfile.setUser(Service.getInstance().getUser());
+                updateProfile.setVisible(true);
+            }
 
+            @Override
+            public void updateProfile(Model_User_Profile newUserInfo) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
+                        Service.getInstance().getClient().emit("update_profile", newUserInfo.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    if (action) {
+                                        Service.getInstance().setUser(newUserInfo);
+                                        showNotificationDialog("Update Profile Success");
+                                    } else {
+                                        showNotificationDialog("Update Profile Failed");
+                                    }
+                                }
+                                PublicEvent.getInstance().getEventMain().showLoading(false);
+                            }
+                        });
+                    }
+                }).start();
+            }
+
+            @Override
+            public void showNotification(String message) {
+                Main.this.showNotificationDialog(message);
+            }
         });
     }
+
+    public void showNotificationDialog(String message) {
+        // Create a JDialog
+        JDialog dialog = new JDialog(this, "Notification", false);
+        dialog.setLayout(new BorderLayout());
+        JTextArea textArea = new JTextArea(message);
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
+        textArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        dialog.add(new JScrollPane(textArea), BorderLayout.CENTER);
+
+        // Add OK button
+        JPanel buttonPanel = new JPanel();
+        JButton okButton = new JButton("OK");
+        buttonPanel.add(okButton);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Action to close dialog when OK is pressed
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose(); // Close the dialog
+            }
+        });
+
+        dialog.setSize(300, 115);
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(this); // Center dialog
+        dialog.setVisible(true);
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.

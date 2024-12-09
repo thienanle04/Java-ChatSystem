@@ -7,7 +7,7 @@ import user.event.PublicEvent;
 import user.model.Model_Login;
 import user.model.Model_Message;
 import user.model.Model_Register;
-import user.model.Model_User_Account;
+import user.model.Model_User_Profile;
 import user.service.Service;
 import user.swing.PanelSlider;
 import io.socket.client.Ack;
@@ -32,7 +32,7 @@ public class Login extends javax.swing.JPanel {
 
             @Override
             public void login(Model_Login data) {
-                new Thread(new Runnable() {
+                Thread sendLogin = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         PublicEvent.getInstance().getEventMain().showLoading(true);
@@ -42,7 +42,7 @@ public class Login extends javax.swing.JPanel {
                                 if (os.length > 0) {
                                     boolean action = (Boolean) os[0];
                                     if (action) {
-                                        Service.getInstance().setUser(new Model_User_Account(os[1]));
+                                        Service.getInstance().setUser(new Model_User_Profile(os[1]));
                                         PublicEvent.getInstance().getEventMain().showLoading(false);
                                         PublicEvent.getInstance().getEventMain().initChat();
                                     } else {
@@ -54,9 +54,21 @@ public class Login extends javax.swing.JPanel {
                                 }
                             }
                         });
-
                     }
-                }).start();
+                });
+                sendLogin.start();
+
+                try {
+                    Thread.sleep(1000);
+                    if (sendLogin.isAlive()) {
+                        sendLogin.interrupt();
+                    }
+                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                    PublicEvent.getInstance().getEventMain().showNotification("Login Failed! Please try again.\nServer takes too long to response.");
+                } catch (Exception e) {
+                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                    PublicEvent.getInstance().getEventMain().showNotification("Login Failed! Some error occurred.");
+                }
             }
 
             @Override
@@ -67,7 +79,7 @@ public class Login extends javax.swing.JPanel {
                         if (os.length > 0) {
                             Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
                             if (ms.isAction()) {
-                                Model_User_Account user = new Model_User_Account(os[2]);
+                                Model_User_Profile user = new Model_User_Profile(os[2]);
                                 Service.getInstance().setUser(user);
                             }
                             message.callMessage(ms);

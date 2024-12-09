@@ -1,28 +1,42 @@
 package user.form;
 
 import user.model.Model_Group_Chat;
+import java.awt.CardLayout;
 import net.miginfocom.swing.MigLayout;
 
 public class Home extends javax.swing.JLayeredPane {
 
+    private javax.swing.JLayeredPane content;
     private Chat chat;
+    private CardLayout cardLayout;
 
     public Home() {
         initComponents();
         init();
     }
+    
+    private void initCardLayout() {
+        cardLayout = new CardLayout();
+        content = new javax.swing.JLayeredPane();
+        
+        content.setLayout(cardLayout);
+        
+        chat = new Chat();
+        
+        content.add(chat, "chat");
+        
+        cardLayout.show(content, "chat");
+        this.add(content);
+    }
 
     private void init() {
         setLayout(new MigLayout("fill", "0[fill,230!][fill, grow]0", "0[fill]0"));
         this.add(new Menu_Left());
-        chat = new Chat();
-        this.add(chat);
-        chat.setVisible(false);
+        initCardLayout();
     }
 
     public void setChat(Model_Group_Chat groupChat) {
         chat.setChat(groupChat);
-        chat.setVisible(true);
     }
 
     public void updateChat(Model_Group_Chat groupChat) {

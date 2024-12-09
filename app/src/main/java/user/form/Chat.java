@@ -91,12 +91,20 @@ public class Chat extends javax.swing.JPanel {
         add(chat_Title1, "wrap");
         add(chatBody, "wrap");
         add(chatBottom, "h ::50%");
+
+        chat_Title1.setVisible(false);
+        chatBody.setVisible(false);
+        chatBottom.setVisible(false);
     }
 
     public void setChat(Model_Group_Chat groupChat) {
         chat_Title1.setChatName(groupChat);
         chatBottom.setChat(groupChat);
         chatBody.clearChat();
+
+        chat_Title1.setVisible(true);
+        chatBody.setVisible(true);
+        chatBottom.setVisible(true);
 
         if (chats_data.containsKey(groupChat.getGroupId())) {
             LinkedList<Model_Chat_Message> messages = chats_data.get(groupChat.getGroupId());
