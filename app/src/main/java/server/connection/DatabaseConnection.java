@@ -11,8 +11,8 @@ public class DatabaseConnection {
     private final String server = "localhost";
     private final String port = "3306";
     private final String database = "chatsystem";
-    private final String userName = "JavaChatSystem";
-    private final String password = "javachatsystem";
+    private final String userName = "admin";
+    private final String password = "*Nghia1692004";
 
     // Private constructor to prevent instantiation
     private DatabaseConnection() { }

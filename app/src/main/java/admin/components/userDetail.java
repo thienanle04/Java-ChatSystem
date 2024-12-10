@@ -53,6 +53,9 @@ public class userDetail extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -194,7 +197,7 @@ public class userDetail extends javax.swing.JPanel {
                                                 .addComponent(jLabel3)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(filterByUsername, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        81, Short.MAX_VALUE)
+                                                        124, Short.MAX_VALUE)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -208,7 +211,7 @@ public class userDetail extends javax.swing.JPanel {
                                                 .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 135, Short.MAX_VALUE))
+                                                .addGap(0, 177, Short.MAX_VALUE))
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
                                                 .createSequentialGroup()
@@ -226,10 +229,11 @@ public class userDetail extends javax.swing.JPanel {
                                                 .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 112,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(setRoleAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, 135,
-                                                        Short.MAX_VALUE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(lock)))
+                                                .addComponent(setRoleAdmin)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lock)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addContainerGap()));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,10 +257,8 @@ public class userDetail extends javax.swing.JPanel {
                                         .addComponent(jLabel3)
                                         .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(delete_button)
                                         .addComponent(update_button)

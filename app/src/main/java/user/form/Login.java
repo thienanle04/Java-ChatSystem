@@ -42,9 +42,16 @@ public class Login extends javax.swing.JPanel {
                                 if (os.length > 0) {
                                     boolean action = (Boolean) os[0];
                                     if (action) {
-                                        Service.getInstance().setUser(new Model_User_Profile(os[1]));
-                                        PublicEvent.getInstance().getEventMain().showLoading(false);
-                                        PublicEvent.getInstance().getEventMain().initChat();
+                                        String role = (String) os[2];
+                                        if (role.equals("user")) {
+                                            Service.getInstance().setUser(new Model_User_Profile(os[1]));
+                                            PublicEvent.getInstance().getEventMain().showLoading(false);
+                                            PublicEvent.getInstance().getEventMain().initChat();
+                                        }
+                                        else {
+                                            PublicEvent.getInstance().getEventMain().showLoading(false);
+                                            PublicEvent.getInstance().getEventMain().initAdminApp();
+                                        }
                                     } else {
                                         //  password wrong
                                         PublicEvent.getInstance().getEventMain().showLoading(false);

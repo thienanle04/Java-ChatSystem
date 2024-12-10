@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <Properties>
-    <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Admin"/>
-  </Properties>
-  <SyntheticProperties>
-    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
-  </SyntheticProperties>
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="admin.components.spamReports" name="spamReports1">
+    </Component>
+    <Component class="admin.components.newUserRegistration" name="newUserRegistration1">
+    </Component>
+  </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -24,33 +22,25 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="AdminHomePage" min="-2" pref="904" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-          </Group>
+          <Component id="adminHomePage" alignment="0" pref="878" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="AdminHomePage" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
+          <Component id="adminHomePage" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JTabbedPane" name="AdminHomePage">
+    <Container class="javax.swing.JTabbedPane" name="adminHomePage">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
         <Component class="admin.components.userDetail" name="userDetail1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="User Detail">
-                <Property name="tabTitle" type="java.lang.String" value="User Detail"/>
+              <JTabbedPaneConstraints tabName="User Details">
+                <Property name="tabTitle" type="java.lang.String" value="User Details"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -58,8 +48,8 @@
         <Component class="admin.components.loginHistory" name="loginHistory1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Logged In History">
-                <Property name="tabTitle" type="java.lang.String" value="Logged In History"/>
+              <JTabbedPaneConstraints tabName="Login History">
+                <Property name="tabTitle" type="java.lang.String" value="Login History"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -73,7 +63,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="admin.components.spamReports" name="spamReports1">
+        <Component class="admin.components.spamReports" name="spamReports2">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Spam Reports">
@@ -82,7 +72,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="admin.components.newUserRegistration" name="newUserRegistration1">
+        <Component class="admin.components.newUserRegistration" name="newUserRegistration2">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="New User Registration">

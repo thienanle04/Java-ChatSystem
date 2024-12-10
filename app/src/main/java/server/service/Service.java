@@ -71,7 +71,8 @@ public class Service {
             public void onData(SocketIOClient sioc, Model_Login t, AckRequest ar) throws Exception {
                 Model_User_Profile login = serviceUser.login(t);
                 if (login != null) {
-                    ar.sendAckData(true, login);
+                    String role = serviceUser.getRole(login.getUserID());
+                    ar.sendAckData(true, login, role);
                     addClient(sioc, login);
                     userConnect(login.getUserID());
                 } else {
