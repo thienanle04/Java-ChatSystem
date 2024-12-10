@@ -1,17 +1,16 @@
 package server.service;
 
 import server.connection.DatabaseConnection;
-import server.model.Model_Client;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
-import server.model.Model_User_Account;
+import server.model.Model_User_Profile;
+
+import java.time.LocalDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServiceUser {
 
@@ -31,7 +30,7 @@ public class ServiceUser {
             PreparedStatement p = con.prepareStatement(CHECK_USER);
             p.setString(1, data.getUserName());
             ResultSet r = p.executeQuery();
-            if (r.first()) {
+            if (r.next()) {
                 message.setAction(false);
                 message.setMessage("User Already Exit");
             } else {
@@ -45,23 +44,18 @@ public class ServiceUser {
                 p = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS);
                 p.setString(1, data.getUserName());
                 p.setString(2, data.getPassword());
+                p.setString(3, data.getEmail());
                 p.execute();
                 r = p.getGeneratedKeys();
                 r.first();
                 int userID = r.getInt(1);
                 r.close();
                 p.close();
-                //  Create user account
-                p = con.prepareStatement(INSERT_USER_ACCOUNT);
-                p.setInt(1, userID);
-                p.setString(2, data.getUserName());
-                p.execute();
-                p.close();
                 con.commit();
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Account(userID, data.getUserName(), "", "", true));
+                message.setData(new Model_User_Profile(userID, data.getUserName(), data.getEmail(), "", "", null));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -77,57 +71,86 @@ public class ServiceUser {
         return message;
     }
 
-    public Model_User_Account login(Model_Login login) throws SQLException {
-        Model_User_Account data = null;
+    public Model_User_Profile login(Model_Login login) throws SQLException {
+        Model_User_Profile data = null;
         PreparedStatement p = con.prepareStatement(LOGIN);
         p.setString(1, login.getUserName());
         p.setString(2, login.getPassword());
         ResultSet r = p.executeQuery();
-        if (r.first()) {
+        if (r.next()) {
             int userID = r.getInt(1);
             String userName = r.getString(2);
-            String gender = r.getString(3);
-            String image = r.getString(4);
-            data = new Model_User_Account(userID, userName, gender, image, true);
+            String email = r.getString(3);
+            String address = r.getString(4);
+            String gender = r.getString(5);
+            LocalDate dob = r.getDate(6).toLocalDate();
+            data = new Model_User_Profile(userID, userName, email, address, gender, dob);
+            // Set Status Online
+            p = con.prepareStatement(SET_STATUS);
+            p.setString(1, "online");
+            p.setInt(2, userID);
+            p.execute();
+
+            // Set Login History
+            p = con.prepareStatement("insert into login_history (user_id) values (?)");
+            p.setInt(1, userID);
+            p.execute();
         }
         r.close();
         p.close();
         return data;
     }
 
-    public List<Model_User_Account> getUser(int exitUser) throws SQLException {
-        List<Model_User_Account> list = new ArrayList<>();
-        PreparedStatement p = con.prepareStatement(SELECT_USER_ACCOUNT);
-        p.setInt(1, exitUser);
-        ResultSet r = p.executeQuery();
-        while (r.next()) {
-            int userID = r.getInt(1);
-            String userName = r.getString(2);
-            String gender = r.getString(3);
-            String image = r.getString(4);
-            list.add(new Model_User_Account(userID, userName, gender, image, checkUserStatus(userID)));
+    // Return if update success or failed
+    boolean updateProfile(Model_User_Profile newProfile) throws SQLException {
+        try {
+            PreparedStatement p = con.prepareStatement("update users set username=?, email=?, address=?, gender=?, date_of_birth=? where user_id=?");
+            p.setString(1, newProfile.getUserName());
+            p.setString(2, newProfile.getEmail());
+            p.setString(3, newProfile.getAddress());
+            p.setString(4, newProfile.getGender());
+            p.setDate(5, java.sql.Date.valueOf(newProfile.getDob()));
+            p.setInt(6, newProfile.getUserID());
+            p.execute();
+            p.close(); 
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        r.close();
-        p.close();
-        return list;
     }
 
-    private boolean checkUserStatus(int userID) {
-        List<Model_Client> clients = Service.getInstance().getListClient();
-        for (Model_Client c : clients) {
-            if (c.getUser().getUserID() == userID) {
-                return true;
-            }
+    // Return list of private chat (2 person chat) of user
+    public void userDisconnect(int userID) throws SQLException {
+        PreparedStatement p = con.prepareStatement(SET_STATUS);
+        p.setString(1, "offline");
+        p.setInt(2, userID);
+        p.execute();
+        p.close();
+    }
+
+    // Get user profile (all information)
+    public Model_User_Profile getUserProfile (int userId) throws SQLException {
+        Model_User_Profile profile = null;
+        PreparedStatement p = con.prepareStatement("SELECT user_id, username, email, address, gender, date_of_birth FROM users where user_id=?");
+        p.setInt(1, userId);
+        ResultSet rs = p.executeQuery();
+        if (rs.next()) {
+            int userID = rs.getInt(1);
+            String userName = rs.getString(2);
+            String email = rs.getString(3);
+            String address = rs.getString(4);
+            String gender = rs.getString(5);
+            LocalDate dob = rs.getDate(6).toLocalDate();
+            profile = new Model_User_Profile(userID, userName, email, address, gender, dob);
         }
-        return false;
+        return profile;
     }
 
     //  SQL
-    private final String LOGIN = "select UserID, user_account.UserName, Gender, ImageString from `user` join user_account using (UserID) where `user`.UserName=BINARY(?) and `user`.`Password`=BINARY(?) and user_account.`Status`='1'";
-    private final String SELECT_USER_ACCOUNT = "select UserID, UserName, Gender, ImageString from user_account where user_account.`Status`='1' and UserID<>?";
-    private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
-    private final String INSERT_USER_ACCOUNT = "insert into user_account (UserID, UserName) values (?,?)";
-    private final String CHECK_USER = "select UserID from user where UserName =? limit 1";
+    private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
+    private final String SET_STATUS = "update users set status=? where user_id=?";
+    private final String INSERT_USER = "insert into users (username, password_hash, email) values (?,?,?)";
+    private final String CHECK_USER = "select user_id from users where username =? limit 1";
     //  Instance
     private final Connection con;
 }

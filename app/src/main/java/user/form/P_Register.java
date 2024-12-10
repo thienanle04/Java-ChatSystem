@@ -1,8 +1,10 @@
 package user.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
-
+import user.event.EventMessage;
 import user.event.PublicEvent;
+import user.model.Model_Message;
+import user.model.Model_Register;
 
 public class P_Register extends javax.swing.JPanel {
 
@@ -16,32 +18,29 @@ public class P_Register extends javax.swing.JPanel {
                 + "font:-2;");
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         lbTitle = new javax.swing.JLabel();
-        username = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         txtUser = new javax.swing.JTextField();
-        password = new javax.swing.JLabel();
-        txtPass = new javax.swing.JPasswordField();
+        jLabel2 = new javax.swing.JLabel();
         cmdRegister = new javax.swing.JButton();
         cmdBackLogin = new javax.swing.JButton();
-        txtRePassword = new javax.swing.JPasswordField();
-        email = new javax.swing.JLabel();
+        txtPass = new javax.swing.JPasswordField();
+        jLabel3 = new javax.swing.JLabel();
         lbError = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(281, 328));
-        setMinimumSize(new java.awt.Dimension(281, 328));
 
         lbTitle.setForeground(new java.awt.Color(87, 87, 87));
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTitle.setText("Register");
 
-        username.setText("User Name");
+        jLabel1.setText("User Name");
 
-        password.setText("Password");
+        jLabel2.setText("Email");
 
         cmdRegister.setText("Register");
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -51,7 +50,7 @@ public class P_Register extends javax.swing.JPanel {
         });
 
         cmdBackLogin.setForeground(new java.awt.Color(15, 128, 206));
-        cmdBackLogin.setText("Go back");
+        cmdBackLogin.setText("Back Login");
         cmdBackLogin.setContentAreaFilled(false);
         cmdBackLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmdBackLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -60,7 +59,7 @@ public class P_Register extends javax.swing.JPanel {
             }
         });
 
-        email.setText("Email");
+        jLabel3.setText("Password");
 
         lbError.setForeground(new java.awt.Color(255, 0, 0));
         lbError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -71,18 +70,22 @@ public class P_Register extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmdBackLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmdRegister, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPass, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtUser)
-                    .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(password, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                    .addComponent(txtRePassword, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(email, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmdBackLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmdRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                            .addComponent(txtPass)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                            .addComponent(txtEmail))))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -91,24 +94,24 @@ public class P_Register extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(lbTitle)
                 .addGap(20, 20, 20)
-                .addComponent(username)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(password)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(email)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtRePassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(cmdRegister)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdBackLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbError)
-                .addGap(0, 42, Short.MAX_VALUE))
+                .addGap(0, 30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -117,19 +120,41 @@ public class P_Register extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdBackLoginActionPerformed
 
     private void cmdRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRegisterActionPerformed
-        //TODO: Register
+        String userName = txtUser.getText().trim();
+        String email = txtEmail.getText().trim();
+        String password = String.valueOf(txtPass.getPassword());
+        if (userName.equals("")) {
+            txtUser.grabFocus();
+        } else if (email.equals("")) {
+            txtEmail.grabFocus();
+        } else if (password.equals("")) {
+            txtEmail.grabFocus();
+        } else {
+            Model_Register data = new Model_Register(userName, password, email);
+            PublicEvent.getInstance().getEventLogin().register(data, new EventMessage() {
+                @Override
+                public void callMessage(Model_Message message) {
+                    if (!message.isAction()) {
+                        lbError.setText(message.getMessage());
+                    } else {
+                        PublicEvent.getInstance().getEventMain().initChat();
+                    }
+                }
+            });
+        }
     }//GEN-LAST:event_cmdRegisterActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdBackLogin;
     private javax.swing.JButton cmdRegister;
-    private javax.swing.JLabel email;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbError;
     private javax.swing.JLabel lbTitle;
-    private javax.swing.JLabel password;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPass;
-    private javax.swing.JPasswordField txtRePassword;
     private javax.swing.JTextField txtUser;
-    private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

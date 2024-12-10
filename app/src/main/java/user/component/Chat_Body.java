@@ -1,54 +1,51 @@
 package user.component;
 
-import java.awt.Color;
+import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.Adjustable;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
-import user.swing.ScrollBar;
+
+import user.model.Model_Chat_Message;
 
 public class Chat_Body extends javax.swing.JPanel {
 
     public Chat_Body() {
         initComponents();
         init();
-        
-        addDate("11/06/2024");
-        addItemLeft("Hey! How’s everything going with you?", "Phuoc Nghia");
-        addItemRight("Hey! I'm good, just been super busy with work. How about you?");
-        
-        addDate("Today");
-        addItemLeft("Same here! Work has been non-stop lately. But I'm looking forward to the weekend.", "Phuoc Nghia");
-        addItemRight("Oh, nice! Got any plans?");
-        
-        addItemLeft("Not sure yet, maybe catching up on some sleep. Or I might go hiking if the weahter's nice. You?", "Phuoc Nghia");
-        addItemRight("That sounds awesome! I've been meaning to go hiking too. I might just relax, though. I could use a lazy weekend.");
-    
-        addItemLeft("Totally understand. Sometimes doing nothing is the best plan.", "Phuoc Nghia");
-        addItemRight("Haha, exactly!");
     }
 
     private void init() {
         body.setLayout(new MigLayout("fillx", "", "5[bottom]5"));
-        sp.setVerticalScrollBar(new ScrollBar());
-        sp.getVerticalScrollBar().setBackground(Color.WHITE);
-        
+        sp.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
+                + "width:5;"
+                + "background:null;"
+                + "trackInsets:5,0,5,0;"
+                + "thumbInsets:5,0,5,0;");
+        sp.getVerticalScrollBar().setUnitIncrement(10);
     }
 
-    public void addItemLeft(String text, String user) {
+    public void addItemLeft(Model_Chat_Message data) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(text);
-        item.setUserProfile(user);
-        body.add(item, "wrap, w 100::50%");
-        body.repaint();
-        body.revalidate();
+        item.setText(data.getMessage());
+        item.setTime();
+        item.setUserProfile(data.getUserName());
+        body.add(item, "wrap, w 100::60%");
+        repaint();
+        revalidate();
     }
 
-    public void addItemRight(String text) {
+    public void addItemRight(Model_Chat_Message data) {
         Chat_Right item = new Chat_Right();
-        item.setText(text);
-        body.add(item, "wrap, al right, w 100::50%");
-        body.repaint();
-        body.revalidate();
+        item.setText(data.getMessage());
+        item.setTime();
+        body.add(item, "wrap, al right, w 100::60%");
+        repaint();
+        revalidate();
+        scrollToBottom();
     }
-    
+
     public void addDate(String date) {
         Chat_Date item = new Chat_Date();
         item.setDate(date);
@@ -56,8 +53,13 @@ public class Chat_Body extends javax.swing.JPanel {
         body.repaint();
         body.revalidate();
     }
-    
-    @SuppressWarnings("unchecked")
+
+    public void clearChat() {
+        body.removeAll();
+        repaint();
+        revalidate();
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -94,8 +96,22 @@ public class Chat_Body extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void scrollToBottom() {
+        JScrollBar verticalBar = sp.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables
+
 }

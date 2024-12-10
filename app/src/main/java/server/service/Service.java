@@ -7,22 +7,27 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+
 import server.model.Model_Client;
+import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
-import server.model.Model_Receive_Message;
 import server.model.Model_Register;
-import server.model.Model_Send_Message;
-import server.model.Model_User_Account;
+import server.model.Model_User_Profile;
+import server.model.Model_Chat_Message;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Collections;
 
 public class Service {
     
     private static Service instance;
     private SocketIOServer server;
+    private ServiceMessage serviceMessage;
     private ServiceUser serviceUser;
     private final List<Model_Client> listClient;
     private final int PORT_NUMBER = 9999;
@@ -36,6 +41,7 @@ public class Service {
     
     private Service() {
         serviceUser = new ServiceUser();
+        serviceMessage = new ServiceMessage();
         listClient = Collections.synchronizedList(new ArrayList<>());
     }
     
@@ -56,15 +62,14 @@ public class Service {
                 ar.sendAckData(message.isAction(), message.getMessage(), message.getData());
                 if (message.isAction()) {
                     System.out.println("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "\n");
-                    server.getBroadcastOperations().sendEvent("list_user", (Model_User_Account) message.getData());
-                    addClient(sioc, (Model_User_Account) message.getData());
+                    addClient(sioc, (Model_User_Profile) message.getData());
                 }
             }
         });
         server.addEventListener("login", Model_Login.class, new DataListener<Model_Login>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Login t, AckRequest ar) throws Exception {
-                Model_User_Account login = serviceUser.login(t);
+                Model_User_Profile login = serviceUser.login(t);
                 if (login != null) {
                     ar.sendAckData(true, login);
                     addClient(sioc, login);
@@ -74,23 +79,77 @@ public class Service {
                 }
             }
         });
-        server.addEventListener("list_user", Integer.class, new DataListener<Integer>() {
+        server.addEventListener("update_profile", Object.class, new DataListener<Object>() {
+            @Override
+            public void onData(SocketIOClient sioc, Object t, AckRequest ar) throws Exception {
+                try {
+                    Model_User_Profile newUserInfo = new Model_User_Profile(t);
+                    boolean ok = serviceUser.updateProfile(newUserInfo);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
+        server.addEventListener("list_chat", Integer.class, new DataListener<Integer>() {
             @Override
             public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
                 try {
-                    List<Model_User_Account> list = serviceUser.getUser(userID);
-                    sioc.sendEvent("list_user", list.toArray());
+                    List<Model_Group_Chat> list = serviceMessage.getChatListId(userID);
+                    sioc.sendEvent("list_chat", list.toArray());
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
             }
         });
-        server.addEventListener("send_to_user", Model_Send_Message.class, new DataListener<Model_Send_Message>() {
+
+        server.addEventListener("get_all_chats", Integer.class, new DataListener<Integer>() {
             @Override
-            public void onData(SocketIOClient sioc, Model_Send_Message t, AckRequest ar) throws Exception {
-                sendToClient(t, ar);
+            public void onData(SocketIOClient sioc, Integer userID, AckRequest ar) throws Exception {
+                try {
+                    HashMap<Integer, LinkedList<Model_Chat_Message>> data = serviceMessage.getAllChat(userID);
+                    sioc.sendEvent("get_all_chats", data);
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
             }
         });
+
+        server.addEventListener("send_to_user", Model_Chat_Message.class, new DataListener<Model_Chat_Message>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Chat_Message t, AckRequest ar) throws Exception {
+                try {
+                    // Save the message to the database
+                    Model_Chat_Message receive_Message = serviceMessage.saveMessage(t);
+
+                    if (receive_Message != null) {
+                        ar.sendAckData(true, receive_Message.getMessageID());
+
+                        // Get the list of users in the group chat
+                        List<Integer> list = serviceMessage.getUserListInGroupChat(t.getGroupID());
+                        
+                        // Send the message to the user
+                        for (Model_Client c : listClient) {
+                            if (list.contains(c.getUser().getUserID())) {
+                                if (c.getUser().getUserID() == t.getSenderID()) {
+                                    continue;
+                                }
+                                c.getClient().sendEvent("receive_ms", receive_Message);
+                                break;
+                            }
+                        }
+                        
+                    } else {
+                        ar.sendAckData(false);
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        });
+        
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient sioc) {
@@ -106,24 +165,32 @@ public class Service {
     }
     
     private void userConnect(int userID) {
-        server.getBroadcastOperations().sendEvent("user_status", userID, true);
+        try {
+            List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
+            for (Integer chatId : chatIds) {
+                server.getBroadcastOperations().sendEvent("user_status", chatId, true);
+            }
+        }
+        catch (SQLException e) {
+            System.err.println(e);
+        }
     }
     
     private void userDisconnect(int userID) {
-        server.getBroadcastOperations().sendEvent("user_status", userID, false);
-    }
-    
-    private void addClient(SocketIOClient client, Model_User_Account user) {
-        listClient.add(new Model_Client(client, user));
-    }
-    
-    private void sendToClient(Model_Send_Message data, AckRequest ar) {
-        for (Model_Client c : listClient) {
-            if (c.getUser().getUserID() == data.getToUserID()) {
-                c.getClient().sendEvent("receive_ms", new Model_Receive_Message(data.getMessageType(), data.getFromUserID(), data.getText()));
-                break;
+        try {
+            List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
+            for (Integer chatId : chatIds) {
+                server.getBroadcastOperations().sendEvent("user_status", chatId, false);
+                serviceUser.userDisconnect(userID);
             }
         }
+        catch (SQLException e) {
+            System.err.println(e);
+        }
+    }
+    
+    private void addClient(SocketIOClient client, Model_User_Profile user) {
+        listClient.add(new Model_Client(client, user));
     }
     
     public int removeClient(SocketIOClient client) {

@@ -1,11 +1,11 @@
 package user.event;
 
-import user.model.Model_User_Account;
+import user.model.Model_Group_Chat;
 import java.util.List;
 
 public interface EventMenuLeft {
 
-    public void newUser(List<Model_User_Account> users);
+    public void newChat(List<Model_Group_Chat> chats);
 
     public void userConnect(int userID);
 

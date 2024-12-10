@@ -1,11 +1,19 @@
 package user.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import user.swing.PanelSlider;
-import user.event.PublicEvent;
 import user.event.EventLogin;
+import user.event.EventMessage;
+import user.event.PublicEvent;
+import user.model.Model_Login;
+import user.model.Model_Message;
+import user.model.Model_Register;
+import user.model.Model_User_Profile;
+import user.service.Service;
+import user.swing.PanelSlider;
+import io.socket.client.Ack;
 
 public class Login extends javax.swing.JPanel {
+
     public Login() {
         initComponents();
         init();
@@ -19,18 +27,78 @@ public class Login extends javax.swing.JPanel {
         slide.showSlid(login, PanelSlider.SliderType.NONE);
         lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+5;");
-                
+
         PublicEvent.getInstance().addEventLogin(new EventLogin() {
+
+            @Override
+            public void login(Model_Login data) {
+                Thread sendLogin = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
+                        Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    if (action) {
+                                        Service.getInstance().setUser(new Model_User_Profile(os[1]));
+                                        PublicEvent.getInstance().getEventMain().showLoading(false);
+                                        PublicEvent.getInstance().getEventMain().initChat();
+                                    } else {
+                                        //  password wrong
+                                        PublicEvent.getInstance().getEventMain().showLoading(false);
+                                    }
+                                } else {
+                                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                                }
+                            }
+                        });
+                    }
+                });
+                sendLogin.start();
+
+                try {
+                    Thread.sleep(1000);
+                    if (sendLogin.isAlive()) {
+                        sendLogin.interrupt();
+                    }
+                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                    PublicEvent.getInstance().getEventMain().showNotification("Login Failed! Please try again.\nServer takes too long to response.");
+                } catch (Exception e) {
+                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                    PublicEvent.getInstance().getEventMain().showNotification("Login Failed! Some error occurred.");
+                }
+            }
+
+            @Override
+            public void register(Model_Register data, EventMessage message) {
+                Service.getInstance().getClient().emit("register", data.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
+                            if (ms.isAction()) {
+                                Model_User_Profile user = new Model_User_Profile(os[2]);
+                                Service.getInstance().setUser(user);
+                            }
+                            message.callMessage(ms);
+                            //  call message back when done register
+                        }
+                    }
+                });
+            }
+
             @Override
             public void goRegister() {
                 slide.showSlid(register, PanelSlider.SliderType.RIGHT_TO_LEFT);
             }
-            
+
             @Override
             public void goLogin() {
                 slide.showSlid(login, PanelSlider.SliderType.LEFT_TO_RIGHT);
             }
-            
+
             @Override
             public void goResetPassword() {
                 slide.showSlid(resetPassword, PanelSlider.SliderType.RIGHT_TO_LEFT);
@@ -47,7 +115,7 @@ public class Login extends javax.swing.JPanel {
             }
         });
     }
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
