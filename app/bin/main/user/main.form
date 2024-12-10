@@ -107,6 +107,16 @@
                     </Constraint>
                   </Constraints>
                 </Component>
+                <Component class="user.form.VIew_Image" name="vIew_Image">
+                  <AuxValues>
+                    <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="300"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card3"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
                 <Component class="user.form.Home" name="home">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
