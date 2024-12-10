@@ -4,6 +4,11 @@
  */
 package admin.components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
@@ -37,7 +42,7 @@ public class spamReports extends javax.swing.JPanel {
         SpamReports = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         FilterByName = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        lockAccount = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         SortBy = new javax.swing.JComboBox<>();
         FilterByTimeStamp = new javax.swing.JTextField();
@@ -45,21 +50,71 @@ public class spamReports extends javax.swing.JPanel {
 
         SpamReports.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"11-11-2024 2:07:20 ", "nghia"},
-                {"12-11-2024 12:07:20 ", "an"}
+
             },
             new String [] {
-                "Timestamp", "Username"
+                "Timestamp", "ReportBy", "Username"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            Connection conn = DriverManager.getConnection(url, user, password);
+        
+            // Truy vấn dữ liệu
+            String query = """
+                SELECT 
+                    s.report_at AS Timestamp,
+                    ur.username AS ReportBy,
+                    u.username AS Username
+                FROM 
+                    spam_list s
+                JOIN 
+                    users u ON s.report_user = u.user_id
+                JOIN 
+                    users ur ON s.report_by = ur.user_id
+                ORDER BY 
+                    s.report_at DESC
+            """;
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+        
+            // Lấy model từ bảng SpamReports
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) SpamReports.getModel();
+        
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+        
+            // Thêm dữ liệu từ ResultSet vào bảng
+            while (rs.next()) {
+                Object[] row = new Object[]{
+                    rs.getTimestamp("Timestamp"), // Lấy giá trị từ cột report_at
+                    rs.getString("ReportBy"),     // Lấy giá trị từ cột report_by (tên người báo cáo)
+                    rs.getString("Username")      // Lấy giá trị từ cột username (tên người bị báo cáo)
+                };
+                model.addRow(row);
+            }
+        
+            // Đóng kết nối
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
         jScrollPane4.setViewportView(SpamReports);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -71,10 +126,10 @@ public class spamReports extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("Lock Account");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        lockAccount.setText("Lock Account");
+        lockAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                lockAccountActionPerformed(evt);
             }
         });
 
@@ -107,7 +162,7 @@ public class spamReports extends javax.swing.JPanel {
                     .addComponent(jScrollPane4)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton3))
+                        .addComponent(lockAccount))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
@@ -138,7 +193,7 @@ public class spamReports extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(lockAccount)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -176,9 +231,9 @@ public class spamReports extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_FilterByNameActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void lockAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockAccountActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_lockAccountActionPerformed
 
     private void FilterByTimeStampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FilterByTimeStampActionPerformed
         // TODO add your handling code here:
@@ -241,10 +296,10 @@ public class spamReports extends javax.swing.JPanel {
     private javax.swing.JTextField FilterByTimeStamp;
     private javax.swing.JComboBox<String> SortBy;
     private javax.swing.JTable SpamReports;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JButton lockAccount;
     // End of variables declaration//GEN-END:variables
 }

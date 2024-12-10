@@ -4,6 +4,11 @@
  */
 package admin.components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
@@ -45,10 +50,7 @@ public class friendCount extends javax.swing.JPanel {
         filterBy = new javax.swing.JComboBox<>();
 
         FriendCount.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Nghia",  new Integer(5),  new Integer(25), "2018-09-20"},
-                {"An",  new Integer(4),  new Integer(16), "2019-10-20"}
-            },
+            new Object [][] {},
             new String [] {
                 "Username", "Direct Friends Count", "Total Friends Count", "Creation Date"
             }
@@ -61,6 +63,59 @@ public class friendCount extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn dữ liệu
+            String query = """
+                SELECT 
+                    u.username AS Username,
+                    COUNT(DISTINCT uf.friend_id) AS DirectFriendsCount,
+                    (SELECT COUNT(*) FROM user_friends WHERE user_id = u.user_id OR friend_id = u.user_id) AS TotalFriendsCount,
+                    DATE_FORMAT(u.created_at, '%Y-%m-%d') AS CreationDate
+                FROM 
+                    users u
+                LEFT JOIN 
+                    user_friends uf
+                ON 
+                    u.user_id = uf.user_id
+                GROUP BY 
+                    u.user_id
+            """;
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            // Lấy model từ bảng
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) FriendCount.getModel();
+
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+
+            // Thêm dữ liệu từ ResultSet vào bảng
+            while (rs.next()) {
+                Object[] row = new Object[]{
+                    rs.getString("Username"),
+                    rs.getInt("DirectFriendsCount"),
+                    rs.getInt("TotalFriendsCount"),
+                    rs.getString("CreationDate")
+                };
+                model.addRow(row);
+            }
+
+            // Đóng kết nối
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
         jScrollPane6.setViewportView(FriendCount);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -186,7 +241,7 @@ public class friendCount extends javax.swing.JPanel {
 
     private void DirectFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DirectFriendActionPerformed
         // TODO add your handling code here:
-        String directFriend = DirectFriend.getText().trim();
+        String directFriend = DirectFriend.getText().trim().isEmpty() ? "0" : DirectFriend.getText().trim();;
         String _filterBy = (String) filterBy.getSelectedItem();// =, > , < 
         
         if (!directFriend.isEmpty()) {

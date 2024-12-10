@@ -4,6 +4,11 @@
  */
 package admin.components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
@@ -49,11 +54,7 @@ public class newUserRegistration extends javax.swing.JPanel {
         filterByName = new javax.swing.JTextField();
 
         NewUserRegistation.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"2018-09-18", "nghia", "124"},
-                {"2018-10-20", "an", "123"},
-                {"2019-11-24", "hoang", "125"}
-            },
+            new Object [][] {},
             new String [] {
                 "Creation Date", "Username", "Password"
             }
@@ -66,6 +67,51 @@ public class newUserRegistration extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
+        try {
+            // Kết nối đến database
+            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            String user = "admin";
+            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            Connection conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn dữ liệu
+            String query = """
+                SELECT 
+                    DATE_FORMAT(created_at, '%Y-%m-%d') AS CreationDate,
+                    username, 
+                    password_hash 
+                FROM 
+                    users
+            """;
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            // Lấy model từ bảng
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) NewUserRegistation.getModel();
+
+            // Xóa dữ liệu cũ nếu có
+            model.setRowCount(0);
+
+            // Thêm dữ liệu từ ResultSet vào bảng
+            while (rs.next()) {
+                Object[] row = new Object[]{
+                    rs.getString("CreationDate"),
+                    rs.getString("username"),
+                    rs.getString("password_hash")
+                };
+                model.addRow(row);
+            }
+
+            // Đóng kết nối
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
         jScrollPane5.setViewportView(NewUserRegistation);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -176,27 +222,84 @@ public class newUserRegistration extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
-        dataset.addValue(50, "Số lượng", "Tháng 1");
-        dataset.addValue(75, "Số lượng", "Tháng 2");
-        dataset.addValue(120, "Số lượng", "Tháng 3");
+        String inputYear = JOptionPane.showInputDialog(null, "Nhập năm cần xem dữ liệu (yyyy):", "Nhập Năm", JOptionPane.QUESTION_MESSAGE);
+        if (inputYear != null && !inputYear.trim().isEmpty()) {
+            try {
+                int year = Integer.parseInt(inputYear.trim());
 
-        org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
-                "Biểu đồ số lượng người đăng ký",
-                "Tháng",
-                "Số lượng",
-                dataset
-        );
+                // Kết nối đến database
+                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+                String user = "admin";
+                String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+                Connection conn = DriverManager.getConnection(url, user, password);
 
-        org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
+                // Truy vấn dữ liệu
+                String query = """
+                    SELECT 
+                        MONTH(created_at) AS Month, 
+                        COUNT(*) AS UserCount 
+                    FROM 
+                        users 
+                    WHERE 
+                        YEAR(created_at) = ?
+                    GROUP BY 
+                        MONTH(created_at)
+                    ORDER BY 
+                        MONTH(created_at)
+                """;
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, year);
+                ResultSet rs = stmt.executeQuery();
 
-        javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
-        chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
-        chartDialog.setContentPane(chartPanel);
-        chartDialog.setSize(800, 600);
-        chartDialog.setLocationRelativeTo(this);
+                // Chuẩn bị dữ liệu cho biểu đồ
+                org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
 
-        chartDialog.setVisible(true);
+                // Khởi tạo mảng giá trị mặc định cho 12 tháng
+                int[] userCounts = new int[12];
+                while (rs.next()) {
+                    int month = rs.getInt("Month");
+                    int userCount = rs.getInt("UserCount");
+                    userCounts[month - 1] = userCount; // Lưu giá trị cho tháng tương ứng
+                }
+
+                // Thêm dữ liệu vào dataset, đảm bảo đủ 12 cột
+                for (int i = 0; i < 12; i++) {
+                    dataset.addValue(userCounts[i], "Số lượng", "Tháng " + (i + 1));
+                }
+
+                // Tạo biểu đồ cột
+                org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
+                        "Biểu đồ số lượng người đăng ký năm " + year,
+                        "Tháng",
+                        "Số lượng",
+                        dataset
+                );
+
+                // Hiển thị biểu đồ
+                org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
+
+                javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
+                chartDialog.setDefaultCloseOperation(javax.swing.JDialog.DISPOSE_ON_CLOSE);
+                chartDialog.setContentPane(chartPanel);
+                chartDialog.setSize(1200, 600);
+                chartDialog.setLocationRelativeTo(this);
+
+                chartDialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Năm nhập không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Bạn chưa nhập năm!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
     private DefaultTableModel originalModel;
     private void startDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startDateActionPerformed
