@@ -24,7 +24,7 @@ public class ServiceUser {
     }
 
     public Model_Message register(Model_Register data) {
-        //  Check user exit
+        // Check user exit
         Model_Message message = new Model_Message();
         try {
             PreparedStatement p = con.prepareStatement(CHECK_USER);
@@ -32,19 +32,37 @@ public class ServiceUser {
             ResultSet r = p.executeQuery();
             if (r.next()) {
                 message.setAction(false);
-                message.setMessage("User Already Exit");
+                message.setMessage("Username Already Exist");
             } else {
                 message.setAction(true);
             }
             r.close();
             p.close();
+
             if (message.isAction()) {
-                //  Insert User Register
+                p = con.prepareStatement("select user_id from users where email =? limit 1");
+                p.setString(1, data.getEmail());
+                r = p.executeQuery();
+                if (r.next()) {
+                    message.setAction(false);
+                    message.setMessage("Email Already Exist");
+                } else {
+                    message.setAction(true);
+                }
+                r.close();
+                p.close();
+            }
+
+            if (message.isAction()) {
+                // Insert User Register
                 con.setAutoCommit(false);
                 p = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS);
-                p.setString(1, data.getUserName());
-                p.setString(2, data.getPassword());
-                p.setString(3, data.getEmail());
+                p.setString(1, data.getName());
+                p.setString(2, data.getUserName());
+                p.setString(3, data.getPassword());
+                p.setString(4, data.getEmail());
+                LocalDate date = LocalDate.now().minusYears(100);   // Set Date of Birth to current date minus 100 years
+                p.setDate(5, java.sql.Date.valueOf(date));
                 p.execute();
                 r = p.getGeneratedKeys();
                 r.first();
@@ -55,7 +73,7 @@ public class ServiceUser {
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Profile(userID, data.getUserName(), data.getEmail(), "", "", null));
+                message.setData(new Model_User_Profile(userID, data.getUserName(), data.getEmail(), "", "Other", date));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -104,7 +122,7 @@ public class ServiceUser {
     // Return if update success or failed
     boolean updateProfile(Model_User_Profile newProfile) throws SQLException {
         try {
-            PreparedStatement p = con.prepareStatement("update users set username=?, email=?, address=?, gender=?, date_of_birth=? where user_id=?");
+            PreparedStatement p = con.prepareStatement("update users set name=?, email=?, address=?, gender=?, date_of_birth=? where user_id=?");
             p.setString(1, newProfile.getUserName());
             p.setString(2, newProfile.getEmail());
             p.setString(3, newProfile.getAddress());
@@ -112,7 +130,7 @@ public class ServiceUser {
             p.setDate(5, java.sql.Date.valueOf(newProfile.getDob()));
             p.setInt(6, newProfile.getUserID());
             p.execute();
-            p.close(); 
+            p.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -129,9 +147,10 @@ public class ServiceUser {
     }
 
     // Get user profile (all information)
-    public Model_User_Profile getUserProfile (int userId) throws SQLException {
+    public Model_User_Profile getUserProfile(int userId) throws SQLException {
         Model_User_Profile profile = null;
-        PreparedStatement p = con.prepareStatement("SELECT user_id, username, email, address, gender, date_of_birth FROM users where user_id=?");
+        PreparedStatement p = con.prepareStatement(
+                "SELECT user_id, name, email, address, gender, date_of_birth FROM users where user_id=?");
         p.setInt(1, userId);
         ResultSet rs = p.executeQuery();
         if (rs.next()) {
@@ -146,11 +165,11 @@ public class ServiceUser {
         return profile;
     }
 
-    //  SQL
-    private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
+    // SQL
+    private final String LOGIN = "select user_id, name, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";
-    private final String INSERT_USER = "insert into users (username, password_hash, email) values (?,?,?)";
+    private final String INSERT_USER = "insert into users (name, username, password_hash, email, date_of_birth) values (?, ?,?,?,?)";
     private final String CHECK_USER = "select user_id from users where username =? limit 1";
-    //  Instance
+    // Instance
     private final Connection con;
 }

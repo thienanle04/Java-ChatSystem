@@ -30,7 +30,7 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     private void init() {
-        setLayout(new MigLayout("fill", "0[fill,230!][fill, grow]0", "0[fill]0"));
+        setLayout(new MigLayout("fill", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
         this.add(new Menu_Left());
         initCardLayout();
     }

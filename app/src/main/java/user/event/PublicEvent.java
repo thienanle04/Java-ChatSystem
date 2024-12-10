@@ -7,6 +7,7 @@ public class PublicEvent {
     private EventChat eventChat;
     private EventLogin eventLogin;
     private EventMenuLeft eventMenuLeft;
+    private EventUpdateInfo eventUpdateInfo;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
@@ -14,6 +15,15 @@ public class PublicEvent {
         }
         return instance;
     }
+    
+    public void addEventUpdateInfo(EventUpdateInfo event) {
+        this.eventUpdateInfo = event;
+    }
+
+    public EventUpdateInfo getEventUpdateInfo() {
+        return eventUpdateInfo;
+    }
+
 
     private PublicEvent() {
 

@@ -5,6 +5,14 @@ import org.json.JSONObject;
 
 public class Model_Register {
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -29,7 +37,8 @@ public class Model_Register {
         this.email = email;
     }
 
-    public Model_Register(String userName, String password, String email) {
+    public Model_Register(String name, String userName, String password, String email) {
+        this.name = name;
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -38,6 +47,7 @@ public class Model_Register {
     public Model_Register() {
     }
 
+    private String name;
     private String userName;
     private String password;
     private String email;
@@ -45,6 +55,7 @@ public class Model_Register {
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
+            json.put("name", name);
             json.put("userName", userName);
             json.put("password", password);
             json.put("email", email);

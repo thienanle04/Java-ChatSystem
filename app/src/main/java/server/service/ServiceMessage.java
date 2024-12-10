@@ -70,7 +70,7 @@ public class ServiceMessage {
 
             if (type == GroupType.TWO) {
                 // If the group is a two-person chat, then the name of the chat is the name of the other person
-                PreparedStatement p2 = con.prepareStatement("select u.username, u.status from group_members gm join users u on u.user_id = gm.user_id where gm.group_id = ? and gm.user_id <> ? limit 1");
+                PreparedStatement p2 = con.prepareStatement("select u.name, u.status from group_members gm join users u on u.user_id = gm.user_id where gm.group_id = ? and gm.user_id <> ? limit 1");
                 p2.setInt(1, groupID);
                 p2.setInt(2, userId);
                 ResultSet r2 = p2.executeQuery();
@@ -131,7 +131,7 @@ public class ServiceMessage {
                 if (visibility.equals("hidden")) {
                     message = "This message was deleted";
                 }
-                PreparedStatement p2 = con.prepareStatement("select u.username from users u where u.user_id = ? limit 1");
+                PreparedStatement p2 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
                 p2.setInt(1, senderID);
                 ResultSet r2 = p2.executeQuery();
                 r2.next();
