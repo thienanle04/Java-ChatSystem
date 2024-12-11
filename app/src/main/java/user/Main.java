@@ -4,7 +4,7 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
-import io.socket.client.Ack;
+import user.model.Model_Friend;
 import user.model.Model_Group_Chat;
 import user.event.EventMain;
 import user.event.PublicEvent;
@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import user.form.UpdateProfile;
-import user.model.Model_User_Profile;
 
 public class Main extends javax.swing.JFrame {
     UpdateProfile updateProfile;
@@ -61,8 +60,33 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void selectChat(Model_Group_Chat chat) {
+            public void selectChat(Model_Group_Chat chat) { 
+                // If chat is already initialized
                 home.setChat(chat);
+            }
+
+            @Override
+            public void selectChat(Model_Friend profile) {
+                // Do not know whether the chat is already initialized or not
+                // So, we need to check if chat is already initialized by sending request to server
+                // Server will return the chat id
+                // Check if the chat id is already exist in the chat list
+                // If exist, select the chat / If not, create new chat
+            }
+
+            @Override
+            public void showFriendList() {
+                home.showFriendList();
+            }
+
+            @Override
+            public void showFriendRequest() {
+                home.showFriendRequest();
+            }
+
+            @Override
+            public void showFindFriend() {
+
             }
 
             @Override
@@ -75,30 +99,20 @@ public class Main extends javax.swing.JFrame {
                 updateProfile.setUser(Service.getInstance().getUser());
                 updateProfile.setVisible(true);
             }
+            
+            @Override
+            public void goFindNewFriend() {
+                    
+            }
+    
+            @Override
+            public void goViewFriendList() {
+                    
+            }
 
             @Override
-            public void updateProfile(Model_User_Profile newUserInfo) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        PublicEvent.getInstance().getEventMain().showLoading(true);
-                        Service.getInstance().getClient().emit("update_profile", newUserInfo.toJsonObject(), new Ack() {
-                            @Override
-                            public void call(Object... os) {
-                                if (os.length > 0) {
-                                    boolean action = (Boolean) os[0];
-                                    if (action) {
-                                        Service.getInstance().setUser(newUserInfo);
-                                        showNotificationDialog("Update Profile Success");
-                                    } else {
-                                        showNotificationDialog("Update Profile Failed");
-                                    }
-                                }
-                                PublicEvent.getInstance().getEventMain().showLoading(false);
-                            }
-                        });
-                    }
-                }).start();
+            public void goViewFriendRequest() {
+                
             }
 
             @Override
@@ -131,6 +145,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        dialog.setAlwaysOnTop(true);
         dialog.setSize(300, 115);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(this); // Center dialog

@@ -6,8 +6,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import java.util.List;
 import user.model.Model_Group_Chat;
-import user.component.Friend_List;
-import user.component.Friend_Request;
+import user.component.Friend_List_Menu_Button;
+import user.component.Friend_Request_Menu_Button;
 import user.component.Friend_Search;
 import user.component.Item_People;
 import user.event.EventMenuLeft;
@@ -99,8 +99,8 @@ public class Menu_Left extends javax.swing.JPanel {
         menuList.removeAll();
         searchBar1.setVisible(false);
         menuList.add(new Friend_Search(), "wrap");
-        menuList.add(new Friend_List(), "wrap");
-        menuList.add(new Friend_Request(), "wrap");
+        menuList.add(new Friend_List_Menu_Button(), "wrap");
+        menuList.add(new Friend_Request_Menu_Button(), "wrap");
         refreshMenuList();
     }
     

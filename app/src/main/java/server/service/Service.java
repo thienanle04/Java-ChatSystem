@@ -13,6 +13,7 @@ import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
+import server.model.Model_Reset_Password;
 import server.model.Model_User_Profile;
 import server.model.Model_Chat_Message;
 
@@ -85,6 +86,20 @@ public class Service {
                 try {
                     Model_User_Profile newUserInfo = new Model_User_Profile(t);
                     boolean ok = serviceUser.updateProfile(newUserInfo);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
+        server.addEventListener("update_password", Object.class, new DataListener<Object>() {
+            @Override
+            public void onData(SocketIOClient sioc, Object t, AckRequest ar) throws Exception {
+                try {
+                    Model_Reset_Password newUserInfo = new Model_Reset_Password(t);
+                    boolean ok = serviceUser.updatePassword(newUserInfo);
                     ar.sendAckData(ok);
                 } catch (Exception e) {
                     System.err.println(e);

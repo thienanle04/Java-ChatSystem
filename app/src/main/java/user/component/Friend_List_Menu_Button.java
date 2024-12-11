@@ -4,22 +4,35 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Friend_List extends javax.swing.JPanel {
-    public Friend_List() {
+import user.event.PublicEvent;
+
+public class Friend_List_Menu_Button extends javax.swing.JPanel {
+    public Friend_List_Menu_Button() {
         initComponents();
         init();
     }
+
+    private boolean mouseOver;
     
     private void init() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
                 setBackground(new Color(242,242,242));
+                mouseOver = true;
             }
             
             @Override
             public void mouseExited(MouseEvent me) {
                 setBackground(new Color(249,249,249));
+                mouseOver = false;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (mouseOver) {
+                    PublicEvent.getInstance().getEventMain().showFriendList();
+                }
             }
         });
     }

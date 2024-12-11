@@ -8,12 +8,21 @@ public class PublicEvent {
     private EventLogin eventLogin;
     private EventMenuLeft eventMenuLeft;
     private EventUpdateInfo eventUpdateInfo;
+    private EventFriendRequest eventFriendRequest;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
             instance = new PublicEvent();
         }
         return instance;
+    }
+
+    public void addEventFriendRequest(EventFriendRequest event) {
+        this.eventFriendRequest = event;
+    }
+
+    public EventFriendRequest getEventFriendRequest() {
+        return eventFriendRequest;
     }
     
     public void addEventUpdateInfo(EventUpdateInfo event) {

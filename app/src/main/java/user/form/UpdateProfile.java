@@ -3,6 +3,7 @@ package user.form;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import io.socket.client.Ack;
+import user.model.Model_Message;
 import user.event.EventMessage;
 
 import user.event.EventUpdateInfo;
@@ -508,7 +509,7 @@ public class UpdateProfile extends javax.swing.JDialog {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(newPasswordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -555,7 +556,19 @@ public class UpdateProfile extends javax.swing.JDialog {
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void savePasswordChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savePasswordChangeActionPerformed
-        
+        String curPass = String.valueOf(currentPassword.getPassword());
+        String newPass = String.valueOf(newPasswordInput.getPassword());
+        if (curPass.equals("") || newPass.equals("")) {
+            PublicEvent.getInstance().getEventMain().showNotification("Please fill in all fields");
+            return;
+        }
+        Model_Reset_Password password = new Model_Reset_Password(Service.getInstance().getUser().getUserName(), curPass, newPass);
+        PublicEvent.getInstance().getEventUpdateInfo().updatePassword(password, new EventMessage() {
+            @Override
+            public void callMessage(Model_Message message) {
+                PublicEvent.getInstance().getEventMain().showNotification(message.getMessage());
+            }
+        });
         dispose();
     }//GEN-LAST:event_savePasswordChangeActionPerformed
 
@@ -570,7 +583,7 @@ public class UpdateProfile extends javax.swing.JDialog {
         String new_gender = genderOption.getSelectedItem().toString();
         LocalDate dob = LocalDate.of(Integer.parseInt(year.getSelectedItem().toString()), Integer.parseInt(month.getSelectedItem().toString()), Integer.parseInt(day.getSelectedItem().toString()));
         Model_User_Profile newUserInfo = new Model_User_Profile(user.getUserID(), new_username, new_email, new_address, new_gender, dob);
-        PublicEvent.getInstance().getEventMain().updateProfile(newUserInfo);
+        PublicEvent.getInstance().getEventUpdateInfo().updateProfile(newUserInfo);
         dispose();
     }// GEN-LAST:event_SaveActionPerformed
 

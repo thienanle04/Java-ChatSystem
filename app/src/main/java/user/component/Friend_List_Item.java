@@ -1,0 +1,133 @@
+package user.component;
+
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import user.event.PublicEvent;
+import user.model.Model_Friend;
+
+public class Friend_List_Item extends javax.swing.JPanel {
+    private Model_Friend friend;
+    private boolean mouseOver;
+    
+    public Friend_List_Item(Model_Friend data) {
+        initComponents();
+        friend = data;
+        activeStatus.setActive(data.isOnline());
+        username.setText(data.getName());
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                setBackground(new Color(242,242,242));
+                mouseOver = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent me) {
+                setBackground(new Color(255,255,255));
+                mouseOver = false;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (me.getButton() == 1 && mouseOver) { // Left mouse button
+                    // Open chat
+                    PublicEvent.getInstance().getEventMain().selectChat(friend);
+                }
+            }
+        });
+    }
+   
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        cmdBlock = new javax.swing.JButton();
+        cmdUnfriend = new javax.swing.JButton();
+        username = new javax.swing.JLabel();
+        cmdNewGroup = new javax.swing.JButton();
+        activeStatus = new user.swing.ActiveStatus();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
+
+        cmdBlock.setText("Block");
+
+        cmdUnfriend.setText("Unfriend");
+
+        username.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        username.setText("Name");
+        username.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usernameMouseClicked(evt);
+            }
+        });
+
+        cmdNewGroup.setText("New group");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(username)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addComponent(cmdNewGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdUnfriend, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdBlock, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmdUnfriend, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmdBlock, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmdNewGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(activeStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(7, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void usernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usernameMouseClicked
+        if (evt.getButton() == 1) { // Left mouse button
+            // Open chat
+
+        }
+    }//GEN-LAST:event_usernameMouseClicked
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        if (evt.getButton() == 1) { // Left mouse button
+            // Open chat
+
+        }
+    }//GEN-LAST:event_formMouseClicked
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private user.swing.ActiveStatus activeStatus;
+    private javax.swing.JButton cmdBlock;
+    private javax.swing.JButton cmdNewGroup;
+    private javax.swing.JButton cmdUnfriend;
+    private javax.swing.JLabel username;
+    // End of variables declaration//GEN-END:variables
+}

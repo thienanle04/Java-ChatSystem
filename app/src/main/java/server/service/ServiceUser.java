@@ -4,6 +4,7 @@ import server.connection.DatabaseConnection;
 import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
+import server.model.Model_Reset_Password;
 import server.model.Model_User_Profile;
 
 import java.time.LocalDate;
@@ -165,8 +166,31 @@ public class ServiceUser {
         return profile;
     }
 
+    public boolean updatePassword(Model_Reset_Password data) throws SQLException {
+        try {
+            // PreparedStatement p = con.prepareStatement("username=BINARY(?) and password_hash=BINARY(?)");
+            PreparedStatement p = con.prepareStatement("update users set password_hash=? where username=BINARY(?) and password_hash=BINARY(?)");
+            p.setString(1, data.getNewPassword());
+            p.setString(2, data.getUserName());
+            p.setString(3, data.getPassword());
+            p.execute();
+            p.close();
+
+            p = con.prepareStatement("select user_id from users where username =? and password_hash=? limit 1");
+            p.setString(1, data.getUserName());
+            p.setString(2, data.getNewPassword());
+            ResultSet r = p.executeQuery();
+            boolean ok = r.next();
+            r.close();
+            p.close();
+            return ok;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // SQL
-    private final String LOGIN = "select user_id, name, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
+    private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";
     private final String INSERT_USER = "insert into users (name, username, password_hash, email, date_of_birth) values (?, ?,?,?,?)";
     private final String CHECK_USER = "select user_id from users where username =? limit 1";

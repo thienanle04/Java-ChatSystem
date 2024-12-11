@@ -5,6 +5,7 @@ USE chatsystem;
 
 CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -25,14 +26,15 @@ CREATE TABLE Login_History (
 	FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
+--  user_id_1 < user_id_2 (one record for 2 peopel)
 CREATE TABLE User_Friends (
-    user_id INT,
-    friend_id INT,
-    status ENUM('pending', 'accepted', 'blocked', 'rejected') NOT NULL,
+    user_id_1 INT,
+    user_id_2 INT,
+    status ENUM('pending_1_2', 'pending_2_1', 'friends', 'block_1_2', 'block_2_1') NOT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, friend_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (friend_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    PRIMARY KEY (user_id_1, user_id_2),
+    FOREIGN KEY (user_id_1) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id_2) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Chat_Group (
