@@ -11,3 +11,7 @@ build
 # Ignore the libs folder and backups
 script/system-models.mwb.bak
 script/system-models.mwb
+app/src/main/java/server/connection
+connection
+DatabaseConnection.java
+bin

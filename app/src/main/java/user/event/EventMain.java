@@ -8,6 +8,8 @@ public interface EventMain {
     public void showLoading(boolean show);
 
     public void initChat();
+    
+    public void initAdminApp();
 
     public void selectChat(Model_Group_Chat chat);
 

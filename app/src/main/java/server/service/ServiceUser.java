@@ -190,6 +190,17 @@ public class ServiceUser {
     }
 
     // SQL
+    public String getRole (int userId) throws SQLException {
+        PreparedStatement p = con.prepareStatement("SELECT role FROM users where user_id=?");
+        p.setInt(1, userId);
+        ResultSet rs = p.executeQuery();
+        if (rs.next()) {
+            String role = rs.getString(1);
+            return role;
+        }
+        return "";
+    }
+    //  SQL
     private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";
     private final String INSERT_USER = "insert into users (name, username, password_hash, email, date_of_birth) values (?, ?,?,?,?)";
