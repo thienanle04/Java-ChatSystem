@@ -9,9 +9,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -38,6 +43,11 @@ public class newUserRegistration extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -53,18 +63,20 @@ public class newUserRegistration extends javax.swing.JPanel {
         jLabel16 = new javax.swing.JLabel();
         FilterByTime = new javax.swing.JButton();
         filterByName = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        filterByEmail = new javax.swing.JTextField();
 
         NewUserRegistation.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { "2018-09-18", "nghia", "124" },
-                        { "2018-10-20", "an", "123" },
-                        { "2019-11-24", "hoang", "125" }
+                        { "2018-09-18", "nghia", "124", null },
+                        { "2018-10-20", "an", "123", null },
+                        { "2019-11-24", "hoang", "125", null }
                 },
                 new String[] {
-                        "Creation Date", "Username", "Password"
+                        "Creation Date", "Username", "Password", "Email"
                 }) {
             Class[] types = new Class[] {
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -78,12 +90,13 @@ public class newUserRegistration extends javax.swing.JPanel {
             String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            // Truy vấn dữ liệu
+            // Truy vấn dữ liệu (đã thêm cột email)
             String query = """
                         SELECT
                             DATE_FORMAT(created_at, '%Y-%m-%d') AS CreationDate,
                             username,
-                            password_hash
+                            password_hash,
+                            email
                         FROM
                             users
                     """;
@@ -100,9 +113,10 @@ public class newUserRegistration extends javax.swing.JPanel {
             // Thêm dữ liệu từ ResultSet vào bảng
             while (rs.next()) {
                 Object[] row = new Object[] {
-                        rs.getString("CreationDate"),
-                        rs.getString("username"),
-                        rs.getString("password_hash")
+                        rs.getTimestamp("CreationDate"), // Lấy giá trị từ cột CreationDate
+                        rs.getString("username"), // Lấy giá trị từ cột username
+                        rs.getString("password_hash"), // Lấy giá trị từ cột password_hash
+                        rs.getString("email") // Lấy giá trị từ cột email
                 };
                 model.addRow(row);
             }
@@ -116,12 +130,13 @@ public class newUserRegistration extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+
         jScrollPane5.setViewportView(NewUserRegistation);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Sort by:");
 
-        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "CreationDate" }));
+        SortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name", "Creation Date" }));
         SortBy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SortByActionPerformed(evt);
@@ -166,6 +181,14 @@ public class newUserRegistration extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setText("Filter by email:");
+
+        filterByEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterByEmailActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,10 +196,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane5)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +204,13 @@ public class newUserRegistration extends javax.swing.JPanel {
                                                         .addComponent(jLabel9))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(filterByName,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 130,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(74, 74, 74)
+                                                                .addComponent(jLabel2))
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addGroup(layout.createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,15 +218,18 @@ public class newUserRegistration extends javax.swing.JPanel {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 130,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(startDate,
-                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                        130,
-                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(FilterByTime)))
-                                                                .addGap(147, 147, 147)
+                                                                        .addComponent(startDate,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                130,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(FilterByTime)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(0, 247, Short.MAX_VALUE)
                                                                 .addComponent(jLabel8)
                                                                 .addPreferredGap(
                                                                         javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -209,20 +237,22 @@ public class newUserRegistration extends javax.swing.JPanel {
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(filterByName,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 130,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(filterByEmail,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 152,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 851,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap()));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                .addComponent(jLabel8)
-                                                .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -230,20 +260,29 @@ public class newUserRegistration extends javax.swing.JPanel {
                                                         .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(FilterByTime,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 22,
+                                                        .addComponent(jLabel8)
+                                                        .addComponent(SortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(1, 1, 1)
+                                                .addGap(2, 2, 2)
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel16)
                                                         .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(1, 1, 1)
+                                                .addComponent(FilterByTime, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel9)
                                         .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(filterByEmail, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -251,6 +290,41 @@ public class newUserRegistration extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton4)));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void filterByEmailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByEmailActionPerformed
+        // TODO add your handling code here:
+        String filterName = filterByEmail.getText().trim();
+
+        if (!filterName.isEmpty()) {
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) NewUserRegistation.getModel();
+            }
+
+            DefaultTableModel model = originalModel;
+
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String email = model.getValueAt(i, 3).toString();
+                if (email.toLowerCase().contains(filterName.toLowerCase())) {
+                    filteredModel.addRow(new Object[] {
+                            model.getValueAt(i, 0),
+                            model.getValueAt(i, 1),
+                            model.getValueAt(i, 2),
+                            model.getValueAt(i, 3),
+                    });
+                }
+            }
+
+            NewUserRegistation.setModel(filteredModel);
+        } else {
+            NewUserRegistation.setModel(originalModel);
+        }
+    }// GEN-LAST:event_filterByEmailActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -348,47 +422,48 @@ public class newUserRegistration extends javax.swing.JPanel {
         // TODO add your handling code here:
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
+        // Parse the input dates
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start, inputFormatter);
+        LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end, inputFormatter);
+        try {
+            // Define the table's date format
+            DateTimeFormatter tableFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
-        if (!start.isEmpty() || !end.isEmpty()) {
-            try {
-                LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start);
-                LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end);
-
-                if (originalModel == null) {
-                    originalModel = (DefaultTableModel) NewUserRegistation.getModel();
-                }
-
-                DefaultTableModel model = originalModel;
-
-                DefaultTableModel filteredModel = new DefaultTableModel();
-
-                for (int i = 0; i < model.getColumnCount(); i++) {
-                    filteredModel.addColumn(model.getColumnName(i));
-                }
-
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    String dateStr = model.getValueAt(i, 0).toString();
-                    LocalDate creationDate = LocalDate.parse(dateStr);
-
-                    if ((creationDate.isEqual(_startDate) || creationDate.isAfter(_startDate)) &&
-                            (creationDate.isEqual(_endDate) || creationDate.isBefore(_endDate))) {
-                        filteredModel.addRow(new Object[] {
-                                model.getValueAt(i, 0),
-                                model.getValueAt(i, 1),
-                                model.getValueAt(i, 2),
-                        });
-                    }
-                }
-
-                NewUserRegistation.setModel(filteredModel);
-            } catch (DateTimeParseException e) {
-                JOptionPane.showMessageDialog(this,
-                        "Please enter dates in the format yyyy-MM-dd.",
-                        "Invalid Date Format",
-                        JOptionPane.ERROR_MESSAGE);
+            if (originalModel == null) {
+                originalModel = (DefaultTableModel) NewUserRegistation.getModel();
             }
-        } else {
-            NewUserRegistation.setModel(originalModel);
+
+            DefaultTableModel model = originalModel;
+            DefaultTableModel filteredModel = new DefaultTableModel();
+
+            // Add columns to the new model
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                filteredModel.addColumn(model.getColumnName(i));
+            }
+
+            // Filter rows based on timestamps
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String dateStr = model.getValueAt(i, 0).toString();
+                LocalDate creationDate = LocalDate.parse(dateStr, tableFormatter);
+
+                if ((creationDate.isEqual(_startDate) || creationDate.isAfter(_startDate)) &&
+                        (creationDate.isEqual(_endDate) || creationDate.isBefore(_endDate))) {
+                    filteredModel.addRow(new Object[] {
+                            model.getValueAt(i, 0),
+                            model.getValueAt(i, 1),
+                            model.getValueAt(i, 2),
+                            model.getValueAt(i, 3),
+                    });
+                }
+            }
+
+            NewUserRegistation.setModel(filteredModel);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter valid dates in the format yyyy-MM-dd.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }// GEN-LAST:event_FilterByTimeActionPerformed
 
@@ -415,7 +490,8 @@ public class newUserRegistration extends javax.swing.JPanel {
                     filteredModel.addRow(new Object[] {
                             model.getValueAt(i, 0),
                             model.getValueAt(i, 1),
-                            model.getValueAt(i, 2)
+                            model.getValueAt(i, 2),
+                            model.getValueAt(i, 3),
                     });
                 }
             }
@@ -430,18 +506,33 @@ public class newUserRegistration extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) NewUserRegistation.getModel();
 
+        // Configure a TableRowSorter with custom comparators
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         NewUserRegistation.setRowSorter(sorter);
 
+        // Set a custom comparator for the "Creation Date" column (index 0)
+        sorter.setComparator(0, (Object o1, Object o2) -> {
+            try {
+                java.sql.Timestamp ts1 = (java.sql.Timestamp) o1;
+                java.sql.Timestamp ts2 = (java.sql.Timestamp) o2;
+                return ts1.compareTo(ts2); // Compare timestamps directly
+            } catch (ClassCastException ex) {
+                Logger.getLogger(userDetail.class.getName()).log(Level.SEVERE, null, ex);
+                return 0; // Treat errors as equal
+            }
+        });
+
+        // Determine which column to sort based on the selected option
         String selectedOption = (String) SortBy.getSelectedItem();
         int columnIndex = -1;
 
         if ("Name".equals(selectedOption)) {
-            columnIndex = 1;
+            columnIndex = 1; // Name column index
         } else if ("Creation Date".equals(selectedOption)) {
-            columnIndex = 0;
+            columnIndex = 0; // Creation Date column index
         }
 
+        // Apply sorting if a valid column is selected
         if (columnIndex != -1) {
             sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
             sorter.sort();
@@ -453,10 +544,12 @@ public class newUserRegistration extends javax.swing.JPanel {
     private javax.swing.JTable NewUserRegistation;
     private javax.swing.JComboBox<String> SortBy;
     private javax.swing.JTextField endDate;
+    private javax.swing.JTextField filterByEmail;
     private javax.swing.JTextField filterByName;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane5;

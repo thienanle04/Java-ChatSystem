@@ -4,21 +4,12 @@
  */
 package admin.components;
 
-import io.socket.engineio.client.Transport;
 import java.awt.GridLayout;
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.Properties;
-import java.util.Random;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,7 +19,11 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.ResultSet;
-import admin.components.sendRandomPasswordToEmail;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.internet.ParseException;
 
 /**
  *
@@ -493,103 +488,94 @@ public class userDetail extends javax.swing.JPanel {
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByNameActionPerformed
         // TODO add your handling code here:
         String filterName = filterByName.getText().trim();
+        String filterUsername = filterByUsername.getText().trim();
 
-        if (!filterName.isEmpty()) {
-            if (originalModel == null) {
-                originalModel = (DefaultTableModel) UserDetails.getModel();
-            }
-
-            DefaultTableModel model = originalModel;
-
-            DefaultTableModel filteredModel = new DefaultTableModel();
-
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                filteredModel.addColumn(model.getColumnName(i));
-            }
-
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 0).toString();
-                if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    filteredModel.addRow(new Object[] {
-                            model.getValueAt(i, 0),
-                            model.getValueAt(i, 1),
-                            model.getValueAt(i, 2),
-                            model.getValueAt(i, 3),
-                            model.getValueAt(i, 4),
-                            model.getValueAt(i, 5),
-                            model.getValueAt(i, 6),
-                            model.getValueAt(i, 7),
-                            model.getValueAt(i, 8),
-                            model.getValueAt(i, 9),
-                            model.getValueAt(i, 10),
-                    });
-                }
-            }
-
-            UserDetails.setModel(filteredModel);
-        } else {
-            UserDetails.setModel(originalModel);
+        // Ensure the original model is available
+        if (originalModel == null) {
+            originalModel = (DefaultTableModel) UserDetails.getModel();
         }
+
+        DefaultTableModel model = originalModel;
+
+        // Create a new model to hold the filtered data
+        DefaultTableModel filteredModel = new DefaultTableModel();
+
+        // Add columns from the original model to the filtered model
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            filteredModel.addColumn(model.getColumnName(i));
+        }
+
+        // Loop through the rows of the original model and filter by both Name and Username
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String name = model.getValueAt(i, 0).toString(); // Assuming the name is in the first column
+            String username = model.getValueAt(i, 1).toString(); // Assuming the username is in the second column
+
+            boolean matchesName = filterName.isEmpty() || name.toLowerCase().contains(filterName.toLowerCase());
+            boolean matchesUsername = filterUsername.isEmpty() || username.toLowerCase().contains(filterUsername.toLowerCase());
+
+            // Add the row to filtered model if both conditions are met
+            if (matchesName && matchesUsername) {
+                filteredModel.addRow(new Object[] {
+                    model.getValueAt(i, 0),
+                    model.getValueAt(i, 1),
+                    model.getValueAt(i, 2),
+                    model.getValueAt(i, 3),
+                    model.getValueAt(i, 4),
+                    model.getValueAt(i, 5),
+                    model.getValueAt(i, 6),
+                    model.getValueAt(i, 7),
+                    model.getValueAt(i, 8),
+                    model.getValueAt(i, 9),
+                    model.getValueAt(i, 10),
+                });
+            }
+        }
+
+        // Set the filtered model to the table
+        UserDetails.setModel(filteredModel);
+
+        // Reapply the sorter to maintain sorting behavior
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(filteredModel);
+        UserDetails.setRowSorter(sorter);
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void filterByUsernameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByUsernameActionPerformed
         // TODO add your handling code here:
-        String filterName = filterByUsername.getText().trim();
-
-        if (!filterName.isEmpty()) {
-            if (originalModel == null) {
-                originalModel = (DefaultTableModel) UserDetails.getModel();
-            }
-
-            DefaultTableModel model = originalModel;
-
-            DefaultTableModel filteredModel = new DefaultTableModel();
-
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                filteredModel.addColumn(model.getColumnName(i));
-            }
-
-            for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 1).toString();
-                if (name.toLowerCase().contains(filterName.toLowerCase())) {
-                    filteredModel.addRow(new Object[] {
-                            model.getValueAt(i, 0),
-                            model.getValueAt(i, 1),
-                            model.getValueAt(i, 2),
-                            model.getValueAt(i, 3),
-                            model.getValueAt(i, 4),
-                            model.getValueAt(i, 5),
-                            model.getValueAt(i, 6),
-                            model.getValueAt(i, 7),
-                            model.getValueAt(i, 8),
-                            model.getValueAt(i, 9),
-                            model.getValueAt(i, 10),
-                    });
-                }
-            }
-
-            UserDetails.setModel(filteredModel);
-        } else {
-            UserDetails.setModel(originalModel);
-        }
+        filterByNameActionPerformed(evt);
+        
     }// GEN-LAST:event_filterByUsernameActionPerformed
 
     private void sortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sortByActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
+        // Configure a TableRowSorter with custom comparators
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         UserDetails.setRowSorter(sorter);
 
+        // Set a custom comparator for the "Creation Date" column (index 10)
+        sorter.setComparator(10, (Object o1, Object o2) -> {
+            try {
+                java.sql.Timestamp ts1 = (java.sql.Timestamp) o1;
+                java.sql.Timestamp ts2 = (java.sql.Timestamp) o2;
+                return ts1.compareTo(ts2);  // Compare timestamps directly
+            } catch (ClassCastException ex) {
+                Logger.getLogger(userDetail.class.getName()).log(Level.SEVERE, null, ex);
+                return 0;  // Treat errors as equal
+            }
+        });
+
+        // Determine which column to sort based on the selected option
         String selectedOption = (String) sortBy.getSelectedItem();
         int columnIndex = -1;
 
         if ("Name".equals(selectedOption)) {
-            columnIndex = 0;
-        } else if ("CreationDate".equals(selectedOption)) {
-            columnIndex = 1;
+            columnIndex = 0;  // Name column index
+        } else if ("Creation Date".equals(selectedOption)) {
+            columnIndex = 10;  // Creation Date column index
         }
 
+        // Apply sorting if a valid column is selected
         if (columnIndex != -1) {
             sorter.setSortKeys(Collections.singletonList(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING)));
             sorter.sort();
