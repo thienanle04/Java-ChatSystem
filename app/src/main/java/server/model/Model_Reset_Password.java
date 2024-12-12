@@ -1,6 +1,5 @@
 package server.model;
 
-import java.util.LinkedHashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,24 +41,6 @@ public class Model_Reset_Password {
     private String userName;
     private String password;
     private String newPassword;
-
-     @SuppressWarnings("unchecked")
-    public Model_Reset_Password(Object json) {
-        JSONObject obj = null;
-        try {
-            if (json instanceof LinkedHashMap) {
-                obj = new JSONObject((LinkedHashMap<String, Object>) json);
-            } else {
-                obj = new JSONObject(json);
-            }
-            this.userName = obj.getString("userName");
-            this.password = obj.getString("password");
-            this.newPassword = obj.getString("newPassword");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     public JSONObject toJsonObject() {
         try {

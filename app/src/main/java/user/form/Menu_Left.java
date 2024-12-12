@@ -42,6 +42,13 @@ public class Menu_Left extends javax.swing.JPanel {
             }
 
             @Override
+            public void newChat(Model_Group_Chat groupChats) {
+                chats.add(groupChats);
+                menuList.add(new Item_People(groupChats), "wrap");
+                refreshMenuList();
+            }
+
+            @Override
             public void userConnect(int groupChatId) {
                 for (Model_Group_Chat u : chats) {
                     if (u.getGroupId() == groupChatId) {

@@ -1,11 +1,8 @@
 package server.model;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 public class Model_User_Profile {
 
     public int getUserID() {
@@ -48,12 +45,20 @@ public class Model_User_Profile {
         this.gender = gender;
     }
 
-    public String getDob() {
-        return dob.toString();
+    public LocalDate getDob() {
+        return dob;
     }
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+    public Model_User_Profile(int userID, String userName, String email, String address, String gender, String dob) {
+        this.userID = userID;
+        this.userName = userName;
+        this.email = email;
+        this.address = address;
+        this.gender = gender;
+        this.dob = LocalDate.parse(dob);
     }
 
     public Model_User_Profile(int userID, String userName, String email, String address, String gender, LocalDate dob) {
@@ -65,26 +70,6 @@ public class Model_User_Profile {
         this.dob = dob;
     }
 
-    @SuppressWarnings("unchecked")
-    public Model_User_Profile(Object json) {
-        JSONObject obj = null;
-        try {
-            if (json instanceof LinkedHashMap) {
-                obj = new JSONObject((LinkedHashMap<String, Object>) json);
-            } else {
-                obj = new JSONObject(json);
-            }
-            this.userID = obj.getInt("userID");
-            this.userName = obj.getString("userName");
-            this.email = obj.getString("email");
-            this.address = obj.getString("address");
-            this.gender = obj.getString("gender");
-            this.dob = LocalDate.parse(obj.getString("dob"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Model_User_Profile() {
     }
 
@@ -93,5 +78,6 @@ public class Model_User_Profile {
     private String email;
     private String address;
     private String gender;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
 }

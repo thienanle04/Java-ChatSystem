@@ -138,3 +138,24 @@ END;
 
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS create_private_chat_after_accept_friend_request;
+DELIMITER //
+
+CREATE TRIGGER create_private_chat_after_accept_friend_request
+AFTER UPDATE ON User_Friends
+FOR EACH ROW
+BEGIN
+	-- Check if the friend request status is updated to 'accepted'
+    IF NEW.status = 'friends' AND OLD.status != 'friends' THEN
+        -- Insert a new group chat record with type = 2 (for friend-based group)
+        INSERT INTO Chat_Group (group_type) VALUES (2);
+        
+        -- Add both users to the new group chat
+        INSERT INTO group_members (group_id, user_id) 
+        VALUES (LAST_INSERT_ID(), NEW.user_id_1), (LAST_INSERT_ID(), NEW.user_id_2);
+    END IF;
+END;
+//
+
+DELIMITER ;
+

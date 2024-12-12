@@ -2,6 +2,7 @@ package user.service;
 
 import user.event.PublicEvent;
 import user.model.Model_Chat_Message;
+import user.model.Model_Friend_Request;
 import user.model.Model_User_Profile;
 import user.model.Model_Group_Chat;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import java.util.LinkedList;
 import java.util.Iterator;
 
@@ -53,9 +55,18 @@ public class Service {
                 }
             });
 
-            client.on("get_all_chats", new Emitter.Listener() {
+            client.on("new_chat", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
+                    Model_Group_Chat chat = new Model_Group_Chat(os[0]);
+                    PublicEvent.getInstance().getEventMenuLeft().newChat(chat);
+                }
+            });
+
+            client.on("get_all_data", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    // Get all chat and messages
                     HashMap<Integer, LinkedList<Model_Chat_Message>> chats = new HashMap<>();
                     JSONObject obj = (JSONObject) os[0];
                     Iterator<String> keys = obj.keys();
@@ -70,9 +81,15 @@ public class Service {
                         } catch (JSONException e) {
                             error(e);
                         }
-
                     }
                     PublicEvent.getInstance().getEventChat().initAllChat(chats);
+
+                    // Get all friend requests
+                    JSONArray arr = (JSONArray) os[1];
+                    for (Object o : arr) {
+                        Model_Friend_Request fr = new Model_Friend_Request(o);
+                        PublicEvent.getInstance().getEventFriendRequest().addNewFriendRequest(fr);
+                    }
                 }
             });
 

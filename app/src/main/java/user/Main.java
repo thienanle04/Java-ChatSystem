@@ -57,7 +57,7 @@ public class Main extends javax.swing.JFrame {
                 home.setVisible(true);
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_chat", Service.getInstance().getUser().getUserID());
-                Service.getInstance().getClient().emit("get_all_chats", Service.getInstance().getUser().getUserID());
+                Service.getInstance().getClient().emit("get_all_data", Service.getInstance().getUser().getUserID());
                 updateProfile.setUser(Service.getInstance().getUser());
             }
 
@@ -109,21 +109,6 @@ public class Main extends javax.swing.JFrame {
                 updateProfile.setVisible(true);
             }
             
-            @Override
-            public void goFindNewFriend() {
-                    
-            }
-    
-            @Override
-            public void goViewFriendList() {
-                    
-            }
-
-            @Override
-            public void goViewFriendRequest() {
-                
-            }
-
             @Override
             public void showNotification(String message) {
                 Main.this.showNotificationDialog(message);
@@ -177,7 +162,7 @@ public class Main extends javax.swing.JFrame {
         loading = new user.form.Loading();
         login = new user.form.Login();
         home = new user.form.Home();
-        adminApp = new adminHomePagePanel();
+        // adminApp = new adminHomePagePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -189,7 +174,7 @@ public class Main extends javax.swing.JFrame {
         body.add(loading, "card5");
         body.add(login, "card4");
         body.add(home, "card2");
-        body.add(adminApp, "adminCard");
+        // body.add(adminApp, "adminCard");
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);

@@ -25,11 +25,5 @@ public interface EventMain {
     
     public void editProfile();
     
-    public void goFindNewFriend();
-    
-    public void goViewFriendList();
-    
-    public void goViewFriendRequest();
-
     public void showNotification(String message);
 }

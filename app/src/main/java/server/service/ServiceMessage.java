@@ -42,6 +42,67 @@ public class ServiceMessage {
         return list;
     }
 
+    // Get the private chat between only two users
+    public Model_Group_Chat getPrivateChat(int user, int other) {
+        Model_Group_Chat groupChat = null;
+        try {
+            PreparedStatement p = con.prepareStatement("select group_id from group_members and user_id = ? and group_id in (select gm.group_id from group_members gm join chat_group cg on cg.group_id = gm.group_id where gm.user_id = ? and cg.group_type = 2)");
+            p.setInt(1, user);
+            p.setInt(2, other);
+            ResultSet r = p.executeQuery();
+            if (r.next()) {
+                // group chat name is the name of the other person
+                PreparedStatement p2 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
+                p2.setInt(1, other);
+                ResultSet r2 = p2.executeQuery();
+                r2.next();
+                String name = r2.getString(1);
+                groupChat = new Model_Group_Chat(r.getInt(1), name, "none", 2);
+                p2.close();
+                r2.close();
+            }
+            r.close();
+            p.close();
+
+            return groupChat;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Create a new private chat
+        try {
+            PreparedStatement p = con.prepareStatement("insert into chat_group (group_type) values (2)", PreparedStatement.RETURN_GENERATED_KEYS);
+            p.executeUpdate();
+            ResultSet r = p.getGeneratedKeys();
+            if (r.next()) {
+                int groupID = r.getInt(1);
+                PreparedStatement p2 = con.prepareStatement("insert into group_members (group_id, user_id) values (?, ?)");
+                p2.setInt(1, groupID);
+                p2.setInt(2, user);
+                p2.executeUpdate();
+                p2.setInt(1, groupID);
+                p2.setInt(2, other);
+                p2.executeUpdate();
+                p2.close();
+
+                PreparedStatement p3 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
+                p3.setInt(1, other);
+                ResultSet r3 = p3.executeQuery();
+                r3.next();
+                String name = r3.getString(1);
+                groupChat = new Model_Group_Chat(groupID, name, "none", 2);
+                p3.close();
+                r3.close();
+            }
+            r.close();
+            p.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return groupChat;
+    }
+
     // Note: Private chat is the direct chat of two users
     public List<Integer> getChatPrivateOfUser(int userId) throws SQLException {
         List<Integer> list = new ArrayList<>();

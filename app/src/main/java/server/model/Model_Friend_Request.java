@@ -1,4 +1,4 @@
-package user.model;
+package server.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +36,9 @@ public class Model_Friend_Request {
         this.toUserID = toUserID;
         this.fromUserID = fromUserID;
         this.name = name;
+    }
+
+    public Model_Friend_Request() {
     }
 
     public Model_Friend_Request(Object json) {
