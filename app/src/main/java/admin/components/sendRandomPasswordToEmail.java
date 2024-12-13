@@ -77,8 +77,8 @@ public class sendRandomPasswordToEmail {
     private static void updatePasswordInDatabase(String username, String newPassword) throws SQLException {
         String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "admin",
-                "*Nghia1692004");
+                "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "JavaChatSystem",
+                "javachatsystem");
              PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 
             pstmt.setString(1, newPassword);

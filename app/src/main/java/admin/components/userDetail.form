@@ -26,7 +26,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="filterByUsername" pref="124" max="32767" attributes="0"/>
+                      <Component id="filterByUsername" pref="121" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -35,7 +35,7 @@
                       <Component id="jLabel2" min="-2" pref="48" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="sortBy" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="177" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="174" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
@@ -52,7 +52,6 @@
                       <Component id="setRoleAdmin" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lock" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -102,17 +101,17 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="11" rowCount="0">
-                <Column editable="true" title="Name" type="java.lang.String"/>
-                <Column editable="true" title="Username" type="java.lang.String"/>
-                <Column editable="true" title="Password" type="java.lang.String"/>
-                <Column editable="true" title="Address" type="java.lang.String"/>
-                <Column editable="true" title="Date-of-birth" type="java.lang.Object"/>
-                <Column editable="true" title="Gender" type="java.lang.String"/>
-                <Column editable="true" title="Email" type="java.lang.String"/>
-                <Column editable="true" title="Status" type="java.lang.String"/>
-                <Column editable="true" title="Lock" type="java.lang.Boolean"/>
-                <Column editable="true" title="Role" type="java.lang.String"/>
-                <Column editable="true" title="Creation Date" type="java.lang.String"/>
+                <Column editable="false" title="Name" type="java.lang.String"/>
+                <Column editable="false" title="Username" type="java.lang.String"/>
+                <Column editable="false" title="Password" type="java.lang.String"/>
+                <Column editable="false" title="Address" type="java.lang.String"/>
+                <Column editable="false" title="Date-of-birth" type="java.lang.Object"/>
+                <Column editable="false" title="Gender" type="java.lang.String"/>
+                <Column editable="false" title="Email" type="java.lang.String"/>
+                <Column editable="false" title="Status" type="java.lang.String"/>
+                <Column editable="false" title="Lock" type="java.lang.Boolean"/>
+                <Column editable="false" title="Role" type="java.lang.String"/>
+                <Column editable="false" title="Creation Date" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

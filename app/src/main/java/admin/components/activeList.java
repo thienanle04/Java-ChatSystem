@@ -46,6 +46,7 @@ public class activeList extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -87,9 +88,16 @@ public class activeList extends javax.swing.JPanel {
                     java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class,
                     java.lang.String.class
             };
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
             }
         });
         filterByTimeActionPerformed(null);
@@ -308,8 +316,8 @@ public class activeList extends javax.swing.JPanel {
             try {
                 // Kết nối đến database
                 String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "admin";
-                String password = "*Nghia1692004";
+                String user = "JavaChatSystem";
+                String password = "javachatsystem";
                 Connection conn = DriverManager.getConnection(url, user, password);
 
                 // Truy vấn số lần ứng dụng mở
@@ -463,8 +471,8 @@ public class activeList extends javax.swing.JPanel {
 
                 // Connect to the database
                 String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "admin";
-                String password = "*Nghia1692004"; // Replace with your password
+                String user = "JavaChatSystem";
+                String password = "javachatsystem"; // Replace with your password
                 Connection conn = DriverManager.getConnection(url, user, password);
 
                 // Query data

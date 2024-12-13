@@ -4,6 +4,8 @@ import user.model.Model_Group_Chat;
 import java.awt.CardLayout;
 import net.miginfocom.swing.MigLayout;
 
+import user.service.Service;
+
 public class Home extends javax.swing.JLayeredPane {
 
     private javax.swing.JLayeredPane content;
@@ -11,6 +13,7 @@ public class Home extends javax.swing.JLayeredPane {
     private Friend_List friend_list;
     private Friend_Request friend_request;
     private CardLayout cardLayout;
+    private Menu_Right menuRight;
 
     public Home() {
         initComponents();
@@ -39,12 +42,16 @@ public class Home extends javax.swing.JLayeredPane {
         setLayout(new MigLayout("fill", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
         this.add(new Menu_Left());
         initCardLayout();
-        this.add(new Menu_Right());
+        menuRight = new Menu_Right();
+        this.add(menuRight);
+        menuRight.setVisible(false);
     }
 
     public void setChat(Model_Group_Chat groupChat) {
         cardLayout.show(content, "chat");
         chat.setChat(groupChat);
+        menuRight.setChat(groupChat);
+        menuRight.setVisible(true);
     }
 
     public void updateChat(Model_Group_Chat groupChat) {
@@ -53,10 +60,12 @@ public class Home extends javax.swing.JLayeredPane {
 
     public void showFriendList() {
         cardLayout.show(content, "friend_list");
+        menuRight.setVisible(false);
     }
 
     public void showFriendRequest() {
         cardLayout.show(content, "friend_request");
+        menuRight.setVisible(false);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
