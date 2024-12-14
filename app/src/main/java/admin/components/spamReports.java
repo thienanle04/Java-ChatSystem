@@ -339,7 +339,7 @@ public class spamReports extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
-        int selectedRow = SpamReports.getSelectedRow();
+        int selectedRow =  SpamReports.convertRowIndexToModel(SpamReports.getSelectedRow());
 
         if (selectedRow != -1) {
             Boolean lock = (Boolean) model.getValueAt(selectedRow, 4);

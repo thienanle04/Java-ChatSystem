@@ -305,7 +305,7 @@ public class newUserRegistration extends javax.swing.JPanel {
                 originalModel = (DefaultTableModel) NewUserRegistation.getModel();
             }
 
-            DefaultTableModel model = originalModel;
+            DefaultTableModel model = (DefaultTableModel) NewUserRegistation.getModel();
 
             DefaultTableModel filteredModel = new DefaultTableModel();
 
