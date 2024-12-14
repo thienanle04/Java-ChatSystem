@@ -9,12 +9,21 @@ public class PublicEvent {
     private EventMenuLeft eventMenuLeft;
     private EventUpdateInfo eventUpdateInfo;
     private EventFriendRequest eventFriendRequest;
+    private EventFriendList eventFriendList;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
             instance = new PublicEvent();
         }
         return instance;
+    }
+
+    public void addEventFriendList(EventFriendList event) {
+        this.eventFriendList = event;
+    }
+
+    public EventFriendList getEventFriendList() {
+        return eventFriendList;
     }
 
     public void addEventFriendRequest(EventFriendRequest event) {

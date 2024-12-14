@@ -8,4 +8,6 @@ public interface EventFriendRequest {
     public void rejectFriendRequest(Model_Friend_Request response);
 
     public void addNewFriendRequest(Model_Friend_Request resquest);
+
+    public void searchFriendRequest(String keyword);
 }

@@ -1,5 +1,6 @@
 package user.component;
 
+import java.awt.Component;
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 
@@ -15,17 +16,19 @@ public class Friend_Request_Body extends javax.swing.JPanel {
     public void removeFriendRequest(Model_Friend_Request response) {
         for (int i = 0; i < body.getComponentCount(); i++) {
             Friend_Request_Item item = (Friend_Request_Item) body.getComponent(i);
-            if (item.getFromUserID() == response.getFromUserID()) {
+            if (item.getRequest().getFromUserID() == response.getFromUserID()) {
                 body.remove(item);
                 repaint();
                 revalidate();
                 break;
             }
         }
+        body.repaint();
+        body.revalidate();
     }
 
     private void init() {
-        body.setLayout(new MigLayout("fillx", "10[fill]10", "10[fill]10"));
+        body.setLayout(new MigLayout("fillx, hidemode 3", "10[fill]10", "10[fill]10"));
         sp.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "width:5;"
                 + "background:null;"
@@ -39,6 +42,20 @@ public class Friend_Request_Body extends javax.swing.JPanel {
         body.add(item, "wrap, w 100::100%");
         repaint();
         revalidate();
+    }
+
+    public void filterFriendRequest(String text) {
+        for (Component component : body.getComponents()) {
+            Friend_Request_Item item = (Friend_Request_Item) component;
+            if (item.getRequest().getName().toLowerCase().contains(text.toLowerCase())) {
+                item.setVisible(true);
+            } else {
+                item.setVisible(false);
+            }
+        }
+
+        body.repaint();
+        body.revalidate();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

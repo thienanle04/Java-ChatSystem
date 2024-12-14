@@ -1,7 +1,6 @@
 package user.event;
 
 import user.model.Model_Group_Chat;
-import user.model.Model_Friend;
 
 public interface EventMain {
 
@@ -12,8 +11,6 @@ public interface EventMain {
     public void initAdminApp();
 
     public void selectChat(Model_Group_Chat chat);
-
-    public void selectChat(Model_Friend friend);
 
     public void updateChat(Model_Group_Chat chat);
 

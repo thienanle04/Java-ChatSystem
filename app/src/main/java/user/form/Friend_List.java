@@ -1,9 +1,15 @@
 package user.form;
 
+import io.socket.client.Ack;
 import net.miginfocom.swing.MigLayout;
+import user.model.Model_Friend_Request;
 import user.component.Friend_Title;
+import user.event.EventFriendList;
+import user.event.PublicEvent;
 import user.component.Friend_Search_Bar;
 import user.component.Friend_List_Body;
+import user.model.Model_Friend;
+import user.service.Service;
 
 public class Friend_List extends javax.swing.JPanel {
     Friend_Title title;
@@ -16,6 +22,66 @@ public class Friend_List extends javax.swing.JPanel {
     }
 
     private void init() {
+        PublicEvent.getInstance().addEventFriendList(new EventFriendList() {
+            @Override
+            public void addFriend(Model_Friend friend) {
+                body.addFriend(friend);
+            }
+
+            @Override
+            public void userConnect(int userID) {
+                body.updateUserStatus(userID, "online");
+            }
+
+            @Override
+            public void userDisconnect(int userID) {
+                body.updateUserStatus(userID, "offline");
+            }
+
+            @Override
+            public void filterFriend(String name, String status) {
+                body.filterFriend(name, status);
+            }
+
+            @Override
+            public void unFriend(Model_Friend friend) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Model_Friend_Request req = new Model_Friend_Request(friend.getUserID(), Service.getInstance().getUser().getUserID(), friend.getName());
+                        Service.getInstance().getClient().emit("unfriend", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                if ((boolean) args[0]) {
+                                    body.removeFriend(friend.getUserID());
+                                    PublicEvent.getInstance().getEventMain().showNotification("Unfriend successful");
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+
+            @Override
+            public void blockFriend(Model_Friend friend) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Model_Friend_Request req = new Model_Friend_Request(friend.getUserID(), Service.getInstance().getUser().getUserID(), friend.getName());
+                        Service.getInstance().getClient().emit("block_friend", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                if ((boolean) args[0]) {
+                                    body.removeFriend(friend.getUserID());
+                                    PublicEvent.getInstance().getEventMain().showNotification("You have blocked " + friend.getName());
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
+
         setLayout(new MigLayout("fillx", "0[fill]0", "0[200]10[100]10[fill]0"));
         title = new Friend_Title();
         search_bar = new Friend_Search_Bar();

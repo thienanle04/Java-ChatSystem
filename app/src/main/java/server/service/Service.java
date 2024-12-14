@@ -21,12 +21,11 @@ import server.model.Model_Reset_Password;
 import server.model.Model_User_Profile;
 import server.model.Model_Chat_Message;
 import server.model.Model_Friend_Request;
+import server.model.Model_Friend;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,6 +79,7 @@ public class Service {
                 }
             }
         });
+
         server.addEventListener("login", Model_Login.class, new DataListener<Model_Login>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Login t, AckRequest ar) throws Exception {
@@ -92,6 +92,7 @@ public class Service {
                 } else {
                     ar.sendAckData(false);
                 }
+
             }
         });
 
@@ -163,6 +164,19 @@ public class Service {
             }
         });
 
+        server.addEventListener("unfriend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
+                try {
+                    boolean ok = serviceUser.responseFriendRequest(t, "unfriend");
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
         server.addEventListener("block_friend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
@@ -201,8 +215,11 @@ public class Service {
                 try {
                     // Get all history chats
                     HashMap<Integer, LinkedList<Model_Chat_Message>> data = serviceMessage.getAllChat(userID);
+                    // Get all friend request
                     ArrayList<Model_Friend_Request> list = serviceUser.getFriendRequestsReceived(userID);
-                    sioc.sendEvent("get_all_data", data, list.toArray());
+                    // Get all friend list
+                    ArrayList<Model_Friend> friends = serviceUser.getFriendList(userID);
+                    sioc.sendEvent("get_all_data", data, list.toArray(), friends.toArray());
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
@@ -260,7 +277,8 @@ public class Service {
         try {
             List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
             for (Integer chatId : chatIds) {
-                server.getBroadcastOperations().sendEvent("user_status", chatId, true);
+                server.getBroadcastOperations().sendEvent("chat_status", chatId, true);
+                server.getBroadcastOperations().sendEvent("user_status", userID, true);
             }
         }
         catch (SQLException e) {
@@ -272,7 +290,8 @@ public class Service {
         try {
             List<Integer> chatIds = serviceMessage.getChatPrivateOfUser(userID);
             for (Integer chatId : chatIds) {
-                server.getBroadcastOperations().sendEvent("user_status", chatId, false);
+                server.getBroadcastOperations().sendEvent("chat_status", chatId, false);
+                server.getBroadcastOperations().sendEvent("user_status", userID, false);
                 serviceUser.userDisconnect(userID);
             }
         }

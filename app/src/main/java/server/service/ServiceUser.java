@@ -1,6 +1,7 @@
 package server.service;
 
 import server.connection.DatabaseConnection;
+import server.model.Model_Friend;
 import server.model.Model_Friend_Request;
 import server.model.Model_Login;
 import server.model.Model_Message;
@@ -201,7 +202,7 @@ public class ServiceUser {
             userID2 = temp;
         }
         
-        if (status.equals("reject")) {
+        if (status.equals("reject") || status.equals("unfriend")) {
             try {
                 PreparedStatement p = con.prepareStatement("delete from user_friends where user_id_1=? and user_id_2=?");
                 p.setInt(1, userID1);
@@ -225,6 +226,34 @@ public class ServiceUser {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public ArrayList<Model_Friend> getFriendList(int userID) {
+        ArrayList<Model_Friend> list = new ArrayList<>();
+        try {
+            PreparedStatement p = con.prepareStatement("select user_id_1, user_id_2 from user_friends where (user_id_1=? or user_id_2=?) and status='friends'");
+            p.setInt(1, userID);
+            p.setInt(2, userID);
+            ResultSet r = p.executeQuery();
+            while (r.next()) {
+                int userID1 = r.getInt(1);
+                int userID2 = r.getInt(2);
+                int otherID = userID1 == userID ? userID2 : userID1;
+                PreparedStatement p2 = con.prepareStatement("select name, status from users where user_id=?");
+                p2.setInt(1, otherID);
+                ResultSet r2 = p2.executeQuery();
+                if (r2.next()) {
+                    String name = r2.getString(1);
+                    String status = r2.getString(2);
+                    list.add(new Model_Friend(otherID, name, status));
+                }
+            }
+            r.close();
+            p.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public ArrayList<Model_Friend_Request> getFriendRequestsReceived(int userID) throws SQLException {

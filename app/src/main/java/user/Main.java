@@ -4,7 +4,6 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
-import user.model.Model_Friend;
 import admin.adminHomePagePanel;
 import user.model.Model_Group_Chat;
 import user.event.EventMain;
@@ -72,15 +71,6 @@ public class Main extends javax.swing.JFrame {
             public void selectChat(Model_Group_Chat chat) { 
                 // If chat is already initialized
                 home.setChat(chat);
-            }
-
-            @Override
-            public void selectChat(Model_Friend profile) {
-                // Do not know whether the chat is already initialized or not
-                // So, we need to check if chat is already initialized by sending request to server
-                // Server will return the chat id
-                // Check if the chat id is already exist in the chat list
-                // If exist, select the chat / If not, create new chat
             }
 
             @Override

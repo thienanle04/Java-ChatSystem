@@ -60,6 +60,11 @@ public class Friend_Request extends javax.swing.JPanel {
             public void addNewFriendRequest(Model_Friend_Request request) {
                 body.addFriendRequest(request);
             }
+
+            @Override
+            public void searchFriendRequest(String keyword) {
+                body.filterFriendRequest(keyword);
+            }
         });
 
         setLayout(new MigLayout("fillx", "0[fill]0", "0[200]10[150]10[fill]0"));

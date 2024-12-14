@@ -46,7 +46,7 @@ public class ServiceMessage {
     public Model_Group_Chat getPrivateChat(int user, int other) {
         Model_Group_Chat groupChat = null;
         try {
-            PreparedStatement p = con.prepareStatement("select group_id from group_members and user_id = ? and group_id in (select gm.group_id from group_members gm join chat_group cg on cg.group_id = gm.group_id where gm.user_id = ? and cg.group_type = 2)");
+            PreparedStatement p = con.prepareStatement("select group_id from group_members where user_id = ? and group_id in (select gm.group_id from group_members gm join chat_group cg on cg.group_id = gm.group_id where gm.user_id = ? and cg.group_type = 2)");
             p.setInt(1, user);
             p.setInt(2, other);
             ResultSet r = p.executeQuery();
@@ -57,7 +57,7 @@ public class ServiceMessage {
                 ResultSet r2 = p2.executeQuery();
                 r2.next();
                 String name = r2.getString(1);
-                groupChat = new Model_Group_Chat(r.getInt(1), name, "none", 2);
+                groupChat = new Model_Group_Chat(r.getInt(1), other, name, "none", 2);
                 p2.close();
                 r2.close();
             }
@@ -85,12 +85,13 @@ public class ServiceMessage {
                 p2.executeUpdate();
                 p2.close();
 
-                PreparedStatement p3 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
+                PreparedStatement p3 = con.prepareStatement("select u.name, u.status from users u where u.user_id = ? limit 1");
                 p3.setInt(1, other);
                 ResultSet r3 = p3.executeQuery();
                 r3.next();
                 String name = r3.getString(1);
-                groupChat = new Model_Group_Chat(groupID, name, "none", 2);
+                String status = r3.getString(2);
+                groupChat = new Model_Group_Chat(groupID, other, name, status, 2);
                 p3.close();
                 r3.close();
             }
@@ -131,17 +132,18 @@ public class ServiceMessage {
 
             if (type == GroupType.TWO) {
                 // If the group is a two-person chat, then the name of the chat is the name of the other person
-                PreparedStatement p2 = con.prepareStatement("select u.name, u.status from group_members gm join users u on u.user_id = gm.user_id where gm.group_id = ? and gm.user_id <> ? limit 1");
+                PreparedStatement p2 = con.prepareStatement("select u.user_id, u.name, u.status from group_members gm join users u on u.user_id = gm.user_id where gm.group_id = ? and gm.user_id <> ? limit 1");
                 p2.setInt(1, groupID);
                 p2.setInt(2, userId);
                 ResultSet r2 = p2.executeQuery();
-                r2.next();
-                name = r2.getString(1);
-                String status = r2.getString(2); // then the status of the group chat is the status of 'other' person
-                list.add(new Model_Group_Chat(groupID, name, status, type.getValue()));
+                r2.next(); 
+                int otherID = r2.getInt(1);
+                name = r2.getString(2);
+                String status = r2.getString(3); // then the status of the group chat is the status of 'other' person
+                list.add(new Model_Group_Chat(groupID, otherID, name, status, type.getValue()));
             } else {
                 // If group type is "MANY", then its' status is "none"
-                list.add(new Model_Group_Chat(groupID, name, "none", type.getValue()));
+                list.add(new Model_Group_Chat(groupID, 0, name, "none", type.getValue()));
             }
         }
         r.close();

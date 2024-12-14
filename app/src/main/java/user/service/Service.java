@@ -5,6 +5,7 @@ import user.model.Model_Chat_Message;
 import user.model.Model_Friend_Request;
 import user.model.Model_User_Profile;
 import user.model.Model_Group_Chat;
+import user.model.Model_Friend;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -90,10 +91,17 @@ public class Service {
                         Model_Friend_Request fr = new Model_Friend_Request(o);
                         PublicEvent.getInstance().getEventFriendRequest().addNewFriendRequest(fr);
                     }
+
+                    // Get all friends
+                    JSONArray arr2 = (JSONArray) os[2];
+                    for (Object o : arr2) {
+                        Model_Friend friend = new Model_Friend(o);
+                        PublicEvent.getInstance().getEventFriendList().addFriend(friend);;
+                    }
                 }
             });
 
-            client.on("user_status", new Emitter.Listener() {
+            client.on("chat_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
                     int userID = (Integer) os[0];
@@ -107,6 +115,22 @@ public class Service {
                     }
                 }
             });
+
+            client.on("user_status", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    int userID = (Integer) os[0];
+                    boolean status = (Boolean) os[1];
+                    if (status) {
+                        //  connect
+                        PublicEvent.getInstance().getEventFriendList().userConnect(userID);
+                    } else {
+                        //  disconnect
+                        PublicEvent.getInstance().getEventFriendList().userDisconnect(userID);
+                    }
+                }
+            });
+
             client.on("receive_ms", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {

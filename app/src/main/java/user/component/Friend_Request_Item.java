@@ -12,10 +12,10 @@ public class Friend_Request_Item extends javax.swing.JPanel {
         username.setText(data.getName());
     }
    
-    public int getFromUserID() {
-        return request.getFromUserID();
+    public Model_Friend_Request getRequest() {
+        return request;
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
