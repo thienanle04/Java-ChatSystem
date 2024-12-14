@@ -27,7 +27,9 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="cmdSearch" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-              <Component id="jTextField2" pref="350" max="32767" attributes="0"/>
+              <Component id="newGroup" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <Component id="jTextField2" pref="297" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -35,8 +37,9 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="cmdSearch" alignment="0" max="32767" attributes="0"/>
           <Component id="jTextField2" alignment="0" max="32767" attributes="0"/>
+          <Component id="newGroup" alignment="0" max="32767" attributes="0"/>
+          <Component id="cmdSearch" max="32767" attributes="0"/>
           <Component id="jComboBox1" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
@@ -62,6 +65,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Search"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="newGroup">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="New Group"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newGroupActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

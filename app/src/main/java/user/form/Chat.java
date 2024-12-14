@@ -97,7 +97,7 @@ public class Chat extends javax.swing.JPanel {
         chatBottom.setVisible(false);
     }
 
-    public void setChat(Model_Group_Chat groupChat) {
+    private void selected(Model_Group_Chat groupChat) {
         chat_Title1.setChatName(groupChat);
         chatBottom.setChat(groupChat);
         chatBody.clearChat();
@@ -105,6 +105,10 @@ public class Chat extends javax.swing.JPanel {
         chat_Title1.setVisible(true);
         chatBody.setVisible(true);
         chatBottom.setVisible(true);
+    }
+
+    public void setChat(Model_Group_Chat groupChat) {
+        selected(groupChat);
 
         if (chats_data.containsKey(groupChat.getGroupId())) {
             LinkedList<Model_Chat_Message> messages = chats_data.get(groupChat.getGroupId());

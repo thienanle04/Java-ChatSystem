@@ -85,11 +85,11 @@ public class Model_User_Profile {
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("userID", String.valueOf(this.userID));
+            obj.put("userID", this.userID);
             obj.put("userName", this.userName);
             obj.put("email", this.email);
             obj.put("address", this.address);
-            obj.put("dob", this.dob.toString());
+            obj.put("dob", this.dob);
             obj.put("gender", this.gender);
         } catch (JSONException e) {
             e.printStackTrace();

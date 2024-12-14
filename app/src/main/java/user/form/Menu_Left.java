@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import java.util.List;
+
+import user.model.Model_Friend;
 import user.model.Model_Group_Chat;
 import user.component.Friend_List_Menu_Button;
 import user.component.Friend_Request_Menu_Button;
@@ -12,6 +14,7 @@ import user.component.Friend_Search;
 import user.component.Item_People;
 import user.event.EventMenuLeft;
 import user.event.PublicEvent;
+import user.app.GroupType;
 
 public class Menu_Left extends javax.swing.JPanel {
 
@@ -38,6 +41,33 @@ public class Menu_Left extends javax.swing.JPanel {
                     chats.add(d);
                     menuList.add(new Item_People(d), "wrap");
                     refreshMenuList();
+                }
+            }
+
+            @Override
+            public void newChat(Model_Group_Chat groupChat) {
+                if (menuMessage.isSelected()) {
+                    menuList.add(new Item_People(groupChat), "wrap");
+                    refreshMenuList();
+                }
+
+                for (Model_Group_Chat d : chats) {
+                    if (groupChat.getName().equals(d.getName())) {
+                        return;
+                    }
+                }
+                chats.add(groupChat);
+            }
+
+            @Override
+            public void selectChat(Model_Friend friend) {
+                for (Model_Group_Chat d : chats) {
+                    if (d.getGroupType() == GroupType.TWO) {
+                        if (d.getUserID() == friend.getUserID()) {
+                            PublicEvent.getInstance().getEventMain().selectChat(d);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -210,11 +240,11 @@ public class Menu_Left extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
+                .addGap(0, 0, 0)
                 .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
                 .addContainerGap())
         );

@@ -75,11 +75,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Block"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdBlockActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="cmdUnfriend">
       <Properties>
         <Property name="text" type="java.lang.String" value="Unfriend"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdUnfriendActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="username">
       <Properties>
@@ -96,6 +102,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="New group"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdNewGroupActionPerformed"/>
+      </Events>
     </Component>
     <Component class="user.swing.ActiveStatus" name="activeStatus">
     </Component>

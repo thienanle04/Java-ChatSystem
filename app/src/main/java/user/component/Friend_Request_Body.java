@@ -1,15 +1,11 @@
 package user.component;
 
+import java.awt.Component;
 import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Adjustable;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
 import user.model.Model_Friend_Request;
 
-@SuppressWarnings("unused")
 public class Friend_Request_Body extends javax.swing.JPanel {
 
     public Friend_Request_Body() {
@@ -17,30 +13,49 @@ public class Friend_Request_Body extends javax.swing.JPanel {
         init();
     }
 
+    public void removeFriendRequest(Model_Friend_Request response) {
+        for (int i = 0; i < body.getComponentCount(); i++) {
+            Friend_Request_Item item = (Friend_Request_Item) body.getComponent(i);
+            if (item.getRequest().getFromUserID() == response.getFromUserID()) {
+                body.remove(item);
+                repaint();
+                revalidate();
+                break;
+            }
+        }
+        body.repaint();
+        body.revalidate();
+    }
+
     private void init() {
-        //setLayout(new MigLayout("fillx", "0[fill]0", "[grow]"));
-        body.setLayout(new MigLayout("fillx", "10[fill]10", "10[fill]10"));
+        body.setLayout(new MigLayout("fillx, hidemode 3", "10[fill]10", "10[fill]10"));
         sp.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "width:5;"
                 + "background:null;"
                 + "trackInsets:5,0,5,0;"
                 + "thumbInsets:5,0,5,0;");
         sp.getVerticalScrollBar().setUnitIncrement(10);
-        addItem(new Model_Friend_Request(14, "Penny"));
-        addItem(new Model_Friend_Request(20, "Tony"));
-        addItem(new Model_Friend_Request(14, "Penny"));
-        addItem(new Model_Friend_Request(20, "Tony"));
-        addItem(new Model_Friend_Request(14, "Penny"));
-        addItem(new Model_Friend_Request(20, "Tony"));
-        addItem(new Model_Friend_Request(14, "Penny"));
-        addItem(new Model_Friend_Request(20, "Tony"));
     }
 
-    public void addItem(Model_Friend_Request data) {
-        Friend_Request_Item item = new Friend_Request_Item(data);
+    public void addFriendRequest(Model_Friend_Request request) {
+        Friend_Request_Item item = new Friend_Request_Item(request);
         body.add(item, "wrap, w 100::100%");
         repaint();
         revalidate();
+    }
+
+    public void filterFriendRequest(String text) {
+        for (Component component : body.getComponents()) {
+            Friend_Request_Item item = (Friend_Request_Item) component;
+            if (item.getRequest().getName().toLowerCase().contains(text.toLowerCase())) {
+                item.setVisible(true);
+            } else {
+                item.setVisible(false);
+            }
+        }
+
+        body.repaint();
+        body.revalidate();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -81,19 +96,6 @@ public class Friend_Request_Body extends javax.swing.JPanel {
             .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void scrollToBottom() {
-        JScrollBar verticalBar = sp.getVerticalScrollBar();
-        AdjustmentListener downScroller = new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                Adjustable adjustable = e.getAdjustable();
-                adjustable.setValue(adjustable.getMaximum());
-                verticalBar.removeAdjustmentListener(this);
-            }
-        };
-        verticalBar.addAdjustmentListener(downScroller);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;

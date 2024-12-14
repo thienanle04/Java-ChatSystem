@@ -15,6 +15,14 @@ public class Model_Group_Chat {
         this.groupId = groupId;
     }
 
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
     public String getName() {
         return name;
     }
@@ -43,8 +51,9 @@ public class Model_Group_Chat {
         return status.equals("online");
     }
 
-    public Model_Group_Chat(int groupId, String name, String status, GroupType groupType) {
+    public Model_Group_Chat(int groupId, int userID, String name, String status, GroupType groupType) {
         this.groupId = groupId;
+        this.userID = userID;
         this.name = name;
         this.status = status;
         this.groupType = groupType;
@@ -54,6 +63,7 @@ public class Model_Group_Chat {
         JSONObject obj = (JSONObject) json;
         try {
             groupId = obj.getInt("groupId");
+            userID = obj.getInt("userID");
             name = obj.getString("name");
             status = obj.getString("status");
             groupType = GroupType.toGroupType(obj.getInt("groupType"));
@@ -63,6 +73,7 @@ public class Model_Group_Chat {
     }
 
     private int groupId;
+    private int userID;
     private String name;
     private String status;
     private GroupType groupType;

@@ -50,7 +50,7 @@ public class Login extends javax.swing.JPanel {
                                         }
                                         else {
                                             PublicEvent.getInstance().getEventMain().showLoading(false);
-                                            PublicEvent.getInstance().getEventMain().initAdminApp();
+                                            // PublicEvent.getInstance().getEventMain().initAdminApp();
                                         }
                                     } else {
                                         PublicEvent.getInstance().getEventMain().showNotification("Login fail");

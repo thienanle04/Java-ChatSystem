@@ -1,4 +1,4 @@
-package user.model;
+package server.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,17 +40,6 @@ public class Model_Friend {
         this.userID = userID;
         this.name = name;
         this.status = status;
-    }
-
-    public Model_Friend(Object obj) {
-        JSONObject json = (JSONObject) obj;
-        try {
-            userID = json.getInt("userID");
-            name = json.getString("name");
-            status = json.getString("status");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
     
     public JSONObject toJsonObject() {

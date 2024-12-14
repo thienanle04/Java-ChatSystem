@@ -24,24 +24,46 @@ public class Friend_Request extends javax.swing.JPanel {
         PublicEvent.getInstance().addEventFriendRequest(new EventFriendRequest() {
             @Override
             public void acceptFriendRequest(Model_Friend_Request response) {
-                Service.getInstance().getClient().emit("accept_friend_request", response.toJsonObject(), new Ack() {
+                new Thread(new Runnable() {
                     @Override
-                    public void call(Object... args) {
-                        if ((boolean) args[0]) {
-                        }
+                    public void run() {
+                        Service.getInstance().getClient().emit("accept_friend_request", response.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                if ((boolean) args[0]) {
+                                    body.removeFriendRequest(response);
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
             }
 
             @Override
             public void rejectFriendRequest(Model_Friend_Request response) {
-                Service.getInstance().getClient().emit("reject_friend_request", response.toJsonObject(), new Ack() {
+                new Thread(new Runnable() {
                     @Override
-                    public void call(Object... args) {
-                        if ((boolean) args[0]) {
-                        }
+                    public void run() {
+                        Service.getInstance().getClient().emit("reject_friend_request", response.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                if ((boolean) args[0]) {
+                                    body.removeFriendRequest(response);
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
+            }
+
+            @Override
+            public void addNewFriendRequest(Model_Friend_Request request) {
+                body.addFriendRequest(request);
+            }
+
+            @Override
+            public void searchFriendRequest(String keyword) {
+                body.filterFriendRequest(keyword);
             }
         });
 
@@ -55,10 +77,9 @@ public class Friend_Request extends javax.swing.JPanel {
         add(body, "wrap");
     }
 
-    
-
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -66,13 +87,11 @@ public class Friend_Request extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 727, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 727, Short.MAX_VALUE));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 681, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 681, Short.MAX_VALUE));
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

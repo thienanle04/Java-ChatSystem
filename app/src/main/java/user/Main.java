@@ -4,7 +4,6 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
-import user.model.Model_Friend;
 import admin.adminHomePagePanel;
 import user.model.Model_Group_Chat;
 import user.event.EventMain;
@@ -57,7 +56,7 @@ public class Main extends javax.swing.JFrame {
                 home.setVisible(true);
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_chat", Service.getInstance().getUser().getUserID());
-                Service.getInstance().getClient().emit("get_all_chats", Service.getInstance().getUser().getUserID());
+                Service.getInstance().getClient().emit("get_all_data", Service.getInstance().getUser().getUserID());
                 updateProfile.setUser(Service.getInstance().getUser());
             }
 
@@ -72,15 +71,6 @@ public class Main extends javax.swing.JFrame {
             public void selectChat(Model_Group_Chat chat) { 
                 // If chat is already initialized
                 home.setChat(chat);
-            }
-
-            @Override
-            public void selectChat(Model_Friend profile) {
-                // Do not know whether the chat is already initialized or not
-                // So, we need to check if chat is already initialized by sending request to server
-                // Server will return the chat id
-                // Check if the chat id is already exist in the chat list
-                // If exist, select the chat / If not, create new chat
             }
 
             @Override
@@ -109,21 +99,6 @@ public class Main extends javax.swing.JFrame {
                 updateProfile.setVisible(true);
             }
             
-            @Override
-            public void goFindNewFriend() {
-                    
-            }
-    
-            @Override
-            public void goViewFriendList() {
-                    
-            }
-
-            @Override
-            public void goViewFriendRequest() {
-                
-            }
-
             @Override
             public void showNotification(String message) {
                 Main.this.showNotificationDialog(message);
@@ -177,7 +152,7 @@ public class Main extends javax.swing.JFrame {
         loading = new user.form.Loading();
         login = new user.form.Login();
         home = new user.form.Home();
-        adminApp = new adminHomePagePanel();
+        // adminApp = new adminHomePagePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -189,7 +164,7 @@ public class Main extends javax.swing.JFrame {
         body.add(loading, "card5");
         body.add(login, "card4");
         body.add(home, "card2");
-        body.add(adminApp, "adminCard");
+        // body.add(adminApp, "adminCard");
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);

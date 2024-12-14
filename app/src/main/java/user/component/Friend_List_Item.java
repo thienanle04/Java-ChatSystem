@@ -33,12 +33,20 @@ public class Friend_List_Item extends javax.swing.JPanel {
             public void mouseReleased(MouseEvent me) {
                 if (me.getButton() == 1 && mouseOver) { // Left mouse button
                     // Open chat
-                    PublicEvent.getInstance().getEventMain().selectChat(friend);
+                    PublicEvent.getInstance().getEventMenuLeft().selectChat(friend);
                 }
             }
         });
     }
-   
+
+    public Model_Friend getFriend() {
+        return friend;
+    }
+
+    public void updateUserStatus(String status) {
+        friend.setStatus(status);
+        activeStatus.setActive(friend.isOnline());
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -58,8 +66,18 @@ public class Friend_List_Item extends javax.swing.JPanel {
         });
 
         cmdBlock.setText("Block");
+        cmdBlock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdBlockActionPerformed(evt);
+            }
+        });
 
         cmdUnfriend.setText("Unfriend");
+        cmdUnfriend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdUnfriendActionPerformed(evt);
+            }
+        });
 
         username.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         username.setText("Name");
@@ -70,6 +88,11 @@ public class Friend_List_Item extends javax.swing.JPanel {
         });
 
         cmdNewGroup.setText("New group");
+        cmdNewGroup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdNewGroupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -111,16 +134,28 @@ public class Friend_List_Item extends javax.swing.JPanel {
     private void usernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usernameMouseClicked
         if (evt.getButton() == 1) { // Left mouse button
             // Open chat
-
+            PublicEvent.getInstance().getEventMenuLeft().selectChat(friend);
         }
     }//GEN-LAST:event_usernameMouseClicked
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         if (evt.getButton() == 1) { // Left mouse button
             // Open chat
-
+            PublicEvent.getInstance().getEventMenuLeft().selectChat(friend);
         }
     }//GEN-LAST:event_formMouseClicked
+
+    private void cmdNewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNewGroupActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdNewGroupActionPerformed
+
+    private void cmdUnfriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUnfriendActionPerformed
+        PublicEvent.getInstance().getEventFriendList().unFriend(friend);
+    }//GEN-LAST:event_cmdUnfriendActionPerformed
+
+    private void cmdBlockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBlockActionPerformed
+        PublicEvent.getInstance().getEventFriendList().blockFriend(friend);
+    }//GEN-LAST:event_cmdBlockActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

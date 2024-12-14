@@ -1,15 +1,12 @@
 package user.component;
 
+import java.awt.Component;
+
 import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Adjustable;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
 import user.model.Model_Friend;
 
-@SuppressWarnings("unused")
 public class Friend_List_Body extends javax.swing.JPanel {
 
     public Friend_List_Body() {
@@ -18,21 +15,63 @@ public class Friend_List_Body extends javax.swing.JPanel {
     }
 
     private void init() {
-        body.setLayout(new MigLayout("fillx", "10[fill]10", "10[fill]10"));
+        body.setLayout(new MigLayout("fillx, hidemode 3", "10[fill]10", "10[fill]10"));
         sp.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "width:5;"
                 + "background:null;"
                 + "trackInsets:5,0,5,0;"
                 + "thumbInsets:5,0,5,0;");
         sp.getVerticalScrollBar().setUnitIncrement(10);
-        addItem(new Model_Friend(14, "Nguyen Dang Viet Hoang", "online"));
     }
 
-    public void addItem(Model_Friend data) {
-        Friend_List_Item item = new Friend_List_Item(data);
+    public void addFriend(Model_Friend friend) {
+        Friend_List_Item item = new Friend_List_Item(friend);
         body.add(item, "wrap, w 100::100%");
         repaint();
         revalidate();
+    }
+
+    public void updateUserStatus(int userID, String status) {
+        for (Component component : body.getComponents()) {
+            if (component instanceof Friend_List_Item) {
+                Friend_List_Item item = (Friend_List_Item) component;
+                if (item.getFriend().getUserID() == userID) {
+                    item.updateUserStatus(status);
+                    break;
+                }
+            }
+        }
+        repaint();
+        revalidate();
+    }
+
+    public void removeFriend(int userID) {
+        for (Component component : body.getComponents()) {
+            if (component instanceof Friend_List_Item) {
+                Friend_List_Item item = (Friend_List_Item) component;
+                if (item.getFriend().getUserID() == userID) {
+                    body.remove(component);
+                    break;
+                }
+            }
+        }
+        repaint();
+        revalidate();
+    }
+
+    public void filterFriend(String name, String status) {
+        for (Component component : body.getComponents()) {
+            if (component instanceof Friend_List_Item) {
+                Friend_List_Item item = (Friend_List_Item) component;
+                if (item.getFriend().getName().toLowerCase().contains(name.toLowerCase()) && (status.equals("all") || item.getFriend().getStatus().equals(status))) {
+                    item.setVisible(true);
+                } else {
+                    item.setVisible(false);
+                }
+            }
+        }
+        body.repaint();
+        body.revalidate();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -73,19 +112,6 @@ public class Friend_List_Body extends javax.swing.JPanel {
             .addComponent(sp, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void scrollToBottom() {
-        JScrollBar verticalBar = sp.getVerticalScrollBar();
-        AdjustmentListener downScroller = new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                Adjustable adjustable = e.getAdjustable();
-                adjustable.setValue(adjustable.getMaximum());
-                verticalBar.removeAdjustmentListener(this);
-            }
-        };
-        verticalBar.addAdjustmentListener(downScroller);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;

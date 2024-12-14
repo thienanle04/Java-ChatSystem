@@ -3,9 +3,8 @@ package user.component;
 import user.event.PublicEvent;
 import user.model.Model_Friend_Request;
 
-@SuppressWarnings("unused")
 public class Friend_Request_Item extends javax.swing.JPanel {
-    private Model_Friend_Request request;
+    private final Model_Friend_Request request;
     
     public Friend_Request_Item(Model_Friend_Request data) {
         initComponents();
@@ -13,7 +12,10 @@ public class Friend_Request_Item extends javax.swing.JPanel {
         username.setText(data.getName());
     }
    
-
+    public Model_Friend_Request getRequest() {
+        return request;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -91,11 +93,11 @@ public class Friend_Request_Item extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
 
     private void cmdDenyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDenyActionPerformed
-        // TODO add your handling code here:
+        PublicEvent.getInstance().getEventFriendRequest().rejectFriendRequest(request);
     }//GEN-LAST:event_cmdDenyActionPerformed
 
     private void cmdAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAcceptActionPerformed
-        // TODO add your handling code here:
+        PublicEvent.getInstance().getEventFriendRequest().acceptFriendRequest(request);
     }//GEN-LAST:event_cmdAcceptActionPerformed
 
 
