@@ -15,7 +15,7 @@ public class Friend_List_Body extends javax.swing.JPanel {
     }
 
     private void init() {
-        body.setLayout(new MigLayout("fillx", "10[fill]10", "10[fill]10"));
+        body.setLayout(new MigLayout("fillx, hidemode 3", "10[fill]10", "10[fill]10"));
         sp.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
                 + "width:5;"
                 + "background:null;"

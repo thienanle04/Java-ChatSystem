@@ -4,6 +4,29 @@
  */
 package user.form;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import user.model.Model_Group_Chat;
+import user.service.Service;
+import user.app.GroupType;
+import user.event.PublicEvent;
+
 /**
  *
  * @author asus
@@ -16,7 +39,12 @@ public class Menu_Right extends javax.swing.JPanel {
     public Menu_Right() {
         initComponents();
     }
-
+    private int user_Id;
+    private Model_Group_Chat groupChat;
+    public void setChat(Model_Group_Chat groupChat){
+        user_Id = Service.getInstance().getUser().getUserID();
+        this.groupChat = groupChat;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,31 +54,442 @@ public class Menu_Right extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        addMember = new javax.swing.JButton();
+        promoteAdminRole = new javax.swing.JButton();
+        deleteMember = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
         jLabel1.setText("Menu Right Note");
+
+        addMember.setText("Add Members");
+        addMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMemberActionPerformed(evt);
+            }
+        });
+
+        promoteAdminRole.setText("Promote Admin Role");
+        promoteAdminRole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                promoteAdminRoleActionPerformed(evt);
+            }
+        });
+
+        deleteMember.setText("Delete Members");
+        deleteMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteMemberActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel1)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(addMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(promoteAdminRole, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(deleteMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(113, 113, 113)
+                .addGap(53, 53, 53)
                 .addComponent(jLabel1)
-                .addContainerGap(371, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(addMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(deleteMember, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(promoteAdminRole, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(227, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private void addMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMemberActionPerformed
+        // TODO add your handling code here:
+        // Thay đổi giá trị `currentUserId` bằng user_id hiện tại
+        int currentUserId = user_Id; // ID của user hiện tại
+        int groupId = this.groupChat.getGroupId();
+        if(this.groupChat.getGroupType() == GroupType.MANY) {
+            try {
+                // Kết nối đến database
+                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+                String user = "JavaChatSystem";
+                String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
+                Connection conn = DriverManager.getConnection(url, user, password);
+
+                // Lấy dữ liệu bạn bè từ database
+                String query = """
+                    SELECT 
+                        CASE 
+                            WHEN user_id_1 = ? THEN user_id_2
+                            ELSE user_id_1
+                        END AS friend_id
+                    FROM user_friends
+                    WHERE 
+                        (user_id_1 = ? OR user_id_2 = ?)
+                        AND status = 'friends'
+                        AND CASE 
+                                WHEN user_id_1 = ? THEN user_id_2
+                                ELSE user_id_1
+                            END NOT IN (
+                                SELECT user_id 
+                                FROM group_members 
+                                WHERE group_id = ? 
+                            );
+                """;
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, currentUserId); // user_id cho điều kiện CASE
+                stmt.setInt(2, currentUserId); // user_id cho điều kiện WHERE
+                stmt.setInt(3, currentUserId); // user_id cho điều kiện WHERE
+                stmt.setInt(4, currentUserId); // user_id cho điều kiện CASE
+                stmt.setInt(5, groupId);       // groupId để lọc
+
+                ResultSet rs = stmt.executeQuery();
+
+                // Chuẩn bị dữ liệu cho JTable
+                java.util.List<Object[]> data = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    int friendId = rs.getInt("friend_id");
+
+                    // Lấy thêm thông tin bạn bè từ bảng `users`
+                    String friendQuery = "SELECT user_id, username, name FROM users WHERE user_id = ?";
+                    PreparedStatement friendStmt = conn.prepareStatement(friendQuery);
+                    friendStmt.setInt(1, friendId);
+
+                    ResultSet friendRs = friendStmt.executeQuery();
+                    if (friendRs.next()) {
+                        data.add(new Object[]{
+                                friendRs.getInt("user_id"),
+                                friendRs.getString("username"),
+                                friendRs.getString("name"),
+                        });
+                    }
+                    friendRs.close();
+                    friendStmt.close();
+                }
+
+                Object[][] friends = data.toArray(new Object[0][]);
+                String[] columnNames = {"User ID", "Username", "Name"};
+
+                // Hiển thị dữ liệu trên JTable
+                JTable friendsTable = new JTable(friends, columnNames);
+                friendsTable.setFillsViewportHeight(true);
+                friendsTable.setRowHeight(30);
+                // Ẩn cột "User ID"
+                friendsTable.getColumnModel().getColumn(0).setMinWidth(0);
+                friendsTable.getColumnModel().getColumn(0).setMaxWidth(0);
+                friendsTable.getColumnModel().getColumn(0).setWidth(0);
+
+
+                JScrollPane scrollPane = new JScrollPane(friendsTable);
+                scrollPane.setPreferredSize(new Dimension(500, 300));
+
+                // Tạo JDialog để hiển thị bảng
+                JDialog dialog = new JDialog((JFrame) null, "List of Friends", true);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(scrollPane, BorderLayout.CENTER);
+
+                JButton addButton = new JButton("Add");
+                addButton.addActionListener(e -> {
+                    int selectedRow = friendsTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        int friendId = (int) friendsTable.getValueAt(selectedRow, 0);
+                        try {
+                            // Thêm bạn bè vào nhóm với groupID
+                            String insertQuery = "INSERT INTO group_members (group_id, user_id, role) VALUES (?, ?, 'member')";
+                            try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+                                insertStmt.setInt(1, groupId); // Thay `groupId` bằng giá trị nhóm của bạn
+                                insertStmt.setInt(2, friendId);
+                                insertStmt.executeUpdate();
+                                JOptionPane.showMessageDialog(dialog, "Friend added to group successfully!");
+                                dialog.dispose();
+                            } // Thay `groupId` bằng giá trị nhóm của bạn
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(dialog, "Error adding friend to group: " + ex.getMessage(),
+                                    "Database Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(dialog, "Please select a friend to add.", "No Friend Selected",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(addButton);
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(550, 400);
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching friends: " + e.getMessage(), "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else {
+            PublicEvent.getInstance().getEventMain().showNotification("Can not add new member to private chat");
+        }
+    }//GEN-LAST:event_addMemberActionPerformed
+
+    private void deleteMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMemberActionPerformed
+        // TODO add your handling code here:
+        int groupId = this.groupChat.getGroupId();
+        int userId = user_Id; 
+        String role = "member";
+        String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+        String user = "JavaChatSystem";
+        String password = "javachatsystem"; 
+        try {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            String query = "SELECT role FROM group_members WHERE group_id = ? AND user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                role = rs.getString("role"); // Lấy giá trị của cột "role"
+            } else {
+                System.out.println("User không thuộc group này hoặc group không tồn tại.");
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(role);
+        if (this.groupChat.getGroupType() == GroupType.MANY) {
+            if(role.equals("admin")){
+               // Create and show a dialog with group members
+                JDialog dialog = new JDialog((Frame) null, "Group Members", true);
+                dialog.setLayout(new BorderLayout());
+                dialog.setSize(600, 400);
+                dialog.setLocationRelativeTo(null);
+
+                // Table model
+                DefaultTableModel tableModel = new DefaultTableModel(new String[]{"User Name", "Name", "UserId"}, 0);
+                JTable memberTable = new JTable(tableModel);
+
+                // Fetch group members
+                try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                    String query = "SELECT u.username, u.name, gm.user_id " +
+                                   "FROM group_members gm " +
+                                   "JOIN users u ON gm.user_id = u.user_id " +
+                                   "WHERE gm.group_id = ? AND gm.role = 'member'";
+
+                    PreparedStatement stmt = conn.prepareStatement(query);
+                    stmt.setInt(1, groupId);
+                    ResultSet rs = stmt.executeQuery();
+
+                    while (rs.next()) {
+                        String userName = rs.getString("username");
+                        String name = rs.getString("name");
+                        int _userId = rs.getInt("user_id");
+
+                        // Add member data to table
+                        tableModel.addRow(new Object[]{userName, name, _userId});
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                // Hide the 'userId' column by setting its min/max width to 0
+                memberTable.getColumnModel().getColumn(2).setMinWidth(0);
+                memberTable.getColumnModel().getColumn(2).setMaxWidth(0);
+                memberTable.getColumnModel().getColumn(2).setWidth(0);
+
+                // Create the Delete button
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.addActionListener(e -> {
+                    int selectedRow = memberTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        int _userId = (int) tableModel.getValueAt(selectedRow, 2); // Get user_id from the selected row
+
+                        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                            // Thực hiện câu lệnh DELETE để xóa người dùng khỏi group_members
+                            String deleteQuery = "DELETE FROM group_members WHERE user_id = ? AND group_id = ?";
+                            PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
+                            deleteStmt.setInt(1, _userId); // Truyền user_id
+                            deleteStmt.setInt(2, groupId); // Truyền group_id
+                            deleteStmt.executeUpdate();
+                            JOptionPane.showMessageDialog(dialog, "User successfully deleted from group.");
+
+                            // Xóa dòng trong JTable
+                            tableModel.removeRow(selectedRow);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(dialog, "Error deleting user from group.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(dialog, "Please select a user to delete.", "No Selection", JOptionPane.WARNING_MESSAGE);
+                    }
+                }); 
+                // Set up the dialog
+                dialog.add(new JScrollPane(memberTable), BorderLayout.CENTER);
+
+                // Add the Promote button to the bottom panel
+                JPanel bottomPanel = new JPanel();
+                bottomPanel.add(deleteButton);
+                dialog.add(bottomPanel, BorderLayout.SOUTH);
+
+                dialog.setVisible(true);
+            }
+            else
+            {
+               PublicEvent.getInstance().getEventMain().showNotification("You are not a admin"); 
+            }
+        }
+        else {
+            PublicEvent.getInstance().getEventMain().showNotification("Can not promote admin in private chat");
+        }
+    }//GEN-LAST:event_deleteMemberActionPerformed
+
+    private void promoteAdminRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promoteAdminRoleActionPerformed
+        // TODO add your handling code here:
+        int groupId = this.groupChat.getGroupId();
+        int userId = user_Id; 
+        String role = "member";
+        String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
+        String user = "JavaChatSystem";
+        String password = "javachatsystem"; 
+        try {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            String query = "SELECT role FROM group_members WHERE group_id = ? AND user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                role = rs.getString("role"); // Lấy giá trị của cột "role"
+            } else {
+                System.out.println("User không thuộc group này hoặc group không tồn tại.");
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(role);
+        if (this.groupChat.getGroupType() == GroupType.MANY) {
+            if(role.equals("admin")){
+               // Create and show a dialog with group members
+                JDialog dialog = new JDialog((Frame) null, "Group Members", true);
+                dialog.setLayout(new BorderLayout());
+                dialog.setSize(600, 400);
+                dialog.setLocationRelativeTo(null);
+
+                // Table model
+                DefaultTableModel tableModel = new DefaultTableModel(new String[]{"User Name", "Name", "UserId"}, 0);
+                JTable memberTable = new JTable(tableModel);
+
+                // Fetch group members
+                try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                    String query = "SELECT u.username, u.name, gm.user_id " +
+                                   "FROM group_members gm " +
+                                   "JOIN users u ON gm.user_id = u.user_id " +
+                                   "WHERE gm.group_id = ? AND gm.role = 'member'";
+
+                    PreparedStatement stmt = conn.prepareStatement(query);
+                    stmt.setInt(1, groupId);
+                    ResultSet rs = stmt.executeQuery();
+
+                    while (rs.next()) {
+                        String userName = rs.getString("username");
+                        String name = rs.getString("name");
+                        int _userId = rs.getInt("user_id");
+
+                        // Add member data to table
+                        tableModel.addRow(new Object[]{userName, name, _userId});
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                // Hide the 'userId' column by setting its min/max width to 0
+                memberTable.getColumnModel().getColumn(2).setMinWidth(0);
+                memberTable.getColumnModel().getColumn(2).setMaxWidth(0);
+                memberTable.getColumnModel().getColumn(2).setWidth(0);
+
+                // Create the Promote button
+                JButton promoteButton = new JButton("Promote");
+                promoteButton.addActionListener(e -> {
+                    int selectedRow = memberTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        int _userId = (int) tableModel.getValueAt(selectedRow, 2); // Get user_id from the selected row
+
+                        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+                            String updateQuery = "UPDATE group_members SET role = 'admin' WHERE user_id = ? AND group_id = ?";
+                            PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                            updateStmt.setInt(1, _userId);
+                            updateStmt.setInt(2, groupId);
+                            updateStmt.executeUpdate();
+                            JOptionPane.showMessageDialog(dialog, "User promoted to admin.");
+
+                            // Optionally refresh the table or remove the promoted user from the list
+                            tableModel.removeRow(selectedRow);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Menu_Right.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(dialog, "Error promoting user to admin.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(dialog, "Please select a user to promote.", "No Selection", JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+                // Set up the dialog
+                dialog.add(new JScrollPane(memberTable), BorderLayout.CENTER);
+
+                // Add the Promote button to the bottom panel
+                JPanel bottomPanel = new JPanel();
+                bottomPanel.add(promoteButton);
+                dialog.add(bottomPanel, BorderLayout.SOUTH);
+
+                dialog.setVisible(true);
+            }
+            else
+            {
+               PublicEvent.getInstance().getEventMain().showNotification("You are not a admin"); 
+            }
+        }
+        else {
+            PublicEvent.getInstance().getEventMain().showNotification("Can not promote admin in private chat");
+        }
+    }//GEN-LAST:event_promoteAdminRoleActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addMember;
+    private javax.swing.JButton deleteMember;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton promoteAdminRole;
     // End of variables declaration//GEN-END:variables
 }

@@ -44,6 +44,7 @@ public class spamReports extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -70,9 +71,16 @@ public class spamReports extends javax.swing.JPanel {
                     java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
                     java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
             }
         });
         reloadSpamReports();
@@ -226,8 +234,8 @@ public class spamReports extends javax.swing.JPanel {
         try {
             // Kết nối đến database
             String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "admin";
-            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+            String user = "JavaChatSystem";
+            String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
             Connection conn = DriverManager.getConnection(url, user, password);
 
             // Truy vấn dữ liệu (đã thêm cột is_locked)
@@ -331,7 +339,7 @@ public class spamReports extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
-        int selectedRow = SpamReports.getSelectedRow();
+        int selectedRow =  SpamReports.convertRowIndexToModel(SpamReports.getSelectedRow());
 
         if (selectedRow != -1) {
             Boolean lock = (Boolean) model.getValueAt(selectedRow, 4);
@@ -342,8 +350,8 @@ public class spamReports extends javax.swing.JPanel {
             // Update the database
             try (Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                    "admin",
-                    "*Nghia1692004")) {
+                    "JavaChatSystem",
+                    "javachatsystem")) {
 
                 String sql = "UPDATE Users SET is_locked = ? WHERE username = ?";
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -15,7 +15,8 @@ public class DatabaseConnection {
     private final String password = "javachatsystem";
 
     // Private constructor to prevent instantiation
-    private DatabaseConnection() { }
+    private DatabaseConnection() {
+    }
 
     // Thread-safe getInstance() using synchronized block
     public static synchronized DatabaseConnection getInstance() {
@@ -30,7 +31,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed()) {
             try {
                 connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + server + ":" + port + "/" + database, userName, password);
+                        "jdbc:mysql://" + server + ":" + port + "/" + database, userName, password);
                 System.out.println("Database connection established.");
             } catch (SQLException e) {
                 System.err.println("Failed to connect to the database: " + e.getMessage());

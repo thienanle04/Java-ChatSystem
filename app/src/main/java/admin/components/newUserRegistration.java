@@ -22,6 +22,7 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import user.event.PublicEvent;
 
 /**
  *
@@ -48,6 +49,8 @@ public class newUserRegistration extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -68,19 +71,24 @@ public class newUserRegistration extends javax.swing.JPanel {
 
         NewUserRegistation.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { "2018-09-18", "nghia", "124", null },
-                        { "2018-10-20", "an", "123", null },
-                        { "2019-11-24", "hoang", "125", null }
+
                 },
                 new String[] {
-                        "Creation Date", "Username", "Password", "Email"
+                        "Creation Date", "Username", "Email"
                 }) {
             Class[] types = new Class[] {
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean[] {
+                    false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
             }
         });
         try {
@@ -95,7 +103,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                         SELECT
                             DATE_FORMAT(created_at, '%Y-%m-%d') AS CreationDate,
                             username,
-                            password_hash,
                             email
                         FROM
                             users
@@ -115,7 +122,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                 Object[] row = new Object[] {
                         rs.getTimestamp("CreationDate"), // Lấy giá trị từ cột CreationDate
                         rs.getString("username"), // Lấy giá trị từ cột username
-                        rs.getString("password_hash"), // Lấy giá trị từ cột password_hash
                         rs.getString("email") // Lấy giá trị từ cột email
                 };
                 model.addRow(row);
@@ -130,7 +136,6 @@ public class newUserRegistration extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-
         jScrollPane5.setViewportView(NewUserRegistation);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -300,7 +305,7 @@ public class newUserRegistration extends javax.swing.JPanel {
                 originalModel = (DefaultTableModel) NewUserRegistation.getModel();
             }
 
-            DefaultTableModel model = originalModel;
+            DefaultTableModel model = (DefaultTableModel) NewUserRegistation.getModel();
 
             DefaultTableModel filteredModel = new DefaultTableModel();
 
@@ -309,13 +314,12 @@ public class newUserRegistration extends javax.swing.JPanel {
             }
 
             for (int i = 0; i < model.getRowCount(); i++) {
-                String email = model.getValueAt(i, 3).toString();
+                String email = model.getValueAt(i, 2).toString();
                 if (email.toLowerCase().contains(filterName.toLowerCase())) {
                     filteredModel.addRow(new Object[] {
                             model.getValueAt(i, 0),
                             model.getValueAt(i, 1),
                             model.getValueAt(i, 2),
-                            model.getValueAt(i, 3),
                     });
                 }
             }
@@ -336,8 +340,8 @@ public class newUserRegistration extends javax.swing.JPanel {
 
                 // Kết nối đến database
                 String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "admin";
-                String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
+                String user = "JavaChatSystem";
+                String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
                 Connection conn = DriverManager.getConnection(url, user, password);
 
                 // Truy vấn dữ liệu
@@ -422,10 +426,18 @@ public class newUserRegistration extends javax.swing.JPanel {
         // TODO add your handling code here:
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
+        LocalDate _startDate = LocalDate.MIN;
+        LocalDate _endDate = LocalDate.MAX;
+        
         // Parse the input dates
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start, inputFormatter);
-        LocalDate _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end, inputFormatter);
+        try {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            _startDate = start.isEmpty() ? LocalDate.MIN : LocalDate.parse(start, inputFormatter);
+            _endDate = end.isEmpty() ? LocalDate.MAX : LocalDate.parse(end, inputFormatter);
+        } catch (DateTimeParseException e) {
+            PublicEvent.getInstance().getEventMain().showNotification("Invalid start date format. "
+                    + "Please use 'yyyy-MM-dd'.");
+        }
         try {
             // Define the table's date format
             DateTimeFormatter tableFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -453,7 +465,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                             model.getValueAt(i, 0),
                             model.getValueAt(i, 1),
                             model.getValueAt(i, 2),
-                            model.getValueAt(i, 3),
                     });
                 }
             }
@@ -491,7 +502,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                             model.getValueAt(i, 0),
                             model.getValueAt(i, 1),
                             model.getValueAt(i, 2),
-                            model.getValueAt(i, 3),
                     });
                 }
             }

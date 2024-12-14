@@ -41,6 +41,7 @@ public class friendCount extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -57,8 +58,7 @@ public class friendCount extends javax.swing.JPanel {
 
         FriendCount.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
-                        { "Nghia", new Integer(5), new Integer(25), "2018-09-20" },
-                        { "An", new Integer(4), new Integer(16), "2019-10-20" }
+
                 },
                 new String[] {
                         "Username", "Direct Friends Count", "Total Friends Count", "Creation Date"
@@ -66,9 +66,16 @@ public class friendCount extends javax.swing.JPanel {
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
             }
         });
         try {
