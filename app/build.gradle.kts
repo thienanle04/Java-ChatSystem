@@ -50,6 +50,7 @@ dependencies {
 
     implementation("com.toedter:jcalendar:1.4")
     implementation("com.sun.mail:javax.mail:1.6.2")
+    implementation ("org.json:json:20230227");
 }
 
 tasks.withType<Copy> {

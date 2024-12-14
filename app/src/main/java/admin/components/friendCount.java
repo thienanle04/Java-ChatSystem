@@ -18,16 +18,35 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import server.config.ConfigUtil;
+
 /**
  *
  * @author Nghiax
  */
 public class friendCount extends javax.swing.JPanel {
+    private String url;
+    private String username;
+    private String password;
+    private Connection conn;
 
     /**
      * Creates new form friendCount
      */
     public friendCount() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            url = configUtil.getString("url");
+            System.out.println("url" + url);
+            username = configUtil.getString("username");
+            password = configUtil.getString("password");
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
     }
 
@@ -79,12 +98,6 @@ public class friendCount extends javax.swing.JPanel {
             }
         });
         try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "admin";
-            String password = "*Nghia1692004"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
-
             // Truy vấn dữ liệu
             String query = """
                                         WITH DirectFriends AS (

@@ -18,16 +18,35 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import server.config.ConfigUtil;
+
 /**
  *
  * @author Nghiax
  */
 public class spamReports extends javax.swing.JPanel {
+    private String url;
+    private String username;
+    private String password;
+    private Connection conn;
 
     /**
      * Creates new form spamReports
      */
     public spamReports() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            url = configUtil.getString("url");
+            System.out.println("url" + url);
+            username = configUtil.getString("username");
+            password = configUtil.getString("password");
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
     }
 
@@ -232,12 +251,6 @@ public class spamReports extends javax.swing.JPanel {
 
     private void reloadSpamReports() {
         try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "JavaChatSystem";
-            String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
-
             // Truy vấn dữ liệu (đã thêm cột is_locked)
             String query = """
                         SELECT
@@ -339,7 +352,7 @@ public class spamReports extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
-        int selectedRow =  SpamReports.convertRowIndexToModel(SpamReports.getSelectedRow());
+        int selectedRow = SpamReports.convertRowIndexToModel(SpamReports.getSelectedRow());
 
         if (selectedRow != -1) {
             Boolean lock = (Boolean) model.getValueAt(selectedRow, 4);
@@ -348,24 +361,20 @@ public class spamReports extends javax.swing.JPanel {
             String username = model.getValueAt(selectedRow, 2).toString();
 
             // Update the database
-            try (Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                    "JavaChatSystem",
-                    "javachatsystem")) {
 
-                String sql = "UPDATE Users SET is_locked = ? WHERE username = ?";
-                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setBoolean(1, newLock); // Set the new lock value
-                    pstmt.setString(2, username); // Identify the user by username
-                    int rowsAffected = pstmt.executeUpdate();
+            String sql = "UPDATE Users SET is_locked = ? WHERE username = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setBoolean(1, newLock); // Set the new lock value
+                pstmt.setString(2, username); // Identify the user by username
+                int rowsAffected = pstmt.executeUpdate();
 
-                    if (rowsAffected > 0) {
-                        reloadSpamReports();
-                        System.out.println("Database updated successfully for user: " + username);
-                    } else {
-                        System.out.println("No rows updated for user: " + username);
-                    }
+                if (rowsAffected > 0) {
+                    reloadSpamReports();
+                    System.out.println("Database updated successfully for user: " + username);
+                } else {
+                    System.out.println("No rows updated for user: " + username);
                 }
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error updating database: " + e.getMessage());
