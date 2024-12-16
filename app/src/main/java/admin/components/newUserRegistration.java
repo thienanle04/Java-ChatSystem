@@ -143,7 +143,6 @@ public class newUserRegistration extends javax.swing.JPanel {
             // Đóng kết nối
             rs.close();
             stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -406,7 +405,6 @@ public class newUserRegistration extends javax.swing.JPanel {
                 // Đóng kết nối
                 rs.close();
                 stmt.close();
-                conn.close();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Năm nhập không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException e) {

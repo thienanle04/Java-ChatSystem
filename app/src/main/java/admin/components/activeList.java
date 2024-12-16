@@ -459,7 +459,6 @@ public class activeList extends javax.swing.JPanel {
                 appOpenStmt.close();
                 groupChattedStmt.close();
                 peopleChattedStmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -533,7 +532,6 @@ public class activeList extends javax.swing.JPanel {
                 // Close connections
                 rs.close();
                 stmt.close();
-                conn.close();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Invalid year format!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException e) {

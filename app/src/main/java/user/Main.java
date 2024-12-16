@@ -68,7 +68,7 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void selectChat(Model_Group_Chat chat) { 
+            public void selectChat(Model_Group_Chat chat) {
                 // If chat is already initialized
                 home.setChat(chat);
             }
@@ -98,7 +98,7 @@ public class Main extends javax.swing.JFrame {
                 updateProfile.setUser(Service.getInstance().getUser());
                 updateProfile.setVisible(true);
             }
-            
+
             @Override
             public void showNotification(String message) {
                 Main.this.showNotificationDialog(message);
@@ -152,7 +152,7 @@ public class Main extends javax.swing.JFrame {
         loading = new user.form.Loading();
         login = new user.form.Login();
         home = new user.form.Home();
-        // adminApp = new adminHomePagePanel();
+        adminApp = new adminHomePagePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,7 +164,7 @@ public class Main extends javax.swing.JFrame {
         body.add(loading, "card5");
         body.add(login, "card4");
         body.add(home, "card2");
-        // body.add(adminApp, "adminCard");
+        body.add(adminApp, "adminCard");
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);

@@ -133,7 +133,6 @@ public class groupList extends javax.swing.JPanel {
             // Đóng kết nối
             rs.close();
             stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -325,7 +324,6 @@ public class groupList extends javax.swing.JPanel {
                 // Đóng kết nối
                 rs.close();
                 stmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -420,7 +418,6 @@ public class groupList extends javax.swing.JPanel {
                 // Đóng kết nối
                 rs.close();
                 stmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error fetching data: " + e.getMessage(), "Database Error",
