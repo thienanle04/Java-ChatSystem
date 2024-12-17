@@ -101,40 +101,53 @@ public class friendCount extends javax.swing.JPanel {
         try {
             // Truy vấn dữ liệu
             String query = """
-                    WITH DirectFriends AS (
-                        -- Get all direct friends for all users
-                        SELECT
-                            CASE
-                                WHEN user_id_1 = uf.user_id_1 THEN user_id_2
-                                ELSE user_id_1
-                            END AS friend_id,
-                            uf.user_id_1 AS current_user_id
-                        FROM User_Friends uf
-                        WHERE uf.status = 'friends'
-                    ),
-                    FriendsOfFriends AS (
-                        -- Get friends of friends excluding the original user_id
-                        SELECT DISTINCT
-                            CASE
-                                WHEN uf.user_id_1 = df.friend_id THEN uf.user_id_2
-                                ELSE uf.user_id_1
-                            END AS fof_id,
-                            df.current_user_id
-                        FROM User_Friends uf
-                        INNER JOIN DirectFriends df
-                            ON (uf.user_id_1 = df.friend_id OR uf.user_id_2 = df.friend_id)
-                        WHERE uf.status = 'friends'
-                          AND (uf.user_id_1 != df.current_user_id AND uf.user_id_2 != df.current_user_id)
-                    )
-                    -- Final result with counts and additional user info for all users
-                    SELECT
-                        u.username,
-                        u.created_at,
-                        (SELECT COUNT(*) FROM DirectFriends df WHERE df.current_user_id = u.user_id) AS total_direct_friends,
-                        (SELECT COUNT(*) FROM FriendsOfFriends fof WHERE fof.current_user_id = u.user_id) AS total_friends_of_friends
-                    FROM Users u;
-
-                                        """;
+                                                                                WITH DirectFriends AS (
+                                            -- Lấy tất cả bạn trực tiếp của mỗi user
+                                            SELECT
+                                                user_id AS current_user_id,
+                                                friend_id
+                                            FROM (
+                                                SELECT
+                                                    uf.user_id_1 AS user_id,
+                                                    uf.user_id_2 AS friend_id
+                                                FROM User_Friends uf
+                                                WHERE uf.status = 'friends'
+                                                UNION ALL
+                                                SELECT
+                                                    uf.user_id_2 AS user_id,
+                                                    uf.user_id_1 AS friend_id
+                                                FROM User_Friends uf
+                                                WHERE uf.status = 'friends'
+                                            ) AS all_friends
+                                        ),
+                                        FriendsOfFriends AS (
+                                            -- Lấy bạn của bạn, loại trừ user gốc
+                                            SELECT DISTINCT
+                                                df.current_user_id,
+                                                df2.friend_id AS fof_id
+                                            FROM DirectFriends df
+                                            INNER JOIN DirectFriends df2
+                                                ON df.friend_id = df2.current_user_id
+                                            WHERE df2.friend_id != df.current_user_id
+                                        )
+                                        -- Kết quả cuối cùng: thông tin user và thống kê bạn bè
+                                        SELECT
+                                            u.user_id,
+                                            u.username,
+                                            u.created_at,
+                                            COALESCE((
+                                                SELECT COUNT(*)
+                                                FROM DirectFriends df
+                                                WHERE df.current_user_id = u.user_id
+                                            ), 0) AS total_direct_friends,
+                                            COALESCE((
+                                                SELECT COUNT(*)
+                                                FROM FriendsOfFriends fof
+                                                WHERE fof.current_user_id = u.user_id
+                                            ), 0) AS total_friends_of_friends
+                                        FROM Users u
+                                        ORDER BY u.user_id;
+                    """;
 
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
