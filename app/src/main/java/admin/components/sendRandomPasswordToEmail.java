@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package admin.components;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,17 +13,19 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.Random;
+
 /**
  *
  * @author Nghiax
  */
 public class sendRandomPasswordToEmail {
-    private static final String FROM_EMAIL = "javamail2200522294@gmail.com";
-    private static final String PASSWORD = "noaohlnrdgivoauz";
+    private static final String FROM_EMAIL = "javamailtest22294@gmail.com";
+    private static final String PASSWORD = "pkyeurwkmhtbohpw";
     private static final String HOST = "smtp.gmail.com";
     private static final int PORT = 587;
 
-    public static void sendEmailWithGeneratedPassword(String recipientEmail, String username) throws MessagingException, SQLException {
+    public static void sendEmailWithGeneratedPassword(String recipientEmail, String username)
+            throws MessagingException, SQLException {
         // Tạo mật khẩu mới
         String newPassword = generatePassword(8);
 
@@ -79,7 +82,7 @@ public class sendRandomPasswordToEmail {
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "JavaChatSystem",
                 "javachatsystem");
-             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+                PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 
             pstmt.setString(1, newPassword);
             pstmt.setString(2, username);
@@ -92,6 +95,6 @@ public class sendRandomPasswordToEmail {
     }
 
     public static void main(String[] args) {
-        
+
     }
 }

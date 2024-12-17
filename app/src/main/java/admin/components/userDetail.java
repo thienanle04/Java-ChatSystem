@@ -18,6 +18,9 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import server.config.ConfigUtil;
+
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,11 +30,28 @@ import java.util.logging.Logger;
  * @author Nghiax
  */
 public class userDetail extends javax.swing.JPanel {
+    private String url;
+    private String username;
+    private String password;
+    private Connection conn;
 
     /**
      * Creates new form userDetail
      */
     public userDetail() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            url = configUtil.getString("url");
+            System.out.println("url" + url);
+            username = configUtil.getString("username");
+            password = configUtil.getString("password");
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
     }
 
@@ -49,7 +69,8 @@ public class userDetail extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -71,26 +92,28 @@ public class userDetail extends javax.swing.JPanel {
         setRoleAdmin = new javax.swing.JButton();
 
         UserDetails.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "Name", "Username", "Password", "Address", "Date-of-birth", "Gender", "Email", "Status", "Lock", "Role", "Creation Date"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
+                },
+                new String[] {
+                        "Name", "Username", "Password", "Address", "Date-of-birth", "Gender", "Email", "Status", "Lock",
+                        "Role", "Creation Date"
+                }) {
+            Class[] types = new Class[] {
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         reloadUserDetail();
@@ -182,80 +205,92 @@ public class userDetail extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(filterByUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 174, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(UpdatePassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(resetPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(setRoleAdmin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lock)))
-                .addContainerGap())
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, 169,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(filterByUsername, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        121, Short.MAX_VALUE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 174, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
+                                                .createSequentialGroup()
+                                                .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(UpdatePassword)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(resetPassword, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 112,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(setRoleAdmin)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lock)))
+                                .addContainerGap()));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterByUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(delete_button)
-                    .addComponent(update_button)
-                    .addComponent(UpdatePassword)
-                    .addComponent(add_button)
-                    .addComponent(resetPassword)
-                    .addComponent(setRoleAdmin)
-                    .addComponent(lock))
-                .addContainerGap())
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(filterByName, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(filterByUsername, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel2)
+                                        .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(delete_button)
+                                        .addComponent(update_button)
+                                        .addComponent(UpdatePassword)
+                                        .addComponent(add_button)
+                                        .addComponent(resetPassword)
+                                        .addComponent(setRoleAdmin)
+                                        .addComponent(lock))
+                                .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
 
     private void reloadUserDetail() {
         try {
-            // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "JavaChatSystem";
-            String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
-
             // Truy vấn dữ liệu
             String query = """
                         SELECT
@@ -303,7 +338,6 @@ public class userDetail extends javax.swing.JPanel {
             // Đóng kết nối
             rs.close();
             stmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -315,7 +349,7 @@ public class userDetail extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
         if (selectedRow >= 0) {
             String currentRole = model.getValueAt(selectedRow, 9).toString();
             String currentUsername = model.getValueAt(selectedRow, 1).toString();
@@ -335,12 +369,7 @@ public class userDetail extends javax.swing.JPanel {
 
                     // Cập nhật vai trò trong cơ sở dữ liệu
                     String updateSQL = "UPDATE Users SET role = ? WHERE username = ?";
-                    try (
-                            Connection conn = DriverManager.getConnection(
-                                    "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                                    "JavaChatSystem",
-                                    "javachatsystem");
-                            PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+                    try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
                         // Gán giá trị cho câu lệnh
                         pstmt.setString(1, "admin");
                         pstmt.setString(2, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
@@ -370,7 +399,7 @@ public class userDetail extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
         if (selectedRow >= 0) {
             String currentPassword = model.getValueAt(selectedRow, 2).toString();
@@ -393,12 +422,7 @@ public class userDetail extends javax.swing.JPanel {
 
                 // Cập nhật dữ liệu vào cơ sở dữ liệu
                 String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
-                try (
-                        Connection conn = DriverManager.getConnection(
-                                "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                                "JavaChatSystem",
-                                "javachatsystem");
-                        PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+                try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
                     // Gán giá trị cho câu lệnh
                     pstmt.setString(1, newPassword);
                     pstmt.setString(2, currentUsername); // Sử dụng `currentUsername` để xác định bản ghi cũ
@@ -472,7 +496,7 @@ public class userDetail extends javax.swing.JPanel {
             // Lưu model gốc để sử dụng lại sau này
             originalModel = (DefaultTableModel) UserDetails.getModel();
         }
-        
+
         DefaultTableModel model = originalModel;
 
         // Tạo một model mới để chứa dữ liệu đã lọc
@@ -509,7 +533,7 @@ public class userDetail extends javax.swing.JPanel {
 
         // Cập nhật lại bảng với model đã lọc
         UserDetails.setModel(filteredModel);
-        
+
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void filterByUsernameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByUsernameActionPerformed
@@ -558,7 +582,7 @@ public class userDetail extends javax.swing.JPanel {
     private void resetPasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetPasswordActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
         String email = model.getValueAt(selectedRow, 6).toString();
         String currentUsername = model.getValueAt(selectedRow, 1).toString();
@@ -636,24 +660,20 @@ public class userDetail extends javax.swing.JPanel {
                     sorter.setSortable(0, false); // Disable sorting
                 }
                 model.addRow(new Object[] { username, name, password, address, dob, gender, email, "offline" });
-//                if (sorter != null) {
-//                    sorter.setSortable(0, true); // Enable sorting lại nếu cần
-//                }
-                try (Connection conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                        "JavaChatSystem",
-                        "javachatsystem")) {
-                    String sql = "INSERT INTO Users (username, name, address, date_of_birth, gender, email, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                        pstmt.setString(1, username);
-                        pstmt.setString(2, name);
-                        pstmt.setString(3, address);
-                        pstmt.setString(4, dob);
-                        pstmt.setString(5, gender);
-                        pstmt.setString(6, email);
-                        pstmt.setString(7, password);
-                        pstmt.executeUpdate();
-                    }
+                // if (sorter != null) {
+                // sorter.setSortable(0, true); // Enable sorting lại nếu cần
+                // }
+
+                String sql = "INSERT INTO Users (username, name, address, date_of_birth, gender, email, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setString(1, username);
+                    pstmt.setString(2, name);
+                    pstmt.setString(3, address);
+                    pstmt.setString(4, dob);
+                    pstmt.setString(5, gender);
+                    pstmt.setString(6, email);
+                    pstmt.setString(7, password);
+                    pstmt.executeUpdate();
 
                     // Xóa các trường nhập liệu sau khi thêm
                     usernameField.setText("");
@@ -679,8 +699,8 @@ public class userDetail extends javax.swing.JPanel {
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_update_buttonActionPerformed
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
-       
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
         if (selectedRow >= 0) {
             String currentUsername = model.getValueAt(selectedRow, 1).toString();
@@ -731,12 +751,7 @@ public class userDetail extends javax.swing.JPanel {
 
                 // Cập nhật dữ liệu vào cơ sở dữ liệu
                 String updateSQL = "UPDATE Users SET username = ?, name = ?, address = ?, date_of_birth = ?, gender = ?, email = ? WHERE username = ?";
-                try (
-                        Connection conn = DriverManager.getConnection(
-                                "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                                "JavaChatSystem",
-                                "javachatsystem");
-                        PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+                try (PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
                     // Gán giá trị cho câu lệnh
                     pstmt.setString(1, newUsername);
                     pstmt.setString(2, newName);
@@ -768,24 +783,18 @@ public class userDetail extends javax.swing.JPanel {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
         String username = (String) model.getValueAt(selectedRow, 1);
         if (selectedRow >= 0) {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?",
                     "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                try (Connection conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL",
-                        "JavaChatSystem",
-                        "javachatsystem")) {
-
-                    String deleteUserSql = "DELETE FROM Users WHERE username = ?";
-                    try (PreparedStatement pstmt2 = conn.prepareStatement(deleteUserSql)) {
-                        pstmt2.setString(1, username);
-                        System.out.println("Deleting user with username: " + username);
-                        pstmt2.executeUpdate();
-                    }
+                String deleteUserSql = "DELETE FROM Users WHERE username = ?";
+                try (PreparedStatement pstmt2 = conn.prepareStatement(deleteUserSql)) {
+                    pstmt2.setString(1, username);
+                    System.out.println("Deleting user with username: " + username);
+                    pstmt2.executeUpdate();
 
                     // Remove the user from the JTable
                     model.removeRow(selectedRow);
@@ -804,7 +813,7 @@ public class userDetail extends javax.swing.JPanel {
     private void lockActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-        int selectedRow =  UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
+        int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
         if (selectedRow != -1) {
             Boolean lock = (Boolean) model.getValueAt(selectedRow, 8);
@@ -815,22 +824,17 @@ public class userDetail extends javax.swing.JPanel {
             String username = model.getValueAt(selectedRow, 1).toString();
 
             // Update the database
-            try (Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/chatsystem",
-                    "JavaChatSystem",
-                    "javachatsystem")) {
 
-                String sql = "UPDATE Users SET is_locked = ? WHERE username = ?";
-                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setBoolean(1, newLock); // Set the new lock value
-                    pstmt.setString(2, username); // Identify the user by username
-                    int rowsAffected = pstmt.executeUpdate();
+            String sql = "UPDATE Users SET is_locked = ? WHERE username = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setBoolean(1, newLock); // Set the new lock value
+                pstmt.setString(2, username); // Identify the user by username
+                int rowsAffected = pstmt.executeUpdate();
 
-                    if (rowsAffected > 0) {
-                        System.out.println("Database updated successfully for user: " + username);
-                    } else {
-                        System.out.println("No rows updated for user: " + username);
-                    }
+                if (rowsAffected > 0) {
+                    System.out.println("Database updated successfully for user: " + username);
+                } else {
+                    System.out.println("No rows updated for user: " + username);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -24,16 +24,35 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import server.config.ConfigUtil;
+
 /**
  *
  * @author Nghiax
  */
 public class activeList extends javax.swing.JPanel {
+    private String url;
+    private String username;
+    private String password;
+    private Connection conn;
 
     /**
      * Creates new form activeList
      */
     public activeList() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            url = configUtil.getString("url");
+            System.out.println("url" + url);
+            username = configUtil.getString("username");
+            password = configUtil.getString("password");
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
     }
 
@@ -314,12 +333,6 @@ public class activeList extends javax.swing.JPanel {
             }
 
             try {
-                // Kết nối đến database
-                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "JavaChatSystem";
-                String password = "javachatsystem";
-                Connection conn = DriverManager.getConnection(url, user, password);
-
                 // Truy vấn số lần ứng dụng mở
                 String appOpenQuery = """
                         SELECT
@@ -446,7 +459,6 @@ public class activeList extends javax.swing.JPanel {
                 appOpenStmt.close();
                 groupChattedStmt.close();
                 peopleChattedStmt.close();
-                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -468,13 +480,6 @@ public class activeList extends javax.swing.JPanel {
         if (inputYear != null && !inputYear.trim().isEmpty()) {
             try {
                 int year = Integer.parseInt(inputYear.trim());
-
-                // Connect to the database
-                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "JavaChatSystem";
-                String password = "javachatsystem"; // Replace with your password
-                Connection conn = DriverManager.getConnection(url, user, password);
-
                 // Query data
                 String query = """
                             WITH MonthList AS (
@@ -527,7 +532,6 @@ public class activeList extends javax.swing.JPanel {
                 // Close connections
                 rs.close();
                 stmt.close();
-                conn.close();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Invalid year format!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException e) {

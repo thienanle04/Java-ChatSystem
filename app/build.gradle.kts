@@ -53,6 +53,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0") // Replace with the latest version
     implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.0") // Optional: For better parameter name handling
+    implementation ("org.json:json:20230227");
 }
 
 tasks.withType<Copy> {
