@@ -13,8 +13,8 @@ import server.utility.Email;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
-
 import javax.mail.MessagingException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,12 +63,13 @@ public class ServiceUser {
             }
 
             if (message.isAction()) {
+                String hashedPassword = BCrypt.hashpw(data.getPassword(), BCrypt.gensalt());
                 // Insert User Register
                 con.setAutoCommit(false);
                 p = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS);
                 p.setString(1, data.getName());
                 p.setString(2, data.getUserName());
-                p.setString(3, data.getPassword());
+                p.setString(3, hashedPassword);
                 p.setString(4, data.getEmail());
                 LocalDate date = LocalDate.now().minusYears(100);   // Set Date of Birth to current date minus 100 years
                 p.setDate(5, java.sql.Date.valueOf(date));
@@ -100,28 +101,29 @@ public class ServiceUser {
 
     public Model_User_Profile login(Model_Login login) throws SQLException {
         Model_User_Profile data = null;
-        PreparedStatement p = con.prepareStatement(LOGIN);
+        PreparedStatement p = con.prepareStatement("select user_id, username, email, address, gender, date_of_birth, password_hash from users where username=BINARY(?)");
         p.setString(1, login.getUserName());
-        p.setString(2, login.getPassword());
         ResultSet r = p.executeQuery();
         if (r.next()) {
-            int userID = r.getInt(1);
-            String userName = r.getString(2);
-            String email = r.getString(3);
-            String address = r.getString(4);
-            String gender = r.getString(5);
-            LocalDate dob = r.getDate(6).toLocalDate();
-            data = new Model_User_Profile(userID, userName, email, address, gender, dob);
-            // Set Status Online
-            p = con.prepareStatement(SET_STATUS);
-            p.setString(1, "online");
-            p.setInt(2, userID);
-            p.execute();
-
-            // Set Login History
-            p = con.prepareStatement("insert into login_history (user_id) values (?)");
-            p.setInt(1, userID);
-            p.execute();
+            if (BCrypt.checkpw(login.getPassword(), r.getString(7))) {
+                int userID = r.getInt(1);
+                String userName = r.getString(2);
+                String email = r.getString(3);
+                String address = r.getString(4);
+                String gender = r.getString(5);
+                LocalDate dob = r.getDate(6).toLocalDate();
+                data = new Model_User_Profile(userID, userName, email, address, gender, dob);
+                // Set Status Online
+                p = con.prepareStatement(SET_STATUS);
+                p.setString(1, "online");
+                p.setInt(2, userID);
+                p.execute();
+                
+                // Set Login History
+                p = con.prepareStatement("insert into login_history (user_id) values (?)");
+                p.setInt(1, userID);
+                p.execute();
+            }
         }
         r.close();
         p.close();
@@ -185,7 +187,7 @@ public class ServiceUser {
                 p.close();
                 
                 p = con.prepareStatement("UPDATE Users SET password_hash = ? WHERE user_id = ?");
-                p.setString(1, req.getNewPassword());
+                p.setString(1, BCrypt.hashpw(req.getNewPassword(), BCrypt.gensalt()));
                 p.setInt(2, userId);
                 p.executeUpdate();
                 
@@ -250,21 +252,24 @@ public class ServiceUser {
 
     public boolean updatePassword(Model_Reset_Password data) throws SQLException {
         try {
-            PreparedStatement p = con.prepareStatement("update users set password_hash=? where username=BINARY(?) and password_hash=BINARY(?)");
-            p.setString(1, data.getNewPassword());
-            p.setString(2, data.getUserName());
-            p.setString(3, data.getPassword());
-            p.execute();
-            p.close();
-
-            p = con.prepareStatement("select user_id from users where username =? and password_hash=? limit 1");
+            // PreparedStatement p = con.prepareStatement("update users set password_hash=? where username=BINARY(?)");
+            PreparedStatement p = con.prepareStatement("select user_id, password_hash from users where username =? limit 1");
             p.setString(1, data.getUserName());
-            p.setString(2, data.getNewPassword());
             ResultSet r = p.executeQuery();
-            boolean ok = r.next();
-            r.close();
-            p.close();
-            return ok;
+            if (r.next()) {
+                if (BCrypt.checkpw(data.getPassword(), r.getString(2))) {
+                    p = con.prepareStatement("update users set password_hash=? where user_id=?");
+                    p.setString(1, BCrypt.hashpw(data.getNewPassword(), BCrypt.gensalt()));
+                    p.setInt(2, r.getInt(1));
+                    p.execute();
+                    p.close();
+                    return true;
+                } else {
+                    throw new SQLException("Wrong Password");
+                }
+            }
+
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -382,7 +387,6 @@ public class ServiceUser {
     }
 
     //  SQL
-    private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";
     private final String INSERT_USER = "insert into users (name, username, password_hash, email, date_of_birth) values (?, ?,?,?,?)";
     private final String CHECK_USER = "select user_id from users where username =? limit 1";

@@ -54,6 +54,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0") // Replace with the latest version
     implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.0") // Optional: For better parameter name handling
     implementation ("org.json:json:20230227");
+
+    implementation("org.mindrot:jbcrypt:0.4")
 }
 
 tasks.withType<Copy> {
