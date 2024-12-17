@@ -376,24 +376,19 @@ public class activeList extends javax.swing.JPanel {
 
                 // Truy vấn số người đã trò chuyện
                 String peopleChattedQuery = """
-                            SELECT
-                                gm.sender_id AS UserID,
-                                SUM(gm.message_count * (gm.group_member_count - 1)) AS PeopleChatted
-                            FROM (
-                                SELECT
-                                    gm.sender_id,
-                                    gm.group_id,
-                                    COUNT(gm.message_id) AS message_count,
-                                    (SELECT COUNT(*) FROM group_members WHERE group_id = gm.group_id) AS group_member_count
-                                FROM
+                            SELECT 
+                                    gm.sender_id AS UserID,
+                                    COUNT(DISTINCT gm_other.user_id) AS PeopleChatted
+                                FROM 
                                     group_messages gm
-                                WHERE
+                                JOIN 
+                                    group_members gm_other
+                                    ON gm.group_id = gm_other.group_id
+                                    AND gm.sender_id != gm_other.user_id
+                                WHERE 
                                     gm.sent_at BETWEEN ? AND ?
-                                GROUP BY
-                                    gm.sender_id, gm.group_id
-                            ) gm
-                            GROUP BY
-                                gm.sender_id;
+                                GROUP BY 
+                                    gm.sender_id;
                         """;
 
                 // Thực thi truy vấn
