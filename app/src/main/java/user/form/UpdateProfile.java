@@ -592,19 +592,15 @@ public class UpdateProfile extends javax.swing.JDialog {
     }// GEN-LAST:event_CancelActionPerformed
 
     private void currentPasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_currentPasswordActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_currentPasswordActionPerformed
 
     private void newPasswordInputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newPasswordInputActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_newPasswordInputActionPerformed
 
     private void newEmailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newEmailActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_newEmailActionPerformed
 
     private void addressInputActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addressInputActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_addressInputActionPerformed
 
     private void monthActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_monthActionPerformed

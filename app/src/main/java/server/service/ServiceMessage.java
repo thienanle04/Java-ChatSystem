@@ -161,15 +161,15 @@ public class ServiceMessage {
         p.executeUpdate();
         ResultSet r = p.getGeneratedKeys();
 
-        PreparedStatement p2 = con.prepareStatement("select u.username from users u where u.user_id = ?");
+        PreparedStatement p2 = con.prepareStatement("select u.name from users u where u.user_id = ?");
         p2.setInt(1, message.getSenderID());
         ResultSet r2 = p2.executeQuery();
         r2.next();
-        String userName = r2.getString(1);
+        String name = r2.getString(1);
 
         if (r.next()) {
             int messageID = r.getInt(1);
-            receive_Message = new Model_Chat_Message(messageID, message.getGroupID(), message.getSenderID(), userName, message.getMessage());
+            receive_Message = new Model_Chat_Message(messageID, message.getGroupID(), message.getSenderID(), name, message.getMessage());
         }
         r.close();
         p.close();

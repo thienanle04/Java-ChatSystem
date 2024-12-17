@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import user.event.PublicEvent;
 import user.service.Service;
 
 public class Friend_Search_Bar extends javax.swing.JPanel {
@@ -40,9 +42,25 @@ public class Friend_Search_Bar extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(504, 100));
 
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Online", "Offline" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         cmdSearch.setText("Search");
+        cmdSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdSearchActionPerformed(evt);
+            }
+        });
 
         newGroup.setText("New Group");
         newGroup.addActionListener(new java.awt.event.ActionListener() {
@@ -74,7 +92,6 @@ public class Friend_Search_Bar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGroupActionPerformed
-        // TODO add your handling code here:
         int currentUserId = Service.getInstance().getUser().getUserID(); // ID của user hiện tại
 
         try {
@@ -234,6 +251,18 @@ public class Friend_Search_Bar extends javax.swing.JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_newGroupActionPerformed
+
+    private void cmdSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSearchActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
+    }//GEN-LAST:event_cmdSearchActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

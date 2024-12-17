@@ -27,10 +27,7 @@ import user.service.Service;
 import user.app.GroupType;
 import user.event.PublicEvent;
 
-/**
- *
- * @author asus
- */
+@SuppressWarnings("unused")
 public class Menu_Right extends javax.swing.JPanel {
 
     /**
@@ -121,7 +118,6 @@ public class Menu_Right extends javax.swing.JPanel {
 
     
     private void addMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMemberActionPerformed
-        // TODO add your handling code here:
         // Thay đổi giá trị `currentUserId` bằng user_id hiện tại
         int currentUserId = user_Id; // ID của user hiện tại
         int groupId = this.groupChat.getGroupId();
@@ -256,7 +252,6 @@ public class Menu_Right extends javax.swing.JPanel {
     }//GEN-LAST:event_addMemberActionPerformed
 
     private void deleteMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMemberActionPerformed
-        // TODO add your handling code here:
         int groupId = this.groupChat.getGroupId();
         int userId = user_Id; 
         String role = "member";
@@ -371,7 +366,6 @@ public class Menu_Right extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteMemberActionPerformed
 
     private void promoteAdminRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promoteAdminRoleActionPerformed
-        // TODO add your handling code here:
         int groupId = this.groupChat.getGroupId();
         int userId = user_Id; 
         String role = "member";

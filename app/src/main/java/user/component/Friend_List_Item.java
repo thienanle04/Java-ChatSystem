@@ -146,7 +146,6 @@ public class Friend_List_Item extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
 
     private void cmdNewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNewGroupActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_cmdNewGroupActionPerformed
 
     private void cmdUnfriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUnfriendActionPerformed

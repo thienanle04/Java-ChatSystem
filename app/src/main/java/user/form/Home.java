@@ -4,8 +4,6 @@ import user.model.Model_Group_Chat;
 import java.awt.CardLayout;
 import net.miginfocom.swing.MigLayout;
 
-import user.service.Service;
-
 public class Home extends javax.swing.JLayeredPane {
 
     private javax.swing.JLayeredPane content;
