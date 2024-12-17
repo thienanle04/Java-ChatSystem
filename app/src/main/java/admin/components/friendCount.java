@@ -61,6 +61,7 @@ public class friendCount extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -100,7 +101,7 @@ public class friendCount extends javax.swing.JPanel {
         try {
             // Truy vấn dữ liệu
             String query = """
-                                        WITH DirectFriends AS (
+                    WITH DirectFriends AS (
                         -- Get all direct friends for all users
                         SELECT
                             CASE
@@ -149,7 +150,7 @@ public class friendCount extends javax.swing.JPanel {
                 Object[] row = new Object[] {
                         rs.getString("username"),
                         rs.getInt("total_direct_friends"),
-                        rs.getInt("total_friends_of_friends"),
+                        rs.getInt("total_friends_of_friends") + rs.getInt("total_direct_friends"),
                         rs.getTimestamp("created_at"), // Adjust if necessary
                 };
                 model.addRow(row);
@@ -225,9 +226,9 @@ public class friendCount extends javax.swing.JPanel {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jLabel7)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(filterBy, javax.swing.GroupLayout.PREFERRED_SIZE, 45,
+                                                .addComponent(filterBy, javax.swing.GroupLayout.PREFERRED_SIZE, 52,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81,
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74,
                                                         Short.MAX_VALUE)
                                                 .addComponent(jLabel4)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

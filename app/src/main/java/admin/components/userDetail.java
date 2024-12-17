@@ -70,6 +70,7 @@ public class userDetail extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -166,7 +167,7 @@ public class userDetail extends javax.swing.JPanel {
             }
         });
 
-        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "online", "offline" }));
+        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "both", "online", "offline" }));
         status.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statusActionPerformed(evt);
@@ -288,7 +289,7 @@ public class userDetail extends javax.swing.JPanel {
                                         .addComponent(lock))
                                 .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
-
+    private DefaultTableModel originalModel ;
     private void reloadUserDetail() {
         try {
             // Truy vấn dữ liệu
@@ -338,6 +339,7 @@ public class userDetail extends javax.swing.JPanel {
             // Đóng kết nối
             rs.close();
             stmt.close();
+            originalModel = (DefaultTableModel) UserDetails.getModel();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
@@ -393,7 +395,7 @@ public class userDetail extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_setRoleAdminActionPerformed
 
-    private DefaultTableModel originalModel;
+    
 
     private void UpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdatePasswordActionPerformed
         // TODO add your handling code here:
@@ -451,6 +453,10 @@ public class userDetail extends javax.swing.JPanel {
 
         if (selectedOption == null || selectedOption.isEmpty()) {
             // Nếu không có tùy chọn nào được chọn, không lọc và hiển thị toàn bộ dữ liệu
+            return;
+        }
+        if (selectedOption.equals("both")) {
+            UserDetails.setModel(originalModel);
             return;
         }
 

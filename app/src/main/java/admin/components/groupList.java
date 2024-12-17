@@ -111,6 +111,8 @@ public class groupList extends javax.swing.JPanel {
                             created_at AS CreationDate
                         FROM
                             chat_group
+                        WHERE
+                            group_type != 2
                     """;
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
