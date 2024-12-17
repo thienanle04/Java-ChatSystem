@@ -37,19 +37,22 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     private void init() {
-        setLayout(new MigLayout("fill", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
         this.add(new Menu_Left());
         initCardLayout();
         menuRight = new Menu_Right();
         this.add(menuRight);
         menuRight.setVisible(false);
+        refreshUI();
     }
 
     public void setChat(Model_Group_Chat groupChat) {
+        menuRight.setVisible(true);
         cardLayout.show(content, "chat");
         chat.setChat(groupChat);
         menuRight.setChat(groupChat);
         menuRight.setVisible(true);
+        refreshUI();
     }
 
     public void updateChat(Model_Group_Chat groupChat) {
@@ -57,13 +60,22 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     public void showFriendList() {
+        menuRight.setVisible(false);
         cardLayout.show(content, "friend_list");
         menuRight.setVisible(false);
+        refreshUI();
     }
 
     public void showFriendRequest() {
+        menuRight.setVisible(false);
         cardLayout.show(content, "friend_request");
         menuRight.setVisible(false);
+        refreshUI();
+    }
+
+    private void refreshUI() {
+        this.revalidate();
+        this.repaint();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

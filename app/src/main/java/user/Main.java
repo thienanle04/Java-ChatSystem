@@ -130,7 +130,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         dialog.setAlwaysOnTop(true);
-        dialog.setSize(300, 115);
+        dialog.setSize(400, 130);
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);

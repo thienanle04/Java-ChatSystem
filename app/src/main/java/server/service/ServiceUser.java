@@ -8,9 +8,14 @@ import server.model.Model_Message;
 import server.model.Model_Register;
 import server.model.Model_Reset_Password;
 import server.model.Model_User_Profile;
+import server.utility.Email;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
+
+import javax.mail.MessagingException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -123,6 +128,80 @@ public class ServiceUser {
         return data;
     }
 
+    // Generate new password (OTP) and send to user's email
+    public Model_Message generateOTP(String recipientEmail) {
+        Model_Message message = new Model_Message();
+        try {
+            String OTP = generatePassword(8);
+            
+            PreparedStatement p = con.prepareStatement("UPDATE Users SET verify_code = ? WHERE email = ?");
+            p.setString(1, OTP);
+            p.setString(2, recipientEmail);
+            int rowsAffected = p.executeUpdate();
+            
+            if (rowsAffected <= 0) {
+                // Check if the email exists with a separate query for better error handling
+                PreparedStatement checkStmt = con.prepareStatement("SELECT 1 FROM Users WHERE email = ?");
+                checkStmt.setString(1, recipientEmail);
+                ResultSet rs = checkStmt.executeQuery();
+                
+                if (rs.next()) {
+                    // Email exists, but update failed for some other reason (unlikely with this simple update)
+                    throw new SQLException("Failed to update verify code for existing user: " + recipientEmail + ". Possible database issue.");
+                } else {
+                    // Email DOES NOT exist
+                    throw new SQLException("User with email '" + recipientEmail + "' not found.");
+                }
+            }
+
+            // Send email to user
+            String subject = "[ChatApp] Reset Password";
+            String content = "Here is your OTP: " + OTP + "\nUse this OTP to reset your password.\nPlease do not share this OTP with anyone.";
+            
+            Email.sendEmail(recipientEmail, subject, content);
+
+            message.setAction(true);
+            message.setMessage("OTP sent to your email. Please check your email.");
+        } catch (SQLException e) {
+            message.setAction(false);
+            message.setMessage(e.getMessage());
+        } catch (MessagingException e) {
+            message.setAction(false);
+            message.setMessage("Failed to send email to user: " + recipientEmail);
+        }
+        return message;
+    }
+
+    public Model_Message resetPassword(Model_Reset_Password req) {
+        Model_Message message = new Model_Message();
+        try {
+            PreparedStatement p = con.prepareStatement("SELECT user_id FROM Users WHERE email = BINARY(?) AND verify_code = BINARY(?)");
+            p.setString(1, req.getUserName());
+            p.setString(2, req.getPassword());
+            ResultSet r = p.executeQuery();
+            if (r.next()) {
+                int userId = r.getInt(1);
+                r.close();
+                p.close();
+                
+                p = con.prepareStatement("UPDATE Users SET password_hash = ? WHERE user_id = ?");
+                p.setString(1, req.getNewPassword());
+                p.setInt(2, userId);
+                p.executeUpdate();
+                
+                message.setAction(true);
+                message.setMessage("Password reset successfully.");
+            } else {
+                message.setAction(false);
+                message.setMessage("Wrong OTP. Please try again.");
+            }
+        } catch (SQLException e) {
+            message.setAction(false);
+            message.setMessage("Failed to reset password. Please try again.");
+        }
+        return message;
+    }
+
     // Return if update success or failed
     boolean updateProfile(Model_User_Profile newProfile) throws SQLException {
         try {
@@ -171,7 +250,6 @@ public class ServiceUser {
 
     public boolean updatePassword(Model_Reset_Password data) throws SQLException {
         try {
-            // PreparedStatement p = con.prepareStatement("username=BINARY(?) and password_hash=BINARY(?)");
             PreparedStatement p = con.prepareStatement("update users set password_hash=? where username=BINARY(?) and password_hash=BINARY(?)");
             p.setString(1, data.getNewPassword());
             p.setString(2, data.getUserName());
@@ -279,7 +357,6 @@ public class ServiceUser {
         return list;
     }
 
-    // SQL
     public String getRole (int userId) throws SQLException {
         PreparedStatement p = con.prepareStatement("SELECT role FROM users where user_id=?");
         p.setInt(1, userId);
@@ -290,6 +367,20 @@ public class ServiceUser {
         }
         return "";
     }
+
+    private static String generatePassword(int length) {
+    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    Random random = new Random();
+    StringBuilder passwordBuilder = new StringBuilder();
+
+    for (int i = 0; i < length; i++) {
+        int index = random.nextInt(characters.length());
+        passwordBuilder.append(characters.charAt(index));
+    }
+
+    return passwordBuilder.toString();
+    }
+
     //  SQL
     private final String LOGIN = "select user_id, username, email, address, gender, date_of_birth from users where username=BINARY(?) and password_hash=BINARY(?)";
     private final String SET_STATUS = "update users set status=? where user_id=?";

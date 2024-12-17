@@ -13,7 +13,9 @@ public interface EventLogin {
     
     public void login(Model_Login data);
     
-    public void forgetPassword(Model_Reset_Password newInfo, EventMessage message);
+    public void requestOTP(String username, EventMessage message);
+
+    public void resetPassword(Model_Reset_Password req, EventMessage message);
 
     public void goResetPassword();
 }

@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import user.event.PublicEvent;
 import user.service.Service;
 
+
+@SuppressWarnings("unused")
 public class Friend_Search_Bar extends javax.swing.JPanel {
 
     public Friend_Search_Bar() {

@@ -150,7 +150,6 @@ public class P_Register extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdRegisterActionPerformed
 
     private void txtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtPassActionPerformed
 
 

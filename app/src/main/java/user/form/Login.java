@@ -104,8 +104,44 @@ public class Login extends javax.swing.JPanel {
             }
 
             @Override
-            public void forgetPassword(Model_Reset_Password newInfo, EventMessage message) {
+            public void requestOTP(String username, EventMessage message) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
+                        Service.getInstance().getClient().emit("request_otp", username, new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
+                                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                                    message.callMessage(ms);
+                                }
+                            }
+                        });
+                    }
+                }).start();
 
+            }
+
+            @Override
+            public void resetPassword(Model_Reset_Password req, EventMessage message) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
+                        Service.getInstance().getClient().emit("reset_password", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    Model_Message ms = new Model_Message((boolean) os[0], os[1].toString());
+                                    PublicEvent.getInstance().getEventMain().showLoading(false);
+                                    message.callMessage(ms);
+                                }
+                            }
+                        });
+                    }
+                }).start();
             }
 
         });

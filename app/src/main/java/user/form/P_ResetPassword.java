@@ -1,6 +1,7 @@
 package user.form;
 
 import com.formdev.flatlaf.FlatClientProperties;
+
 import user.event.EventMessage;
 import user.event.PublicEvent;
 import user.model.Model_Message;
@@ -21,16 +22,15 @@ public class P_ResetPassword extends javax.swing.JPanel {
     private void initComponents() {
 
         lbTitle = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        txtUser = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        email = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        otp = new javax.swing.JLabel();
         cmdResetPassword = new javax.swing.JButton();
         cmdBackLogin = new javax.swing.JButton();
         newPass = new javax.swing.JPasswordField();
-        jLabel3 = new javax.swing.JLabel();
-        lbError = new javax.swing.JLabel();
-        password = new javax.swing.JTextField();
-        cmdGenPassword = new javax.swing.JButton();
+        newPassword = new javax.swing.JLabel();
+        txtOTP = new javax.swing.JTextField();
+        cmdSendOTP = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -38,9 +38,9 @@ public class P_ResetPassword extends javax.swing.JPanel {
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTitle.setText("Reset password");
 
-        jLabel1.setText("Username");
+        email.setText("Email");
 
-        jLabel2.setText("Password");
+        otp.setText("OTP");
 
         cmdResetPassword.setText("Reset password");
         cmdResetPassword.addActionListener(new java.awt.event.ActionListener() {
@@ -59,16 +59,12 @@ public class P_ResetPassword extends javax.swing.JPanel {
             }
         });
 
-        jLabel3.setText("New password");
+        newPassword.setText("New password");
 
-        lbError.setForeground(new java.awt.Color(255, 0, 0));
-        lbError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbError.setText(" ");
-
-        cmdGenPassword.setText("Send new password to email");
-        cmdGenPassword.addActionListener(new java.awt.event.ActionListener() {
+        cmdSendOTP.setText("Send OTP");
+        cmdSendOTP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdGenPasswordActionPerformed(evt);
+                cmdSendOTPActionPerformed(evt);
             }
         });
 
@@ -78,22 +74,17 @@ public class P_ResetPassword extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmdGenPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmdBackLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmdResetPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtUser)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                            .addComponent(newPass, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                            .addComponent(password, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmdSendOTP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmdBackLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmdResetPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtEmail)
+                    .addComponent(email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(otp, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                    .addComponent(newPass, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(newPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                    .addComponent(txtOTP, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -102,26 +93,24 @@ public class P_ResetPassword extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(lbTitle)
                 .addGap(20, 20, 20)
-                .addComponent(jLabel1)
+                .addComponent(email)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addComponent(otp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtOTP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                .addComponent(newPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmdGenPassword)
+                .addComponent(cmdSendOTP)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmdResetPassword)
                 .addGap(0, 0, 0)
                 .addComponent(cmdBackLogin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbError)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addGap(0, 41, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -130,46 +119,74 @@ public class P_ResetPassword extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdBackLoginActionPerformed
 
     private void cmdResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdResetPasswordActionPerformed
-        String userName = txtUser.getText().trim();
-        String passwordC = password.getText().trim();
+        String email = txtEmail.getText().trim();
+        String otp = txtOTP.getText().trim();
         String newPassword = String.valueOf(newPass.getPassword());
-        if (userName.equals("")) {
-           txtUser.grabFocus();
-        } else if (passwordC.equals("")) {
-           password.grabFocus();
+        if (email.equals("")) {
+           txtEmail.grabFocus();
+        } else if (otp.equals("")) {
+           txtOTP.grabFocus();
         } else if (newPassword.equals("")) {
            newPass.grabFocus();
         } else {
-            Model_Reset_Password data = new Model_Reset_Password(userName, passwordC, newPassword);
-            PublicEvent.getInstance().getEventLogin().forgetPassword(data, new EventMessage() {
+            Model_Reset_Password data = new Model_Reset_Password(email, otp, newPassword);
+            PublicEvent.getInstance().getEventLogin().resetPassword(data, new EventMessage() {
                 @Override
                 public void callMessage(Model_Message message) {
-                    if (!message.isAction()) {
-                       lbError.setText(message.getMessage());
+                    if (message.isAction()) {
+                        PublicEvent.getInstance().getEventMain().showNotification("Your password has been reset successfully.\nPlease login with your new password.");
+                        PublicEvent.getInstance().getEventLogin().goLogin(); 
+                        txtEmail.setText("");
+                        txtOTP.setText("");
+                        newPass.setText("");
                     } else {
-                        PublicEvent.getInstance().getEventMain().initChat();
+                        PublicEvent.getInstance().getEventMain().showNotification(message.getMessage());
                     }
                 }
             });
         }
     }//GEN-LAST:event_cmdResetPasswordActionPerformed
 
-    private void cmdGenPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGenPasswordActionPerformed
-        
-    }//GEN-LAST:event_cmdGenPasswordActionPerformed
+    private void cmdSendOTPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSendOTPActionPerformed
+        PublicEvent.getInstance().getEventLogin().requestOTP(txtEmail.getText().trim(), new EventMessage() {
+            @Override
+            public void callMessage(Model_Message message) {
+                
+                if (message.isAction()) {
+                    PublicEvent.getInstance().getEventMain().showNotification(message.getMessage() + "\nYou can request a new OTP once every 3 minutes.");
+                    cmdSendOTP.setEnabled(false);
+                    txtEmail.setEnabled(false);
+                    
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(180000);
+                                txtEmail.setEnabled(true);
+                                cmdSendOTP.setEnabled(true);
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }).start();
+                } else {
+                    PublicEvent.getInstance().getEventMain().showNotification(message.getMessage());
+                }
+            }
+        });
+    }//GEN-LAST:event_cmdSendOTPActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdBackLogin;
-    private javax.swing.JButton cmdGenPassword;
     private javax.swing.JButton cmdResetPassword;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel lbError;
+    private javax.swing.JButton cmdSendOTP;
+    private javax.swing.JLabel email;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JPasswordField newPass;
-    private javax.swing.JTextField password;
-    private javax.swing.JTextField txtUser;
+    private javax.swing.JLabel newPassword;
+    private javax.swing.JLabel otp;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtOTP;
     // End of variables declaration//GEN-END:variables
 }

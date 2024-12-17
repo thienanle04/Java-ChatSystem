@@ -96,6 +96,22 @@ public class Service {
             }
         });
 
+        server.addEventListener("request_otp", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient sioc, String t, AckRequest ar) throws Exception {
+                Model_Message ms = serviceUser.generateOTP(t);
+                ar.sendAckData(ms.isAction(), ms.getMessage());
+            }
+        });
+
+        server.addEventListener("reset_password", Model_Reset_Password.class, new DataListener<Model_Reset_Password>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Reset_Password t, AckRequest ar) throws Exception {
+                Model_Message ms = serviceUser.resetPassword(t);
+                ar.sendAckData(ms.isAction(), ms.getMessage());
+            }
+        });
+
         server.addEventListener("update_profile", Model_User_Profile.class, new DataListener<Model_User_Profile>() {
             @Override
             public void onData(SocketIOClient sioc, Model_User_Profile t, AckRequest ar) throws Exception {
