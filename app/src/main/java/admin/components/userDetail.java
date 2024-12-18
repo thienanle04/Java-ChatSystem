@@ -4,6 +4,8 @@
  */
 package admin.components;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,6 +26,11 @@ import server.config.ConfigUtil;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -73,6 +80,7 @@ public class userDetail extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -93,6 +101,8 @@ public class userDetail extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         resetPassword = new javax.swing.JButton();
         setRoleAdmin = new javax.swing.JButton();
+        viewFriends = new javax.swing.JButton();
+        viewLoginHistory = new javax.swing.JButton();
 
         UserDetails.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
@@ -205,6 +215,20 @@ public class userDetail extends javax.swing.JPanel {
             }
         });
 
+        viewFriends.setText("View List Friends");
+        viewFriends.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewFriendsActionPerformed(evt);
+            }
+        });
+
+        viewLoginHistory.setText("View Logged In History");
+        viewLoginHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewLoginHistoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -220,8 +244,7 @@ public class userDetail extends javax.swing.JPanel {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel3)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(filterByUsername, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        121, Short.MAX_VALUE)
+                                                .addComponent(filterByUsername)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,12 +257,15 @@ public class userDetail extends javax.swing.JPanel {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(sortBy, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 174, Short.MAX_VALUE))
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
                                                 .createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(viewFriends)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(viewLoginHistory)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -289,9 +315,169 @@ public class userDetail extends javax.swing.JPanel {
                                         .addComponent(add_button)
                                         .addComponent(resetPassword)
                                         .addComponent(setRoleAdmin)
-                                        .addComponent(lock))
+                                        .addComponent(lock)
+                                        .addComponent(viewFriends)
+                                        .addComponent(viewLoginHistory))
                                 .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewFriendsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewFriendsActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        // Lấy hàng được chọn trong bảng UserDetails
+        int selectedRow = UserDetails.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String username = (String) model.getValueAt(selectedRow, 1);
+
+            try {
+                // Truy vấn danh sách bạn bè của người dùng đã chọn
+                String query = """
+                            SELECT
+                                u.username AS FriendUsername,
+                                u.name AS FriendName,
+                                u.email AS FriendEmail
+                            FROM
+                                user_friends uf
+                            JOIN
+                                users u
+                            ON
+                                (uf.user_id_1 = u.user_id AND uf.user_id_2 = (SELECT user_id FROM users WHERE username = ?))
+                                OR
+                                (uf.user_id_2 = u.user_id AND uf.user_id_1 = (SELECT user_id FROM users WHERE username = ?))
+                            WHERE
+                                uf.status = 'friends'
+                        """;
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, username);
+                stmt.setString(2, username);
+                ResultSet rs = stmt.executeQuery();
+
+                // Chuẩn bị dữ liệu cho JTable
+                java.util.List<Object[]> data = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    data.add(new Object[] {
+                            rs.getString("FriendUsername"),
+                            rs.getString("FriendName"),
+                            rs.getString("FriendEmail")
+                    });
+                }
+
+                Object[][] friends = data.toArray(new Object[0][]);
+                String[] columnNames = { "Username", "Name", "Email" };
+
+                JTable friendsTable = new JTable(friends, columnNames);
+                friendsTable.setFillsViewportHeight(true);
+                friendsTable.setRowHeight(30);
+
+                JScrollPane scrollPane = new JScrollPane(friendsTable);
+                scrollPane.setPreferredSize(new Dimension(400, 200));
+
+                JDialog dialog = new JDialog((JFrame) null, "Friends of User: " + username, true);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(scrollPane, BorderLayout.CENTER);
+
+                JButton closeButton = new JButton("Close");
+                closeButton.addActionListener(e -> dialog.dispose());
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(closeButton);
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(450, 300);
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching data: " + e.getMessage(),
+                        "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a user to view their friends.",
+                    "No User Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }// GEN-LAST:event_viewFriendsActionPerformed
+
+    private void viewLoginHistoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewLoginHistoryActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
+
+        // Lấy hàng được chọn trong bảng UserDetails
+        int selectedRow = UserDetails.getSelectedRow();
+
+        if (selectedRow != -1) {
+            // Lấy username của hàng được chọn
+            String username = (String) model.getValueAt(selectedRow, 1);
+
+            try {
+                // Truy vấn lịch sử đăng nhập của người dùng
+                String query = """
+                            SELECT
+                                lh.logged_in_at AS LoginTimestamp
+                            FROM
+                                login_history lh
+                            JOIN
+                                users u
+                            ON
+                                lh.user_id = u.user_id
+                            WHERE
+                                u.username = ?
+                            ORDER BY
+                                lh.logged_in_at DESC
+                        """;
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, username);
+                ResultSet rs = stmt.executeQuery();
+
+                // Chuẩn bị dữ liệu cho JTable
+                java.util.List<Object[]> data = new java.util.ArrayList<>();
+                while (rs.next()) {
+                    data.add(new Object[] { rs.getTimestamp("LoginTimestamp") });
+                }
+
+                Object[][] loginHistory = data.toArray(new Object[0][]);
+                String[] columnNames = { "Login Timestamp" };
+
+                JTable historyTable = new JTable(loginHistory, columnNames);
+                historyTable.setFillsViewportHeight(true);
+                historyTable.setRowHeight(30);
+
+                JScrollPane scrollPane = new JScrollPane(historyTable);
+                scrollPane.setPreferredSize(new Dimension(400, 200));
+
+                JDialog dialog = new JDialog((JFrame) null, "Login History of User: " + username, true);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(scrollPane, BorderLayout.CENTER);
+
+                JButton closeButton = new JButton("Close");
+                closeButton.addActionListener(e -> dialog.dispose());
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.add(closeButton);
+                dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.setSize(450, 300);
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+
+                // Đóng kết nối
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching login history: " + e.getMessage(),
+                        "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a user to view their login history.",
+                    "No User Selected", JOptionPane.WARNING_MESSAGE);
+        }
+    }// GEN-LAST:event_viewLoginHistoryActionPerformed
 
     private DefaultTableModel originalModel;
 
@@ -873,5 +1059,7 @@ public class userDetail extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> sortBy;
     private javax.swing.JComboBox<String> status;
     private javax.swing.JButton update_button;
+    private javax.swing.JButton viewFriends;
+    private javax.swing.JButton viewLoginHistory;
     // End of variables declaration//GEN-END:variables
 }

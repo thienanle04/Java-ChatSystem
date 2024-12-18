@@ -11,8 +11,8 @@ public class ConfigUtil {
 
     // Constructor to load config.json from the same directory as ConfigUtil
     public ConfigUtil() throws Exception {
-        String configFilePath = "src/main/java/server/config/config.json"; // Path to config.json relative to the
-                                                                           // project root
+        String configFilePath = "app/src/main/java/server/config/config.json"; // Path to config.json relative to the
+        // project root
         File configFile = new File(configFilePath);
 
         if (!configFile.exists()) {

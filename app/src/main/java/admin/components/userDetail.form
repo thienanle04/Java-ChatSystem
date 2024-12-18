@@ -26,7 +26,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="filterByUsername" pref="121" max="32767" attributes="0"/>
+                      <Component id="filterByUsername" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -35,11 +35,13 @@
                       <Component id="jLabel2" min="-2" pref="48" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="sortBy" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="174" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="viewFriends" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="viewLoginHistory" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="update_button" min="-2" pref="111" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="UpdatePassword" min="-2" max="-2" attributes="0"/>
@@ -84,6 +86,8 @@
                   <Component id="resetPassword" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="setRoleAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lock" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="viewFriends" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="viewLoginHistory" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -298,6 +302,22 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setRoleAdminActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="viewFriends">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="View List Friends"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewFriendsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="viewLoginHistory">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="View Logged In History"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewLoginHistoryActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
