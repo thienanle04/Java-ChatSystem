@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.Random;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -79,12 +80,13 @@ public class sendRandomPasswordToEmail {
 
     private static void updatePasswordInDatabase(String username, String newPassword) throws SQLException {
         String updateSQL = "UPDATE Users SET password_hash = ? WHERE username = ?";
+        String password_hash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL", "JavaChatSystem",
                 "javachatsystem");
                 PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
 
-            pstmt.setString(1, newPassword);
+            pstmt.setString(1, password_hash);
             pstmt.setString(2, username);
             int rowsAffected = pstmt.executeUpdate();
 
