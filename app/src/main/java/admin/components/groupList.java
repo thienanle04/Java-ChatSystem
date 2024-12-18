@@ -460,7 +460,7 @@ public class groupList extends javax.swing.JPanel {
 
         if ("Name".equals(selectedOption)) {
             columnIndex = 0;
-        } else if ("Creation Date".equals(selectedOption)) {
+        } else if ("CreationDate".equals(selectedOption)) {
             columnIndex = 1;
         }
 

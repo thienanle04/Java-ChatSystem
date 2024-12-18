@@ -342,9 +342,6 @@ public class spamReports extends javax.swing.JPanel {
         // Set the filtered model to the table
         SpamReports.setModel(filteredModel);
 
-        // Reapply the sorter to maintain sorting behavior
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(filteredModel);
-        SpamReports.setRowSorter(sorter);
     }// GEN-LAST:event_FilterByNameActionPerformed
 
     private void lockAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_lockAccountActionPerformed
@@ -385,9 +382,9 @@ public class spamReports extends javax.swing.JPanel {
 
     private void FilterByTimeStampActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_FilterByTimeStampActionPerformed
         // TODO add your handling code here:
-        String filterName = FilterByTimeStamp.getText().trim();
+        String filterTimestamp = FilterByTimeStamp.getText().trim();
 
-        if (!filterName.isEmpty()) {
+        if (!filterTimestamp.isEmpty()) {
             if (originalModel == null) {
                 originalModel = (DefaultTableModel) SpamReports.getModel();
             }
@@ -401,8 +398,8 @@ public class spamReports extends javax.swing.JPanel {
             }
 
             for (int i = 0; i < model.getRowCount(); i++) {
-                String name = model.getValueAt(i, 0).toString();
-                if (name.toLowerCase().contains(filterName.toLowerCase())) {
+                String timestamp = model.getValueAt(i, 0).toString();
+                if (timestamp.toLowerCase().contains(filterTimestamp.toLowerCase())) {
                     filteredModel.addRow(new Object[] {
                             model.getValueAt(i, 0),
                             model.getValueAt(i, 1),

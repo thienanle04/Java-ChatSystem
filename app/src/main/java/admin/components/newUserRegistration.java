@@ -344,13 +344,13 @@ public class newUserRegistration extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        String inputYear = JOptionPane.showInputDialog(null, "Nhập năm cần xem dữ liệu (yyyy):", "Nhập Năm",
+        String inputYear = JOptionPane.showInputDialog(null, "Enter the year to view data (yyyy):", "Enter Year",
                 JOptionPane.QUESTION_MESSAGE);
         if (inputYear != null && !inputYear.trim().isEmpty()) {
             try {
                 int year = Integer.parseInt(inputYear.trim());
 
-                // Truy vấn dữ liệu
+                // Query data
                 String query = """
                             SELECT
                                 MONTH(created_at) AS Month,
@@ -368,30 +368,30 @@ public class newUserRegistration extends javax.swing.JPanel {
                 stmt.setInt(1, year);
                 ResultSet rs = stmt.executeQuery();
 
-                // Chuẩn bị dữ liệu cho biểu đồ
+                // Prepare data for the chart
                 org.jfree.data.category.DefaultCategoryDataset dataset = new org.jfree.data.category.DefaultCategoryDataset();
 
-                // Khởi tạo mảng giá trị mặc định cho 12 tháng
+                // Initialize an array for default values for all 12 months
                 int[] userCounts = new int[12];
                 while (rs.next()) {
                     int month = rs.getInt("Month");
                     int userCount = rs.getInt("UserCount");
-                    userCounts[month - 1] = userCount; // Lưu giá trị cho tháng tương ứng
+                    userCounts[month - 1] = userCount; // Store the value for the corresponding month
                 }
 
-                // Thêm dữ liệu vào dataset, đảm bảo đủ 12 cột
+                // Add data to the dataset, ensuring all 12 columns are included
                 for (int i = 0; i < 12; i++) {
-                    dataset.addValue(userCounts[i], "Số lượng", "Tháng " + (i + 1));
+                    dataset.addValue(userCounts[i], "Count", "Month " + (i + 1));
                 }
 
-                // Tạo biểu đồ cột
+                // Create a bar chart
                 org.jfree.chart.JFreeChart barChart = org.jfree.chart.ChartFactory.createBarChart(
-                        "Biểu đồ số lượng người đăng ký năm " + year,
-                        "Tháng",
-                        "Số lượng",
+                        "User Registration Count in " + year,
+                        "Month",
+                        "Count",
                         dataset);
 
-                // Hiển thị biểu đồ
+                // Display the chart
                 org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(barChart);
 
                 javax.swing.JDialog chartDialog = new javax.swing.JDialog((java.awt.Frame) null, "View Chart", true);
@@ -402,19 +402,20 @@ public class newUserRegistration extends javax.swing.JPanel {
 
                 chartDialog.setVisible(true);
 
-                // Đóng kết nối
+                // Close connections
                 rs.close();
                 stmt.close();
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Năm nhập không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid year input!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Database Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Bạn chưa nhập năm!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You have not entered a year!", "Notification", JOptionPane.WARNING_MESSAGE);
         }
+
     }// GEN-LAST:event_jButton4ActionPerformed
 
     private DefaultTableModel originalModel;
