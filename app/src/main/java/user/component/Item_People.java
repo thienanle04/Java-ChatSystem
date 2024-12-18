@@ -2,11 +2,18 @@ package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import user.event.PublicEvent;
+import user.model.Model_Delete_Message;
 import user.model.Model_Group_Chat;
+import user.service.Service;
+
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+@SuppressWarnings("unused")
 public class Item_People extends javax.swing.JPanel {
 
     public Model_Group_Chat getChat() {
@@ -58,7 +65,27 @@ public class Item_People extends javax.swing.JPanel {
             @Override
             public void mouseReleased(MouseEvent me) {
                 if (mouseOver) {
-                    PublicEvent.getInstance().getEventMain().selectChat(chat);
+                    if (me.getButton() == MouseEvent.BUTTON1) {
+                        PublicEvent.getInstance().getEventMain().selectChat(chat);
+                    } else if (me.getButton() == MouseEvent.BUTTON3) {
+                        // Show popup menu
+                        // Create a popup menu
+                        JPopupMenu popupMenu = new JPopupMenu();
+
+                        // Add menu items to the popup menu
+                        JMenuItem menuItem1 = new JMenuItem("Delete all messages");
+                        
+                        popupMenu.add(menuItem1);
+
+                        // Add action listeners for menu items
+                        menuItem1.addActionListener(e -> {
+                            PublicEvent.getInstance().getEventChat().deleteAllMessages(new Model_Delete_Message(chat.getGroupId(), Service.getInstance().getUser().getUserID()));
+                        });
+
+                        popupMenu.show(me.getComponent(), me.getX(), me.getY());
+
+                    }
+
                 }
             }
         });

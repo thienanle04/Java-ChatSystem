@@ -10,12 +10,21 @@ public class PublicEvent {
     private EventUpdateInfo eventUpdateInfo;
     private EventFriendRequest eventFriendRequest;
     private EventFriendList eventFriendList;
+    private EventFindNewFriend eventFindNewFriend;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
             instance = new PublicEvent();
         }
         return instance;
+    }
+
+    public void addEventFindNewFriend(EventFindNewFriend event) {
+        this.eventFindNewFriend = event;
+    }
+
+    public EventFindNewFriend getEventFindNewFriend() {
+        return eventFindNewFriend;
     }
 
     public void addEventFriendList(EventFriendList event) {

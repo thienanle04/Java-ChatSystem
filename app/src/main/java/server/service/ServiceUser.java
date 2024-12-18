@@ -275,6 +275,91 @@ public class ServiceUser {
         }
     }
 
+    public ArrayList<Model_Friend_Request> findNewFriend(Model_Friend_Request req) throws SQLException {
+        ArrayList<Model_Friend_Request> list = new ArrayList<>();
+        String sql = """
+            SELECT user_id, name
+            FROM users
+            WHERE name LIKE ? 
+            AND user_id != ? AND role != 'admin'
+            AND user_id NOT IN (
+                SELECT user_id_2 
+                FROM user_friends 
+                WHERE user_id_1 = ? 
+            )
+            AND user_id NOT IN (
+                SELECT user_id_1 
+                FROM user_friends 
+                WHERE user_id_2 = ? 
+            )
+        """;
+        
+        try (PreparedStatement p = con.prepareStatement(sql)) {
+            p.setString(1, "%" + req.getName() + "%");
+            p.setInt(2, req.getFromUserID());
+            p.setInt(3, req.getFromUserID());
+            p.setInt(4, req.getFromUserID());
+    
+            try (ResultSet r = p.executeQuery()) {
+                while (r.next()) {
+                    int userId = r.getInt("user_id");
+                    String name = r.getString("name");
+                    list.add(new Model_Friend_Request(userId, req.getFromUserID(), name));
+                }
+            }
+        }
+        
+        return list;
+    }
+
+    public boolean blockStranger(Model_Friend_Request req) throws SQLException {
+        int userID1 = req.getFromUserID();
+        int userID2 = req.getToUserID();
+        String status = "block_1_2";
+
+        if (userID1 > userID2) {
+            int temp = userID1;
+            userID1 = userID2;
+            userID2 = temp;
+            status = "block_2_1";
+        }
+        try {
+            PreparedStatement p = con.prepareStatement("insert into user_friends (user_id_1, user_id_2, status) values (?,?,?)");
+            p.setInt(1, userID1);
+            p.setInt(2, userID2);
+            p.setString(3, status);
+            p.execute();
+            p.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean addFriend(Model_Friend_Request req) throws SQLException {
+        int userID1 = req.getFromUserID();
+        int userID2 = req.getToUserID();
+        String status = "pending_1_2";
+
+        if (userID1 > userID2) {
+            int temp = userID1;
+            userID1 = userID2;
+            userID2 = temp;
+            status = "pending_2_1";
+        }
+        try {
+            PreparedStatement p = con.prepareStatement("insert into user_friends (user_id_1, user_id_2, status) values (?,?,?)");
+            p.setInt(1, userID1);
+            p.setInt(2, userID2);
+            p.setString(3, status);
+            p.execute();
+            p.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean responseFriendRequest(Model_Friend_Request req, String status) throws SQLException {
         int userID1 = req.getToUserID();
         int userID2 = req.getFromUserID();

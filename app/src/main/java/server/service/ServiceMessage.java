@@ -60,11 +60,11 @@ public class ServiceMessage {
                 groupChat = new Model_Group_Chat(r.getInt(1), other, name, "none", 2);
                 p2.close();
                 r2.close();
+                return groupChat;
             }
             r.close();
             p.close();
 
-            return groupChat;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -153,6 +153,38 @@ public class ServiceMessage {
 
     // Save the message to the database
     public Model_Chat_Message saveMessage(Model_Chat_Message message) throws SQLException {
+        // Check if user block or blocked by the other user
+        PreparedStatement p3 = con.prepareStatement("select group_type from chat_group where group_id = ?");
+        p3.setInt(1, message.getGroupID());
+        ResultSet r3 = p3.executeQuery();
+        r3.next();
+        int groupType = r3.getInt(1);
+        if (groupType == 2) {
+            int userID1 = message.getSenderID();
+
+            PreparedStatement p5 = con.prepareStatement("select user_id from group_members where group_id = ? and user_id <> ?");
+            p5.setInt(1, message.getGroupID());
+            p5.setInt(2, userID1);
+            ResultSet r5 = p5.executeQuery();
+            r5.next();
+            int userID2 = r5.getInt(1);
+
+            if (userID1 > userID2) {
+                int temp = userID1;
+                userID1 = userID2;
+                userID2 = temp;
+            }
+            PreparedStatement p4 = con.prepareStatement("select * from user_friends where user_id_1 = ? and user_id_2 = ? and (status = 'block_1_2' or status = 'block_2_1')");
+            p4.setInt(1, userID1);
+            p4.setInt(2, userID2);
+            ResultSet r4 = p4.executeQuery();
+            if (r4.next()) {
+                return null;
+            }
+            p4.close();
+            r4.close();
+        }
+
         Model_Chat_Message receive_Message = null;
         PreparedStatement p = con.prepareStatement("insert into group_messages (group_id, sender_id, message) values (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         p.setInt(1, message.getGroupID());
@@ -176,6 +208,18 @@ public class ServiceMessage {
         return receive_Message;
     }
 
+    public void deleteAllMessages(int groupId, int userId) throws SQLException {
+        try {
+            PreparedStatement p = con.prepareStatement("update message_visibility set visibility_status = 'hidden' where user_id = ? and message_id in (select message_id from group_messages where group_id = ?)");
+            p.setInt(1, userId);
+            p.setInt(2, groupId);
+            p.executeUpdate();
+            p.close();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
     // Get all chat messages
     public HashMap<Integer, LinkedList<Model_Chat_Message>> getAllChat(int userId) throws SQLException {
         HashMap<Integer, LinkedList<Model_Chat_Message>> data = new HashMap<>();
@@ -191,8 +235,10 @@ public class ServiceMessage {
                 int senderID = r.getInt(2);
                 String message = r.getString(3);
                 String visibility = r.getString(4);
-                if (visibility.equals("hidden")) {
+                if (visibility.equals("deleted")) {
                     message = "This message was deleted";
+                } else if (visibility.equals("hidden")) {
+                    continue;
                 }
                 PreparedStatement p2 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
                 p2.setInt(1, senderID);

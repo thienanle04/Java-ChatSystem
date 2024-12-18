@@ -15,6 +15,7 @@ import user.event.PublicEvent;
 import user.service.Service;
 import user.model.Model_Group_Chat;
 import user.model.Model_Chat_Message;
+import user.model.Model_Delete_Message;
 
 public class Chat extends javax.swing.JPanel {
     HashMap<Integer, LinkedList<Model_Chat_Message>> chats_data;
@@ -41,7 +42,7 @@ public class Chat extends javax.swing.JPanel {
                                     if (action) {
                                         message.setMessageID((int) os[1]);
                                     } else {
-                                        message.setMessage("Failed to send message");
+                                        message.setMessage("Can not send message");
                                     }
 
                                     if (chats_data.containsKey(chat_Title1.getChat().getGroupId())) {
@@ -86,6 +87,36 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void initAllChat(HashMap<Integer, LinkedList<Model_Chat_Message>> data) {
                 chats_data = data;
+            }
+
+            @Override
+            public void newChat(Model_Group_Chat groupChat) {
+                chats_data.put(groupChat.getGroupId(), new LinkedList<>());
+            }
+
+            @Override
+            public void deleteAllMessages(Model_Delete_Message req) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("delete_all_messages", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    
+                                    if (action) {
+                                        chats_data.get(req.getID()).clear();
+                                        chatBody.clearChat();
+                                    } else {
+                                        PublicEvent.getInstance().getEventMain().showNotification("Can not delete all messages. Please try again later");
+                                    }
+                                }
+                            }
+                        });
+
+                    }
+                }).start();
             }
         });
         add(chat_Title1, "wrap");

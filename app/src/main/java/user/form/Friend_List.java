@@ -6,14 +6,14 @@ import user.model.Model_Friend_Request;
 import user.component.Friend_Title;
 import user.event.EventFriendList;
 import user.event.PublicEvent;
-import user.component.Friend_Search_Bar;
+import user.component.Friend_List_Search_Bar;
 import user.component.Friend_List_Body;
 import user.model.Model_Friend;
 import user.service.Service;
 
 public class Friend_List extends javax.swing.JPanel {
     Friend_Title title;
-    Friend_Search_Bar search_bar;
+    Friend_List_Search_Bar search_bar;
     Friend_List_Body body;
 
     public Friend_List() {
@@ -84,7 +84,7 @@ public class Friend_List extends javax.swing.JPanel {
 
         setLayout(new MigLayout("fillx", "0[fill]0", "0[200]10[100]10[fill]0"));
         title = new Friend_Title();
-        search_bar = new Friend_Search_Bar();
+        search_bar = new Friend_List_Search_Bar();
         body = new Friend_List_Body();
         add(title, "wrap");
         add(search_bar, "wrap");

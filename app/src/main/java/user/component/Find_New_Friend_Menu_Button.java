@@ -3,23 +3,35 @@ package user.component;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import user.event.PublicEvent;
 
-public class Friend_Search extends javax.swing.JPanel {
-    public Friend_Search() {
+public class Find_New_Friend_Menu_Button extends javax.swing.JPanel {
+    public Find_New_Friend_Menu_Button() {
         initComponents();
         init();
     }
+    
+    private boolean mouseOver;
     
     private void init() {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent me) {
                 setBackground(new Color(242,242,242));
+                mouseOver = true;
             }
             
             @Override
             public void mouseExited(MouseEvent me) {
                 setBackground(new Color(249,249,249));
+                mouseOver = false;
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (mouseOver) {
+                    PublicEvent.getInstance().getEventMain().showFindNewFriend();
+                }
             }
         });
     }
@@ -41,7 +53,7 @@ public class Friend_Search extends javax.swing.JPanel {
         icon.setImage(new javax.swing.ImageIcon(getClass().getResource("/user/friend_search.png"))); // NOI18N
 
         lb.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lb.setText("Find new");
+        lb.setText("Find new friend");
         lb.setMaximumSize(new java.awt.Dimension(50, 20));
         lb.setMinimumSize(new java.awt.Dimension(50, 20));
         lb.setName(""); // NOI18N

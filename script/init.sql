@@ -72,7 +72,7 @@ CREATE TABLE Message_Visibility (
     message_id INT NOT NULL,
     user_id INT,
     is_sender BOOLEAN DEFAULT FALSE,
-    visibility_status ENUM('visible', 'hidden') DEFAULT 'visible',
+    visibility_status ENUM('visible', 'hidden', 'deleted') DEFAULT 'visible',
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (message_id) REFERENCES Group_Messages(message_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
@@ -103,36 +103,6 @@ BEGIN
            IF(user_id = NEW.sender_id, TRUE, FALSE)
     FROM Group_Members
     WHERE group_id = NEW.group_id;
-END;
-//
-
-DELIMITER ;
-
-
-DROP TRIGGER IF EXISTS before_visibility_update;
-DELIMITER //
-
-CREATE TRIGGER before_visibility_update
-BEFORE UPDATE ON Message_Visibility
-FOR EACH ROW
-BEGIN
-    DECLARE message_sent_time TIMESTAMP;
-
-    -- Get the sent time of the message
-    SELECT sent_at INTO message_sent_time
-    FROM Group_Messages
-    WHERE message_id = NEW.message_id;
-
-    -- Check if the sender is hiding the message for others
-    IF NEW.visibility_status = 'hidden' AND OLD.visibility_status = 'visible' THEN
-        IF NOT NEW.is_sender THEN
-            -- Enforce the 1-day rule for hiding the message from others
-            IF TIMESTAMPDIFF(HOUR, message_sent_time, NOW()) >= 24 THEN
-                SIGNAL SQLSTATE '45000' 
-                SET MESSAGE_TEXT = 'You can only hide this message from others within one day of sending it.';
-            END IF;
-        END IF;
-    END IF;
 END;
 //
 

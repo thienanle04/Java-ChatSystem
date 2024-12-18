@@ -24,9 +24,9 @@ import user.service.Service;
 
 
 @SuppressWarnings("unused")
-public class Friend_Search_Bar extends javax.swing.JPanel {
+public class Friend_List_Search_Bar extends javax.swing.JPanel {
 
-    public Friend_Search_Bar() {
+    public Friend_List_Search_Bar() {
         initComponents();
         cmdSearch.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+3;");

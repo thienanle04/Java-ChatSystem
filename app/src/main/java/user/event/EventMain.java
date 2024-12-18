@@ -18,7 +18,7 @@ public interface EventMain {
 
     public void showFriendRequest();
 
-    public void showFindFriend();
+    public void showFindNewFriend();
     
     public void editProfile();
     

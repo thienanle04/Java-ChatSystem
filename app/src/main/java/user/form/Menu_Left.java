@@ -3,14 +3,18 @@ package user.form;
 import java.util.ArrayList;
 
 import com.formdev.flatlaf.FlatClientProperties;
+
+import io.socket.client.Ack;
 import net.miginfocom.swing.MigLayout;
 import java.util.List;
 
 import user.model.Model_Friend;
+import user.model.Model_Friend_Request;
 import user.model.Model_Group_Chat;
+import user.service.Service;
 import user.component.Friend_List_Menu_Button;
 import user.component.Friend_Request_Menu_Button;
-import user.component.Friend_Search;
+import user.component.Find_New_Friend_Menu_Button;
 import user.component.Item_People;
 import user.event.EventMenuLeft;
 import user.event.PublicEvent;
@@ -72,6 +76,38 @@ public class Menu_Left extends javax.swing.JPanel {
             }
 
             @Override
+            public void selectChat(Model_Friend_Request friend) {
+                boolean isExist = false;
+                for (Model_Group_Chat d : chats) {
+                    if (d.getGroupType() == GroupType.TWO) {
+                        if (d.getUserID() == friend.getToUserID()) {
+                            PublicEvent.getInstance().getEventMain().selectChat(d);
+                            isExist = true;
+                            break;
+                        }
+                    }
+                }
+                if (!isExist) {
+                    new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("new_chat", friend.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if ((boolean) os[0]) {
+                                    Model_Group_Chat chat = new Model_Group_Chat(os[1]);
+                                    newChat(chat);
+                                    PublicEvent.getInstance().getEventChat().newChat(chat);
+                                    PublicEvent.getInstance().getEventMain().selectChat(chat);
+                                }
+                            }
+                        });
+                    }
+                    }).start();
+                }
+            }
+
+            @Override
             public void userConnect(int groupChatId) {
                 for (Model_Group_Chat u : chats) {
                     if (u.getGroupId() == groupChatId) {
@@ -128,7 +164,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private void showFriend() {
         menuList.removeAll();
         searchBar1.setVisible(false);
-        menuList.add(new Friend_Search(), "wrap");
+        menuList.add(new Find_New_Friend_Menu_Button(), "wrap");
         menuList.add(new Friend_List_Menu_Button(), "wrap");
         menuList.add(new Friend_Request_Menu_Button(), "wrap");
         refreshMenuList();

@@ -84,8 +84,8 @@ public class Main extends javax.swing.JFrame {
             }
 
             @Override
-            public void showFindFriend() {
-
+            public void showFindNewFriend() {
+                home.showFindNewFriend();
             }
 
             @Override

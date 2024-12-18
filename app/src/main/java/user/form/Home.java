@@ -8,6 +8,7 @@ public class Home extends javax.swing.JLayeredPane {
 
     private javax.swing.JLayeredPane content;
     private Chat chat;
+    private Find_New_Friend find_new_friend;
     private Friend_List friend_list;
     private Friend_Request friend_request;
     private CardLayout cardLayout;
@@ -27,12 +28,14 @@ public class Home extends javax.swing.JLayeredPane {
         chat = new Chat();
         friend_list = new Friend_List();
         friend_request = new Friend_Request();
+        find_new_friend = new Find_New_Friend();
         
         content.add(chat, "chat");
         content.add(friend_list, "friend_list");
         content.add(friend_request, "friend_request");
+        content.add(find_new_friend, "find_new_friend");
         
-        cardLayout.show(content, "friend_list");
+        cardLayout.show(content, "chat");
         this.add(content);
     }
 
@@ -47,6 +50,7 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     public void setChat(Model_Group_Chat groupChat) {
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
         menuRight.setVisible(true);
         cardLayout.show(content, "chat");
         chat.setChat(groupChat);
@@ -60,15 +64,22 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     public void showFriendList() {
-        menuRight.setVisible(false);
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow]0", "0[fill]0"));
         cardLayout.show(content, "friend_list");
         menuRight.setVisible(false);
         refreshUI();
     }
 
     public void showFriendRequest() {
-        menuRight.setVisible(false);
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow]0", "0[fill]0"));
         cardLayout.show(content, "friend_request");
+        menuRight.setVisible(false);
+        refreshUI();
+    }
+    
+    public void showFindNewFriend() {
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow]0", "0[fill]0"));
+        cardLayout.show(content, "find_new_friend");
         menuRight.setVisible(false);
         refreshUI();
     }

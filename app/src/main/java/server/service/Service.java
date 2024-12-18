@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import server.model.Model_Client;
+import server.model.Model_Delete_Message;
 import server.model.Model_Group_Chat;
 import server.model.Model_Login;
 import server.model.Model_Message;
@@ -193,6 +194,58 @@ public class Service {
             }
         });
 
+        server.addEventListener("find_new_friend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
+                try {
+                    ArrayList<Model_Friend_Request> list = serviceUser.findNewFriend(t);
+                    ar.sendAckData(true, list.toArray());
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });        
+
+        server.addEventListener("new_chat", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
+                try {
+                    Model_Group_Chat chat = serviceMessage.getPrivateChat(t.getFromUserID(), t.getToUserID());
+                    ar.sendAckData(true, chat);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });   
+
+        server.addEventListener("add_friend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
+                try {
+                    boolean ok = serviceUser.addFriend(t);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
+        server.addEventListener("block_stranger", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
+                try {
+                    boolean ok = serviceUser.blockStranger(t);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
+
         server.addEventListener("block_friend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
             @Override
             public void onData(SocketIOClient sioc, Model_Friend_Request t, AckRequest ar) throws Exception {
@@ -236,6 +289,18 @@ public class Service {
                     // Get all friend list
                     ArrayList<Model_Friend> friends = serviceUser.getFriendList(userID);
                     sioc.sendEvent("get_all_data", data, list.toArray(), friends.toArray());
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        });
+
+        server.addEventListener("delete_all_messages", Model_Delete_Message.class, new DataListener<Model_Delete_Message>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Delete_Message t, AckRequest ar) throws Exception {
+                try {
+                    serviceMessage.deleteAllMessages(t.getID(), t.getUserID());
+                    ar.sendAckData(true);
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
