@@ -12,6 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import java.awt.event.MouseAdapter;
+
 import javax.swing.JButton;
 
 public class Chat_Item extends javax.swing.JLayeredPane {
@@ -23,6 +26,52 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setEditable(false);
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setOpaque(false);
+        
+//        txt.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseEntered(MouseEvent me) {
+//                System.out.println("Mouse entered");
+//                mouseOverText = true;
+//            }
+//
+//            @Override
+//            public void mouseExited(MouseEvent me) {
+//                System.out.println("Mouse exited");
+//                mouseOverText = false;
+//            }
+//
+//            @Override
+//            public void mouseReleased(MouseEvent me) {
+//                if (mouseOverText) {
+//                    System.out.println("Mouse released");
+//                    if (me.getButton() == MouseEvent.BUTTON3) {
+//                        // Show popup menu
+//                        // Create a popup menu
+//                        JPopupMenu popupMenu = new JPopupMenu();
+//
+//                        // Add menu items to the popup menu
+//                        JMenuItem menuItem1 = new JMenuItem("Delete message for me");
+//                        
+//                        popupMenu.add(menuItem1);
+//
+//                        // Add action listeners for menu items
+//                        menuItem1.addActionListener(e -> {
+//                            // PublicEvent.getInstance().getEventChat().reportSpam();
+//                        });
+//
+//                        popupMenu.show(me.getComponent(), me.getX(), me.getY());
+//
+//                    }
+//
+//                }
+//            }
+        // });
+    }
+
+    public void addMouseListenerToTxt(MouseAdapter adapter) {
+        txt.addMouseListener(adapter);
+        label.addMouseListener(adapter);
+        addMouseListener(adapter);
     }
 
     public void setUserProfile(String user) {

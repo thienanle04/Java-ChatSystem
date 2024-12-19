@@ -1,18 +1,24 @@
 package server.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class Model_Delete_Message {
-    private int ID;
+    private int messageID;
+    private int groupID;
     private int userID;
 
-    public int getID() {
-        return ID;
+    public int getMessageID() {
+        return messageID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+
+    public int getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getUserID() {
@@ -25,10 +31,9 @@ public class Model_Delete_Message {
 
     public Model_Delete_Message() {}
 
-    // Annotate the parameterized constructor
-    @JsonCreator
-    public Model_Delete_Message(@JsonProperty("ID") int ID, @JsonProperty("userID") int userID) {
-        this.ID = ID;
+    public Model_Delete_Message(int messageID, int groupID, int userID) {
+        this.messageID = messageID;
+        this.groupID = groupID;
         this.userID = userID;
     }
 }

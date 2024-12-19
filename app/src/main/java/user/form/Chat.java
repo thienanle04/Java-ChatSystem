@@ -107,7 +107,7 @@ public class Chat extends javax.swing.JPanel {
                                     boolean action = (Boolean) os[0];
                                     
                                     if (action) {
-                                        chats_data.get(req.getID()).clear();
+                                        chats_data.get(req.getGroupID()).clear();
                                         chatBody.clearChat();
                                     } else {
                                         PublicEvent.getInstance().getEventMain().showNotification("Can not delete all messages. Please try again later");
@@ -143,6 +143,74 @@ public class Chat extends javax.swing.JPanel {
                 // TODO Search all messages
 
             }
+
+            @Override
+            public void deleteMessageForMe(Model_Delete_Message req) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("delete_message_for_me", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    
+                                    if (action) {
+                                        chatBody.removeMessage(req.getMessageID());
+
+                                        // Remove message from chat data of this group
+                                        if (chats_data.containsKey(req.getGroupID())) {
+                                            // Remove message from chat data of this group
+                                            LinkedList<Model_Chat_Message> messages = chats_data.get(req.getGroupID());
+                                            messages.removeIf(msg -> msg.getMessageID() == req.getMessageID());
+                                        }
+                                    } else {
+
+                                    }
+                                }
+                            }
+                        });
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void deleteMessageForEveryone(Model_Delete_Message req) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("delete_message_for_everyone", req.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    
+                                    if (action) {
+                                        // Set message text to "This message has been deleted"
+                                        chatBody.deleteMessage(req.getMessageID());
+
+                                        // Set message text to "This message has been deleted"
+                                        if (chats_data.containsKey(req.getGroupID())) {
+                                            // Set message text to "This message has been deleted"
+                                            for (Model_Chat_Message message : chats_data.get(req.getGroupID())) {
+                                                if (message.getMessageID() == req.getMessageID()) {
+                                                    message.setMessage("This message has been deleted");
+                                                }
+                                            }
+                                        }
+                                            
+                                    } else {
+                                        
+                                    }
+                                }
+                            }
+                        });
+
+                    }
+                }).start();
+            }
+
         });
         add(chat_Title1, "wrap");
         add(search_bar, "wrap");

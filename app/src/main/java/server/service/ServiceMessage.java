@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import server.connection.DatabaseConnection;
 import server.model.Model_Group_Chat;
 import server.model.Model_Chat_Message;
+import server.model.Model_Delete_Message;
 import server.app.GroupType;
 
 public class ServiceMessage {
@@ -208,6 +209,29 @@ public class ServiceMessage {
         r.close();
         p.close();
         return receive_Message;
+    }
+
+    public void deleteMessageForOne(Model_Delete_Message deleteMessage) throws SQLException {
+        try {
+            PreparedStatement p = con.prepareStatement("update message_visibility set visibility_status = 'hidden' where user_id = ? and message_id = ?");
+            p.setInt(1, deleteMessage.getUserID());
+            p.setInt(2, deleteMessage.getMessageID());
+            p.executeUpdate();
+            p.close();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public void deleteMessageForAll(Model_Delete_Message deleteMessage) throws SQLException {
+        try {
+            PreparedStatement p = con.prepareStatement("update message_visibility set visibility_status = 'deleted' where message_id = ?");
+            p.setInt(1, deleteMessage.getMessageID());
+            p.executeUpdate();
+            p.close();
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     public void deleteAllMessages(int groupId, int userId) throws SQLException {

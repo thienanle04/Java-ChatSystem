@@ -27,4 +27,8 @@ public interface EventChat {
 
     public void searchAllMessage(String key);
 
+    public void deleteMessageForMe(Model_Delete_Message req);
+
+    public void deleteMessageForEveryone(Model_Delete_Message req);
+
 }

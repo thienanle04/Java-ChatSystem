@@ -299,7 +299,31 @@ public class Service {
             @Override
             public void onData(SocketIOClient sioc, Model_Delete_Message t, AckRequest ar) throws Exception {
                 try {
-                    serviceMessage.deleteAllMessages(t.getID(), t.getUserID());
+                    serviceMessage.deleteAllMessages(t.getGroupID(), t.getUserID());
+                    ar.sendAckData(true);
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        });
+
+        server.addEventListener("delete_message_for_me", Model_Delete_Message.class, new DataListener<Model_Delete_Message>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Delete_Message t, AckRequest ar) throws Exception {
+                try {
+                    serviceMessage.deleteMessageForOne(t);
+                    ar.sendAckData(true);
+                } catch (SQLException e) {
+                    System.err.println(e);
+                }
+            }
+        });
+
+        server.addEventListener("delete_message_for_everyone", Model_Delete_Message.class, new DataListener<Model_Delete_Message>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Delete_Message t, AckRequest ar) throws Exception {
+                try {
+                    serviceMessage.deleteMessageForAll(t);
                     ar.sendAckData(true);
                 } catch (SQLException e) {
                     System.err.println(e);

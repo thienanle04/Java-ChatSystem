@@ -1,16 +1,94 @@
 package user.component;
 
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.Icon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+import user.event.PublicEvent;
+import user.model.Model_Chat_Message;
+import user.model.Model_Delete_Message;
+import user.service.Service;
 
 public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
-
-    public Chat_Left_With_Profile() {
+    private Model_Chat_Message message;
+    private boolean mouseOverAvatar;
+    
+    public Chat_Left_With_Profile(Model_Chat_Message message) {
         initComponents();
+
+        this.message = message;
+        setUserProfile(message.getUserName());
+        setText(message.getMessage());
+        setTime(message.getTime());
+        
+        init();
         txt.setBackground(new Color(242, 242, 242));
+    }
+    
+    private void init () {
+        IaImage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent me) {
+                mouseOverAvatar = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+                mouseOverAvatar = false;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (mouseOverAvatar) {
+                    if (me.getButton() == MouseEvent.BUTTON3) {
+                        // Show popup menu
+                        // Create a popup menu
+                        JPopupMenu popupMenu = new JPopupMenu();
+
+                        // Add menu items to the popup menu
+                        JMenuItem menuItem1 = new JMenuItem("Spam report");
+                        
+                        popupMenu.add(menuItem1);
+
+                        // Add action listeners for menu items
+                        menuItem1.addActionListener(_ -> {
+                            // PublicEvent.getInstance().getEventChat().reportSpam();
+                        });
+
+                        popupMenu.show(me.getComponent(), me.getX(), me.getY());
+
+                    }
+
+                }
+            }
+        });
+
+        txt.addMouseListenerToTxt(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                if (me.isPopupTrigger()) {
+                    JPopupMenu popupMenu = new JPopupMenu();
+                    JMenuItem deleteItem = new JMenuItem("Delete message for me");
+        
+                    deleteItem.addActionListener(_ -> {
+                        PublicEvent.getInstance().getEventChat().deleteMessageForMe(new Model_Delete_Message(message.getMessageID(), message.getGroupID(), Service.getInstance().getUser().getUserID()));
+                    });
+        
+                    popupMenu.add(deleteItem);
+                    popupMenu.show(me.getComponent(), me.getX(), me.getY());
+                }
+            }
+        });
+    }
+
+    public Model_Chat_Message getMessage() {
+        return message;
     }
 
     public void setUserProfile(String user) {

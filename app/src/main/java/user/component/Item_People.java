@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-@SuppressWarnings("unused")
 public class Item_People extends javax.swing.JPanel {
 
     public Model_Group_Chat getChat() {
@@ -78,8 +77,8 @@ public class Item_People extends javax.swing.JPanel {
                         popupMenu.add(menuItem1);
 
                         // Add action listeners for menu items
-                        menuItem1.addActionListener(e -> {
-                            PublicEvent.getInstance().getEventChat().deleteAllMessages(new Model_Delete_Message(chat.getGroupId(), Service.getInstance().getUser().getUserID()));
+                        menuItem1.addActionListener(_ -> {
+                            PublicEvent.getInstance().getEventChat().deleteAllMessages(new Model_Delete_Message(0, chat.getGroupId(), Service.getInstance().getUser().getUserID()));
                         });
 
                         popupMenu.show(me.getComponent(), me.getX(), me.getY());

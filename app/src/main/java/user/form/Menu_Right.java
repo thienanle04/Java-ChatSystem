@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import server.config.ConfigUtil;
 import user.model.Model_Group_Chat;
 import user.service.Service;
 import user.app.GroupType;
@@ -30,10 +31,24 @@ import user.event.PublicEvent;
 @SuppressWarnings("unused")
 public class Menu_Right extends javax.swing.JPanel {
 
+    private String Url;
+    private String Username;
+    private String Password;
     /**
      * Creates new form Menu_Left
      */
     public Menu_Right() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            Url = configUtil.getString("url");
+            Username = configUtil.getString("username");
+            Password = configUtil.getString("password");
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
     }
     private int user_Id;
@@ -53,6 +68,7 @@ public class Menu_Right extends javax.swing.JPanel {
         addMember = new javax.swing.JButton();
         promoteAdminRole = new javax.swing.JButton();
         deleteMember = new javax.swing.JButton();
+        changeGroupName = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
@@ -77,6 +93,13 @@ public class Menu_Right extends javax.swing.JPanel {
             }
         });
 
+        changeGroupName.setText("Change Group Name");
+        changeGroupName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeGroupNameActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,19 +114,25 @@ public class Menu_Right extends javax.swing.JPanel {
                         .addComponent(promoteAdminRole, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
+                        .addComponent(changeGroupName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(deleteMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(87, 87, 87)
+                .addGap(53, 53, 53)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(changeGroupName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(deleteMember, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(promoteAdminRole, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -115,9 +144,9 @@ public class Menu_Right extends javax.swing.JPanel {
         if(this.groupChat.getGroupType() == GroupType.MANY) {
             try {
                 // Kết nối đến database
-                String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-                String user = "JavaChatSystem";
-                String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
+                String url = Url;
+                String user = Username;
+                String password = Password; // Thay bằng mật khẩu của bạn
                 Connection conn = DriverManager.getConnection(url, user, password);
 
                 // Lấy dữ liệu bạn bè từ database
@@ -246,9 +275,9 @@ public class Menu_Right extends javax.swing.JPanel {
         int groupId = this.groupChat.getGroupId();
         int userId = user_Id; 
         String role = "member";
-        String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-        String user = "JavaChatSystem";
-        String password = "javachatsystem"; 
+        String url = Url;
+        String user = Username;
+        String password = Password;
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
             String query = "SELECT role FROM group_members WHERE group_id = ? AND user_id = ?";
@@ -360,9 +389,9 @@ public class Menu_Right extends javax.swing.JPanel {
         int groupId = this.groupChat.getGroupId();
         int userId = user_Id; 
         String role = "member";
-        String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-        String user = "JavaChatSystem";
-        String password = "javachatsystem"; 
+        String url = Url;
+        String user = Username;
+        String password = Password;
         try {
             Connection conn = DriverManager.getConnection(url, user, password);
             String query = "SELECT role FROM group_members WHERE group_id = ? AND user_id = ?";
@@ -470,9 +499,85 @@ public class Menu_Right extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_promoteAdminRoleActionPerformed
 
+    private void changeGroupNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeGroupNameActionPerformed
+        String newGroupName = "";
+        int groupId = this.groupChat.getGroupId();
+        // TODO: Rerender MenuLeft Chat;
+        String url = Url;
+        String user = Username;
+        String password = Password;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Kết nối cơ sở dữ liệu
+            conn = DriverManager.getConnection(url, user, password);
+
+            // Truy vấn tên nhóm hiện tại
+            String query = "SELECT group_name, group_type FROM chat_group WHERE group_id = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, groupId);
+            rs = stmt.executeQuery();
+
+            String currentGroupName = null;
+            int groupType = -1;
+
+            if (rs.next()) {
+                currentGroupName = rs.getString("group_name");
+                groupType = rs.getInt("group_type");
+            }
+
+            if (currentGroupName != null) {
+                if (groupType == 2) {
+                    JOptionPane.showMessageDialog(this, "This group cannot be renamed because its type is 2.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Hiển thị hộp thoại để người dùng nhập tên nhóm mới
+                newGroupName = JOptionPane.showInputDialog(this, 
+                    "Current Group Name: " + currentGroupName + "\nEnter New Group Name:", 
+                    "Change Group Name", 
+                    JOptionPane.PLAIN_MESSAGE);
+
+                // Kiểm tra người dùng có nhập giá trị mới hay không
+                if (newGroupName != null && !newGroupName.trim().isEmpty()) {
+                    // Cập nhật tên nhóm trong cơ sở dữ liệu
+                    String updateQuery = "UPDATE chat_group SET group_name = ? WHERE group_id = ? AND group_type != 2";
+                    stmt = conn.prepareStatement(updateQuery);
+                    stmt.setString(1, newGroupName.trim());
+                    stmt.setInt(2, groupId);
+                    int rowsUpdated = stmt.executeUpdate();
+
+                    if (rowsUpdated > 0) {
+                        JOptionPane.showMessageDialog(this, "Group name updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Failed to update group name. Group type may be restricted.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Group name update cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Group not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error connecting to the database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_changeGroupNameActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMember;
+    private javax.swing.JButton changeGroupName;
     private javax.swing.JButton deleteMember;
     private javax.swing.JButton promoteAdminRole;
     // End of variables declaration//GEN-END:variables

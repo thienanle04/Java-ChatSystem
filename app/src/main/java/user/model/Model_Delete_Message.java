@@ -4,20 +4,30 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class Model_Delete_Message {
-    private int ID;
+    private int messageID;
+    private int groupID;
     private int userID;
 
-    public Model_Delete_Message(int ID, int userID) {
-        this.ID = ID;
+    public Model_Delete_Message(int messageID, int groupID, int userID) {
+        this.messageID = messageID;
+        this.groupID = groupID;
         this.userID = userID;
     }
 
-    public int getID() {
-        return ID;
+    public int getMessageID() {
+        return messageID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+
+    public int getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
 
     public int getUserID() {
@@ -31,7 +41,8 @@ public class Model_Delete_Message {
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("ID", ID);
+            obj.put("messageID", messageID);
+            obj.put("groupID", groupID);
             obj.put("userID", userID);
         } catch (JSONException e) {
             e.printStackTrace();

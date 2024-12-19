@@ -47,7 +47,6 @@ public class groupList extends javax.swing.JPanel {
             ConfigUtil configUtil = new ConfigUtil();
             // Access configuration values
             url = configUtil.getString("url");
-            System.out.println("url" + url);
             username = configUtil.getString("username");
             password = configUtil.getString("password");
             conn = DriverManager.getConnection(url, username, password);
@@ -456,7 +455,7 @@ public class groupList extends javax.swing.JPanel {
 
         if ("Name".equals(selectedOption)) {
             columnIndex = 0;
-        } else if ("Creation Date".equals(selectedOption)) {
+        } else if ("CreationDate".equals(selectedOption)) {
             columnIndex = 1;
         }
 

@@ -92,20 +92,53 @@ public class Chat_Body extends javax.swing.JPanel {
         sp.getVerticalScrollBar().setUnitIncrement(10);
     }
 
+    public void removeMessage(int ID) {
+        for (int i = 0; i < body.getComponentCount(); i++) {
+            JComponent comp = (JComponent) body.getComponent(i);
+            if (comp instanceof Chat_Left_With_Profile) {
+                if (((Chat_Left_With_Profile) comp).getMessage().getMessageID() == ID) {
+                    body.remove(i);
+                    break;
+                }
+            } else if (comp instanceof Chat_Right) {
+                if (((Chat_Right) comp).getMessage().getMessageID() == ID) {
+                    body.remove(i);
+                    break;
+                }
+            }
+        }
+        repaint();
+        revalidate();
+    }
+
+    public void deleteMessage(int ID) {
+        for (int i = 0; i < body.getComponentCount(); i++) {
+            JComponent comp = (JComponent) body.getComponent(i);
+            if (comp instanceof Chat_Left_With_Profile) {
+                if (((Chat_Left_With_Profile) comp).getMessage().getMessageID() == ID) {
+                    ((Chat_Left_With_Profile) comp).setText("This message has been deleted");
+                    break;
+                }
+            } else if (comp instanceof Chat_Right) {
+                if (((Chat_Right) comp).getMessage().getMessageID() == ID) {
+                    ((Chat_Right) comp).setText("This message has been deleted");
+                    break;
+                }
+            }
+        }
+        repaint();
+        revalidate();
+    }
+
     public void addItemLeft(Model_Chat_Message data) {
-        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(data.getMessage());
-        item.setTime(data.getTime());
-        item.setUserProfile(data.getUserName());
+        Chat_Left_With_Profile item = new Chat_Left_With_Profile(data);
         body.add(item, "wrap, w 100::60%");
         repaint();
         revalidate();
     }
 
     public void addItemRight(Model_Chat_Message data) {
-        Chat_Right item = new Chat_Right();
-        item.setText(data.getMessage());
-        item.setTime(data.getTime());
+        Chat_Right item = new Chat_Right(data);
         body.add(item, "wrap, al right, w 100::60%");
         repaint();
         revalidate();

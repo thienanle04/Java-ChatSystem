@@ -22,8 +22,6 @@ import javax.swing.JTextField;
 import user.event.PublicEvent;
 import user.service.Service;
 
-
-@SuppressWarnings("unused")
 public class Friend_List_Search_Bar extends javax.swing.JPanel {
 
     public Friend_List_Search_Bar() {
@@ -175,7 +173,7 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
             topPanel.add(groupNameField);
             dialog.add(topPanel, BorderLayout.NORTH); // Đặt vào phần trên của dialog
 
-            addButton.addActionListener(e -> {
+            addButton.addActionListener(_ -> {
                 int selectedRow = friendsTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int friendId = (int) friendsTable.getValueAt(selectedRow, 0);

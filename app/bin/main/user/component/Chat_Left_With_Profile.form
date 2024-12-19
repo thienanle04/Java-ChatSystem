@@ -58,6 +58,10 @@
       </SubComponents>
     </Container>
     <Component class="user.component.Chat_Item" name="txt">
+      <Properties>
+        <Property name="opaque" type="boolean" value="true"/>
+        <Property name="requestFocusEnabled" type="boolean" value="false"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

@@ -1,30 +1,11 @@
 package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import user.event.PublicEvent;
 import user.model.Model_Friend_Request;
 import user.service.Service;
 
-
-@SuppressWarnings("unused")
 public class Find_New_Friend_Search_Bar extends javax.swing.JPanel {
 
     public Find_New_Friend_Search_Bar() {
