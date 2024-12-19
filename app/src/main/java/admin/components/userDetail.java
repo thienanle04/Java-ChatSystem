@@ -52,7 +52,6 @@ public class userDetail extends javax.swing.JPanel {
             ConfigUtil configUtil = new ConfigUtil();
             // Access configuration values
             url = configUtil.getString("url");
-            System.out.println("url" + url);
             username = configUtil.getString("username");
             password = configUtil.getString("password");
             conn = DriverManager.getConnection(url, username, password);
@@ -834,6 +833,7 @@ public class userDetail extends javax.swing.JPanel {
                 JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
+            reloadUserDetail();
             String username = usernameField.getText();
             String password = passwordField.getText();
             String password_hash = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -844,21 +844,10 @@ public class userDetail extends javax.swing.JPanel {
             String email = emailField.getText();
 
             if (!username.isEmpty() && !name.isEmpty()) {
-                if (originalModel == null) {
-                    // Store the original model for later use
-                    originalModel = (DefaultTableModel) UserDetails.getModel();
-                }
-                DefaultTableModel model = originalModel;
-                TableRowSorter<?> sorter = (TableRowSorter<?>) UserDetails.getRowSorter();
+                
+                DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
-                if (sorter != null) {
-                    sorter.setSortKeys(null); // Reset sort keys
-                    sorter.setSortable(0, false); // Disable sorting
-                }
                 model.addRow(new Object[] { username, name, password_hash, address, dob, gender, email, "offline" });
-                // if (sorter != null) {
-                // sorter.setSortable(0, true); // Enable sorting lại nếu cần
-                // }
 
                 String sql = "INSERT INTO Users (username, name, address, date_of_birth, gender, email, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
