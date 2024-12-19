@@ -50,14 +50,11 @@ public class Menu_Right extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         addMember = new javax.swing.JButton();
         promoteAdminRole = new javax.swing.JButton();
         deleteMember = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(249, 249, 249));
-
-        jLabel1.setText("Menu Right Note");
 
         addMember.setText("Add Members");
         addMember.addActionListener(new java.awt.event.ActionListener() {
@@ -90,10 +87,6 @@ public class Menu_Right extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(addMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(promoteAdminRole, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -104,9 +97,7 @@ public class Menu_Right extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(87, 87, 87)
                 .addComponent(addMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(deleteMember, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -483,7 +474,6 @@ public class Menu_Right extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMember;
     private javax.swing.JButton deleteMember;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton promoteAdminRole;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,6 +9,7 @@ import io.socket.client.Ack;
 import user.component.Chat_Body;
 import user.component.Chat_Bottom;
 import user.component.Chat_Title;
+import user.component.Message_Search_Bar;
 import user.event.EventChat;
 import user.event.PublicEvent;
 
@@ -26,7 +27,7 @@ public class Chat extends javax.swing.JPanel {
     }
 
     private void init() {
-        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, fill]0[shrink 0]0"));
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[]0[100%, fill]0[shrink 0]0"));
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(Model_Chat_Message message) {
@@ -118,12 +119,38 @@ public class Chat extends javax.swing.JPanel {
                     }
                 }).start();
             }
+
+            @Override
+            public int searchMessage(int groupID, String key) {
+                if (chat_Title1.getChat() != null && chat_Title1.getChat().getGroupId() == groupID) {
+                    return chatBody.searchMessages(key);
+                }
+                return 0;
+            }
+            
+            @Override
+            public void navigateToMatch(int direction) {
+                chatBody.navigateMatches(direction);
+            }
+
+            @Override
+            public void cancelSearch() {
+                chatBody.cancelSearch();
+            }
+
+            @Override
+            public void searchAllMessage(String key) {
+                // TODO Search all messages
+
+            }
         });
         add(chat_Title1, "wrap");
+        add(search_bar, "wrap");
         add(chatBody, "wrap");
         add(chatBottom, "h ::50%");
 
         chat_Title1.setVisible(false);
+        search_bar.setVisible(false);
         chatBody.setVisible(false);
         chatBottom.setVisible(false);
     }
@@ -132,10 +159,12 @@ public class Chat extends javax.swing.JPanel {
         chat_Title1.setChatName(groupChat);
         chatBottom.setChat(groupChat);
         chatBody.clearChat();
+        search_bar.setChat(groupChat);
 
         chat_Title1.setVisible(true);
         chatBody.setVisible(true);
         chatBottom.setVisible(true);
+        search_bar.setVisible(true);
     }
 
     public void setChat(Model_Group_Chat groupChat) {
@@ -168,6 +197,7 @@ public class Chat extends javax.swing.JPanel {
         chat_Title1 = new Chat_Title();
         chatBody = new Chat_Body();
         chatBottom = new Chat_Bottom();
+        search_bar = new Message_Search_Bar();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -186,5 +216,6 @@ public class Chat extends javax.swing.JPanel {
     private user.component.Chat_Body chatBody;
     private user.component.Chat_Bottom chatBottom;
     private user.component.Chat_Title chat_Title1;
+    private user.component.Message_Search_Bar search_bar;
     // End of variables declaration//GEN-END:variables
 }

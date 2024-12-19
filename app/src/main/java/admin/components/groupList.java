@@ -226,7 +226,6 @@ public class groupList extends javax.swing.JPanel {
     private DefaultTableModel originalModel;
 
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByNameActionPerformed
-        // TODO add your handling code here:
         String filterName = filterByName.getText().trim();
 
         if (!filterName.isEmpty()) {
@@ -259,7 +258,6 @@ public class groupList extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void viewMemberActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewMemberActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
         // Get the selected row
@@ -353,7 +351,6 @@ public class groupList extends javax.swing.JPanel {
     }
 
     private void viewAdminActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAdminActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
         // Get the selected row
@@ -432,7 +429,6 @@ public class groupList extends javax.swing.JPanel {
     }// GEN-LAST:event_viewAdminActionPerformed
 
     private void SortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SortByActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
         // Configure a TableRowSorter with custom comparators

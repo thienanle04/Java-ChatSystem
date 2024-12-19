@@ -8,6 +8,7 @@ import user.service.Service;
 
 import user.swing.JIMSendTextPane;
 
+import java.time.LocalDateTime;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -96,7 +97,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     private void eventSend(JIMSendTextPane txt) {
         String text = txt.getText().trim();
         if (!text.equals("")) {
-            Model_Chat_Message message = new Model_Chat_Message(0, chat.getGroupId(), Service.getInstance().getUser().getUserID(), "", text);
+            Model_Chat_Message message = new Model_Chat_Message(0, chat.getGroupId(), Service.getInstance().getUser().getUserID(), "", text, LocalDateTime.now());
             PublicEvent.getInstance().getEventChat().sendMessage(message);
             txt.setText("");
             txt.grabFocus();

@@ -589,7 +589,6 @@ public class activeList extends javax.swing.JPanel {
     }// GEN-LAST:event_appOpenActionPerformed
 
     private void filterByAppOpenActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByAppOpenActionPerformed
-        // TODO add your handling code here:
         appOpenActionPerformed(evt);
     }// GEN-LAST:event_filterByAppOpenActionPerformed
 

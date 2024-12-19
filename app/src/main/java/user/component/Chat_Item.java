@@ -43,8 +43,20 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         add(layer, 0);
     }
 
+    public void setHighLight() {
+        txt.highlightAllText(new Color(255, 255, 0, 100));
+    }
+
+    public void setNormal() {
+        txt.undoHighlights();
+    }
+
     public void setText(String text) {
         txt.setText(text);
+    }
+
+    public String getText() {
+        return txt.getText();
     }
 
     public void setTime(String time) {

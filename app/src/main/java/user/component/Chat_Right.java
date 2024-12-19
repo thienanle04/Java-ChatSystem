@@ -1,6 +1,8 @@
 package user.component;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Chat_Right extends javax.swing.JLayeredPane {
 
@@ -8,6 +10,19 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         initComponents();
         txt.setBackground(new Color(179, 233, 255));
     }
+
+    public String getText() {
+        return txt.getText();
+    }
+
+    public void setHighLight() {
+        txt.setHighLight();
+    }
+
+    public void setNormal() {
+        txt.setNormal();
+    }
+
 
     public void setText(String text) {
         if (text.equals("")) {
@@ -18,8 +33,9 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         txt.seen();
     }
 
-    public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+    public void setTime(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        txt.setTime(time.format(formatter));
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

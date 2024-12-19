@@ -214,7 +214,6 @@ public class spamReports extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reportedEmailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_reportedEmailActionPerformed
-        // TODO add your handling code here:
         String filterName = reportedEmail.getText().trim();
 
         if (!filterName.isEmpty()) {
@@ -302,7 +301,6 @@ public class spamReports extends javax.swing.JPanel {
     private DefaultTableModel originalModel;
 
     private void FilterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_FilterByNameActionPerformed
-        // TODO add your handling code here:
         String filterName = FilterByName.getText().trim();
 
         // Ensure the original model is available
@@ -348,7 +346,6 @@ public class spamReports extends javax.swing.JPanel {
     }// GEN-LAST:event_FilterByNameActionPerformed
 
     private void lockAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_lockAccountActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
         int selectedRow = SpamReports.convertRowIndexToModel(SpamReports.getSelectedRow());
@@ -384,7 +381,6 @@ public class spamReports extends javax.swing.JPanel {
     }// GEN-LAST:event_lockAccountActionPerformed
 
     private void FilterByTimeStampActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_FilterByTimeStampActionPerformed
-        // TODO add your handling code here:
         String filterName = FilterByTimeStamp.getText().trim();
 
         if (!filterName.isEmpty()) {
@@ -420,7 +416,6 @@ public class spamReports extends javax.swing.JPanel {
     }// GEN-LAST:event_FilterByTimeStampActionPerformed
 
     private void SortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SortByActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) SpamReports.getModel();
 
         // Configure a TableRowSorter with custom comparators

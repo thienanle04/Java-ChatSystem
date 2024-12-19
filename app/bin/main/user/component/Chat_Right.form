@@ -26,7 +26,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="com.raven.component.Chat_Item" name="txt">
+    <Component class="user.component.Chat_Item" name="txt">
     </Component>
   </SubComponents>
 </Form>

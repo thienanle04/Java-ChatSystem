@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.HashMap;
-
+import java.time.LocalDateTime;
 
 import server.connection.DatabaseConnection;
 import server.model.Model_Group_Chat;
@@ -186,10 +187,11 @@ public class ServiceMessage {
         }
 
         Model_Chat_Message receive_Message = null;
-        PreparedStatement p = con.prepareStatement("insert into group_messages (group_id, sender_id, message) values (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement p = con.prepareStatement("insert into group_messages (group_id, sender_id, message, sent_at) values (?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
         p.setInt(1, message.getGroupID());
         p.setInt(2, message.getSenderID());
         p.setString(3, message.getMessage());
+        p.setTimestamp(4, Timestamp.valueOf(message.getTime()));
         p.executeUpdate();
         ResultSet r = p.getGeneratedKeys();
 
@@ -201,7 +203,7 @@ public class ServiceMessage {
 
         if (r.next()) {
             int messageID = r.getInt(1);
-            receive_Message = new Model_Chat_Message(messageID, message.getGroupID(), message.getSenderID(), name, message.getMessage());
+            receive_Message = new Model_Chat_Message(messageID, message.getGroupID(), message.getSenderID(), name, message.getMessage(), message.getTime());
         }
         r.close();
         p.close();
@@ -226,7 +228,7 @@ public class ServiceMessage {
         List<Model_Group_Chat> list = getChatListId(userId);
         for (Model_Group_Chat group : list) {
             LinkedList<Model_Chat_Message> messages = new LinkedList<>();
-            PreparedStatement p = con.prepareStatement("select gm.message_id, sender_id, message, visibility_status from group_messages gm join message_visibility mv on gm.message_id = mv.message_id where gm.group_id = ? and mv.user_id = ?");
+            PreparedStatement p = con.prepareStatement("select gm.message_id, sender_id, message, visibility_status, gm.sent_at from group_messages gm join message_visibility mv on gm.message_id = mv.message_id where gm.group_id = ? and mv.user_id = ?");
             p.setInt(1, group.getGroupId());
             p.setInt(2, userId);
             ResultSet r = p.executeQuery();
@@ -235,6 +237,7 @@ public class ServiceMessage {
                 int senderID = r.getInt(2);
                 String message = r.getString(3);
                 String visibility = r.getString(4);
+                LocalDateTime time = r.getTimestamp(5).toLocalDateTime();
                 if (visibility.equals("deleted")) {
                     message = "This message was deleted";
                 } else if (visibility.equals("hidden")) {
@@ -245,7 +248,7 @@ public class ServiceMessage {
                 ResultSet r2 = p2.executeQuery();
                 r2.next();
                 String userName = r2.getString(1);
-                messages.add(new Model_Chat_Message(messageID, group.getGroupId(), senderID, userName, message));
+                messages.add(new Model_Chat_Message(messageID, group.getGroupId(), senderID, userName, message, time));
             }
             data.put(group.getGroupId(), messages);
         }

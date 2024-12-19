@@ -1,7 +1,12 @@
 package user.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Model_Chat_Message {
 
@@ -37,12 +42,21 @@ public class Model_Chat_Message {
         this.userName = userName;
     }
 
-    public Model_Chat_Message(int messageID, int groupID, int senderID, String userName, String message) {
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public Model_Chat_Message(int messageID, int groupID, int senderID, String userName, String message, LocalDateTime time) {
         this.messageID = messageID;
         this.groupID = groupID;
         this.senderID = senderID;
         this.userName = userName;
         this.message = message;
+        this.time = time;
     }
 
     public String getMessage() {
@@ -64,6 +78,7 @@ public class Model_Chat_Message {
             senderID = obj.getInt("senderID");
             userName = obj.getString("userName");
             message = obj.getString("message");
+            time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").parse(obj.getString("time"), LocalDateTime::from);
         } catch (JSONException e) {
             System.err.println(e);
         }
@@ -77,6 +92,7 @@ public class Model_Chat_Message {
             json.put("senderID", senderID);
             json.put("userName", userName);
             json.put("message", message);
+            json.put("time", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(time));
             return json;
         } catch (JSONException e) {
             return null;
@@ -88,4 +104,6 @@ public class Model_Chat_Message {
     private int senderID;
     private String userName;
     private String message;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime time;
 }

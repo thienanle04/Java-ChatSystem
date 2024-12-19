@@ -353,7 +353,6 @@ public class userDetail extends javax.swing.JPanel {
     }
 
     private void setRoleAdminActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setRoleAdminActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
@@ -401,7 +400,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_setRoleAdminActionPerformed
 
     private void UpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_UpdatePasswordActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
@@ -451,7 +449,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_UpdatePasswordActionPerformed
 
     private void statusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_statusActionPerformed
-        // TODO add your handling code here:
         String selectedOption = (String) status.getSelectedItem();
 
         if (selectedOption == null || selectedOption.isEmpty()) {
@@ -497,7 +494,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_statusActionPerformed
 
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByNameActionPerformed
-        // TODO add your handling code here:
         String filterName = filterByName.getText().trim();
         String filterUsername = filterByUsername.getText().trim();
 
@@ -546,13 +542,11 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void filterByUsernameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByUsernameActionPerformed
-        // TODO add your handling code here:
         filterByNameActionPerformed(evt);
 
     }// GEN-LAST:event_filterByUsernameActionPerformed
 
     private void sortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sortByActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         // Configure a TableRowSorter with custom comparators
@@ -589,7 +583,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_sortByActionPerformed
 
     private void resetPasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetPasswordActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
         int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
@@ -618,7 +611,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_resetPasswordActionPerformed
 
     private void add_buttonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_add_buttonActionPerformed
-        // TODO add your handling code here:
         JTextField usernameField = new JTextField(10);
         JTextField passwordField = new JTextField(10);
         JTextField nameField = new JTextField(10);
@@ -790,7 +782,6 @@ public class userDetail extends javax.swing.JPanel {
     }// GEN-LAST:event_update_buttonActionPerformed
 
     private void delete_buttonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_delete_buttonActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());

@@ -4,16 +4,82 @@ import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Adjustable;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JComponent;
+
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
-
 import user.model.Model_Chat_Message;
 
 public class Chat_Body extends javax.swing.JPanel {
+    private List<JComponent> matchedMessages;
 
     public Chat_Body() {
         initComponents();
         init();
+        matchedMessages = new ArrayList<>();
+    }
+
+    public void cancelSearch() {
+        for (JComponent comp : matchedMessages) {
+            if (comp instanceof Chat_Left_With_Profile) {
+                ((Chat_Left_With_Profile) comp).setNormal();
+            } else if (comp instanceof Chat_Right) {
+                ((Chat_Right) comp).setNormal();
+            }
+        }
+        matchedMessages.clear();
+    }
+
+    // Search for messages containing the search text
+    public int searchMessages(String searchText) {
+        cancelSearch();
+        matchedMessages.clear(); // Clear previous matches
+
+        // Iterate over all components in the chat body
+        for (int i = 0; i < body.getComponentCount(); i++) {
+            JComponent comp = (JComponent) body.getComponent(i);
+
+            // Check if the component is a chat message
+            if (comp instanceof Chat_Left_With_Profile || comp instanceof Chat_Right) {
+                String messageText = null;
+                if (comp instanceof Chat_Left_With_Profile) {
+                    messageText = ((Chat_Left_With_Profile) comp).getText();
+                } else if (comp instanceof Chat_Right) {
+                    messageText = ((Chat_Right) comp).getText();
+                }
+
+                // If the message contains the search text, add it to the matched list
+                if (messageText != null && messageText.toLowerCase().contains(searchText.toLowerCase())) {
+                    matchedMessages.add(comp);
+                }
+            }
+        }
+
+        // Highlight the first match if found
+        if (!matchedMessages.isEmpty()) {
+            for (int i = 0; i < matchedMessages.size(); i++) {
+                JComponent comp = matchedMessages.get(i);
+                if (comp instanceof Chat_Left_With_Profile) {
+                    ((Chat_Left_With_Profile) comp).setHighLight();
+                } else if (comp instanceof Chat_Right) {
+                    ((Chat_Right) comp).setHighLight();
+                }
+            }
+
+            return matchedMessages.size();
+        } else {
+            return 0;
+        }
+    }
+
+    // Navigate to the next or previous match
+    public void navigateMatches(int matchIndex) {
+        if (matchIndex >= 0 && matchIndex < matchedMessages.size()) {
+            sp.getVerticalScrollBar().setValue(matchedMessages.get(matchIndex).getY() - 50);
+        }
+
     }
 
     private void init() {
@@ -29,7 +95,7 @@ public class Chat_Body extends javax.swing.JPanel {
     public void addItemLeft(Model_Chat_Message data) {
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(data.getMessage());
-        item.setTime();
+        item.setTime(data.getTime());
         item.setUserProfile(data.getUserName());
         body.add(item, "wrap, w 100::60%");
         repaint();
@@ -39,7 +105,7 @@ public class Chat_Body extends javax.swing.JPanel {
     public void addItemRight(Model_Chat_Message data) {
         Chat_Right item = new Chat_Right();
         item.setText(data.getMessage());
-        item.setTime();
+        item.setTime(data.getTime());
         body.add(item, "wrap, al right, w 100::60%");
         repaint();
         revalidate();

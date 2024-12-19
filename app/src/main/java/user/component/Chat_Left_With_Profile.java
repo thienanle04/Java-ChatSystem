@@ -1,6 +1,9 @@
 package user.component;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.Icon;
 
 public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
@@ -24,11 +27,23 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
         } else {
             txt.setText(text);
         }
-
     }
 
-    public void setTime() {
-        txt.setTime("10:30");    //  Testing
+    public String getText() {
+        return txt.getText();
+    }
+
+    public void setHighLight() {
+        txt.setHighLight();
+    }
+
+    public void setNormal() {
+        txt.setNormal();
+    }
+
+    public void setTime(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        txt.setTime(time.format(formatter));
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

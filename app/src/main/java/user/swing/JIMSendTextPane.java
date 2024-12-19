@@ -8,9 +8,12 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import javax.swing.JTextPane;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.BoxView;
 import javax.swing.text.ComponentView;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
+import javax.swing.text.Highlighter;
 import javax.swing.text.IconView;
 import javax.swing.text.LabelView;
 import javax.swing.text.ParagraphView;
@@ -20,7 +23,27 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 public class JIMSendTextPane extends JTextPane {
+    
+    // Highlight all text in the text pane
+    public void highlightAllText(Color highlightColor) {
+        try {
+            Highlighter highlighter = getHighlighter();
+            highlighter.removeAllHighlights(); // Clear previous highlights
 
+            // Highlight the entire text range
+            highlighter.addHighlight(0, getDocument().getLength(),
+                    new DefaultHighlighter.DefaultHighlightPainter(highlightColor));
+        } catch (BadLocationException e) {
+            
+        }
+    }
+
+    // Remove all highlights
+    public void undoHighlights() {
+        Highlighter highlighter = getHighlighter();
+        highlighter.removeAllHighlights(); // Clear all existing highlights
+    }
+    
     public String getHintText() {
         return hintText;
     }

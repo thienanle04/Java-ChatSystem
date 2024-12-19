@@ -309,7 +309,6 @@ public class newUserRegistration extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void filterByEmailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByEmailActionPerformed
-        // TODO add your handling code here:
         String filterName = filterByEmail.getText().trim();
 
         if (!filterName.isEmpty()) {
@@ -343,7 +342,6 @@ public class newUserRegistration extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByEmailActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
         String inputYear = JOptionPane.showInputDialog(null, "Nhập năm cần xem dữ liệu (yyyy):", "Nhập Năm",
                 JOptionPane.QUESTION_MESSAGE);
         if (inputYear != null && !inputYear.trim().isEmpty()) {
@@ -420,15 +418,12 @@ public class newUserRegistration extends javax.swing.JPanel {
     private DefaultTableModel originalModel;
 
     private void startDateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startDateActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_startDateActionPerformed
 
     private void endDateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_endDateActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_endDateActionPerformed
 
     private void FilterByTimeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_FilterByTimeActionPerformed
-        // TODO add your handling code here:
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
         LocalDate _startDate = LocalDate.MIN;
@@ -484,7 +479,6 @@ public class newUserRegistration extends javax.swing.JPanel {
     }// GEN-LAST:event_FilterByTimeActionPerformed
 
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByNameActionPerformed
-        // TODO add your handling code here:
         String filterName = filterByName.getText().trim();
 
         if (!filterName.isEmpty()) {
@@ -518,7 +512,6 @@ public class newUserRegistration extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void SortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SortByActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) NewUserRegistation.getModel();
 
         // Configure a TableRowSorter with custom comparators

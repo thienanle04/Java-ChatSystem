@@ -18,4 +18,13 @@ public interface EventChat {
     public void newChat(Model_Group_Chat groupChat);
 
     public void deleteAllMessages(Model_Delete_Message req);
+
+    public int searchMessage(int groupID, String key);
+
+    public void navigateToMatch(int direction);
+
+    public void cancelSearch();
+
+    public void searchAllMessage(String key);
+
 }
