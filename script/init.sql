@@ -79,7 +79,7 @@ CREATE TABLE Message_Visibility (
 );
 
 CREATE TABLE spam_list (
-  report_id int NOT NULL,
+  report_id int NOT NULL AUTO_INCREMENT,
   report_by int DEFAULT NULL,
   report_user int DEFAULT NULL,
   report_at timestamp NULL DEFAULT NULL,

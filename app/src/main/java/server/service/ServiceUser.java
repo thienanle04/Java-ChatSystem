@@ -7,6 +7,7 @@ import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
 import server.model.Model_Reset_Password;
+import server.model.Model_Spam_Report;
 import server.model.Model_User_Profile;
 import server.utility.Email;
 
@@ -328,6 +329,19 @@ public class ServiceUser {
             p.setInt(1, userID1);
             p.setInt(2, userID2);
             p.setString(3, status);
+            p.execute();
+            p.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean spamReport(Model_Spam_Report report) throws SQLException {
+        try {
+            PreparedStatement p = con.prepareStatement("insert into spam_list (report_by, report_user) values (?,?)");
+            p.setInt(1, report.getReport_user_id());
+            p.setInt(2, report.getSpam_user_id());
             p.execute();
             p.close();
             return true;

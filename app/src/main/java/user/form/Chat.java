@@ -17,6 +17,7 @@ import user.service.Service;
 import user.model.Model_Group_Chat;
 import user.model.Model_Chat_Message;
 import user.model.Model_Delete_Message;
+import user.model.Model_Spam_Report;
 
 public class Chat extends javax.swing.JPanel {
     HashMap<Integer, LinkedList<Model_Chat_Message>> chats_data;
@@ -202,6 +203,30 @@ public class Chat extends javax.swing.JPanel {
                                             
                                     } else {
                                         
+                                    }
+                                }
+                            }
+                        });
+
+                    }
+                }).start();
+            }
+
+            @Override
+            public void reportSpam(Model_Spam_Report report) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("report_spam", report.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    
+                                    if (action) {
+                                        PublicEvent.getInstance().getEventMain().showNotification("Report spam success");
+                                    } else {
+                                        PublicEvent.getInstance().getEventMain().showNotification("Report spam failed. Please try again later");
                                     }
                                 }
                             }

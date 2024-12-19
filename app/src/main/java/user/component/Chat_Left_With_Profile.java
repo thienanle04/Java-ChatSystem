@@ -13,6 +13,7 @@ import javax.swing.JPopupMenu;
 import user.event.PublicEvent;
 import user.model.Model_Chat_Message;
 import user.model.Model_Delete_Message;
+import user.model.Model_Spam_Report;
 import user.service.Service;
 
 public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
@@ -58,7 +59,7 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
 
                         // Add action listeners for menu items
                         menuItem1.addActionListener(_ -> {
-                            // PublicEvent.getInstance().getEventChat().reportSpam();
+                            PublicEvent.getInstance().getEventChat().reportSpam(new Model_Spam_Report(message.getSenderID(), Service.getInstance().getUser().getUserID()));
                         });
 
                         popupMenu.show(me.getComponent(), me.getX(), me.getY());

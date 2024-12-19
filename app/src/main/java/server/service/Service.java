@@ -19,6 +19,7 @@ import server.model.Model_Login;
 import server.model.Model_Message;
 import server.model.Model_Register;
 import server.model.Model_Reset_Password;
+import server.model.Model_Spam_Report;
 import server.model.Model_User_Profile;
 import server.model.Model_Chat_Message;
 import server.model.Model_Friend_Request;
@@ -219,6 +220,19 @@ public class Service {
                 }
             }
         });   
+
+        server.addEventListener("report_spam", Model_Spam_Report.class, new DataListener<Model_Spam_Report>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_Spam_Report t, AckRequest ar) throws Exception {
+                try {
+                    boolean ok = serviceUser.spamReport(t);
+                    ar.sendAckData(ok);
+                } catch (Exception e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
+            }
+        });
 
         server.addEventListener("add_friend", Model_Friend_Request.class, new DataListener<Model_Friend_Request>() {
             @Override

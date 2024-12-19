@@ -3,9 +3,11 @@ package user.event;
 
 import user.model.Model_Chat_Message;
 import java.util.LinkedList;
+
 import java.util.HashMap;
 import user.model.Model_Group_Chat;
 import user.model.Model_Delete_Message;
+import user.model.Model_Spam_Report;
 
 public interface EventChat {
 
@@ -30,5 +32,7 @@ public interface EventChat {
     public void deleteMessageForMe(Model_Delete_Message req);
 
     public void deleteMessageForEveryone(Model_Delete_Message req);
+
+    public void reportSpam(Model_Spam_Report report);
 
 }
