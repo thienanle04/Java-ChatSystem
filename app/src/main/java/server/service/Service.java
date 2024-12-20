@@ -365,7 +365,6 @@ public class Service {
                                     continue;
                                 }
                                 c.getClient().sendEvent("receive_ms", receive_Message);
-                                break;
                             }
                         }
                         

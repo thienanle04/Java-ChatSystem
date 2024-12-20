@@ -1,5 +1,7 @@
 package user.form;
 
+import user.event.EventHome;
+import user.event.PublicEvent;
 import user.model.Model_Group_Chat;
 import java.awt.CardLayout;
 import net.miginfocom.swing.MigLayout;
@@ -12,6 +14,7 @@ public class Home extends javax.swing.JLayeredPane {
     private Friend_List friend_list;
     private Friend_Request friend_request;
     private CardLayout cardLayout;
+    private Menu_Left menuLeft;
     private Menu_Right menuRight;
     private Find_All_Messages find_all_messages;
 
@@ -44,8 +47,17 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     private void init() {
+        PublicEvent.getInstance().addEventHome(new EventHome() {
+            @Override
+            public void renameGroupChat(Model_Group_Chat groupChat) {
+                menuLeft.renameGroupChat(groupChat);
+                chat.renameGroupChat(groupChat);
+            }
+        });
+
         setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow][fill, 230!]0", "0[fill]0"));
-        this.add(new Menu_Left());
+        menuLeft = new Menu_Left();
+        this.add(menuLeft);
         initCardLayout();
         menuRight = new Menu_Right();
         this.add(menuRight);

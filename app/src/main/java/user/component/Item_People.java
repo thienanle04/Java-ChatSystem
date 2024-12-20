@@ -47,6 +47,11 @@ public class Item_People extends javax.swing.JPanel {
         }
     }
 
+    public void setName(String name) {
+        chat.setName(name);
+        lb.setText(name);
+    }
+
     private void init() {
         addMouseListener(new MouseAdapter() {
             @Override

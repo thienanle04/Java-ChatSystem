@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 
 import user.config.ConfigUtil;
 import user.event.PublicEvent;
+import user.model.Model_Group_Chat;
 import user.service.Service;
 
 public class Friend_List_Search_Bar extends javax.swing.JPanel {
@@ -236,7 +237,7 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
                             }
 
                             JOptionPane.showMessageDialog(dialog, "Friend added to group successfully!");
-
+                            PublicEvent.getInstance().getEventMenuLeft().newChat(new Model_Group_Chat(groupId, 0, groupName, "none", user.app.GroupType.MANY));
                             // Đóng dialog sau khi thành công
                             dialog.dispose(); // Đóng cửa sổ JDialog
                         } catch (SQLException ex) {

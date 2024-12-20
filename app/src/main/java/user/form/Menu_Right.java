@@ -28,7 +28,6 @@ import user.service.Service;
 import user.app.GroupType;
 import user.event.PublicEvent;
 
-@SuppressWarnings("unused")
 public class Menu_Right extends javax.swing.JPanel {
 
     private String Url;
@@ -232,7 +231,7 @@ public class Menu_Right extends javax.swing.JPanel {
                 dialog.add(scrollPane, BorderLayout.CENTER);
 
                 JButton addButton = new JButton("Add");
-                addButton.addActionListener(e -> {
+                addButton.addActionListener(_ -> {
                     int selectedRow = friendsTable.getSelectedRow();
                     if (selectedRow != -1) {
                         int friendId = (int) friendsTable.getValueAt(selectedRow, 0);
@@ -349,7 +348,7 @@ public class Menu_Right extends javax.swing.JPanel {
 
                 // Create the Delete button
                 JButton deleteButton = new JButton("Delete");
-                deleteButton.addActionListener(e -> {
+                deleteButton.addActionListener(_ -> {
                     int selectedRow = memberTable.getSelectedRow();
                     if (selectedRow != -1) {
                         int _userId = (int) tableModel.getValueAt(selectedRow, 2); // Get user_id from the selected row
@@ -462,7 +461,7 @@ public class Menu_Right extends javax.swing.JPanel {
 
                 // Create the Promote button
                 JButton promoteButton = new JButton("Promote");
-                promoteButton.addActionListener(e -> {
+                promoteButton.addActionListener(_ -> {
                     int selectedRow = memberTable.getSelectedRow();
                     if (selectedRow != -1) {
                         int _userId = (int) tableModel.getValueAt(selectedRow, 2); // Get user_id from the selected row
@@ -508,7 +507,6 @@ public class Menu_Right extends javax.swing.JPanel {
     private void changeGroupNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_changeGroupNameActionPerformed
         String newGroupName = "";
         int groupId = this.groupChat.getGroupId();
-        // TODO: Rerender MenuLeft Chat;
         String url = Url;
         String user = Username;
         String password = Password;
@@ -559,6 +557,8 @@ public class Menu_Right extends javax.swing.JPanel {
                     if (rowsUpdated > 0) {
                         JOptionPane.showMessageDialog(this, "Group name updated successfully!", "Success",
                                 JOptionPane.INFORMATION_MESSAGE);
+                        groupChat.setName(newGroupName.trim());
+                        PublicEvent.getInstance().getEventHome().renameGroupChat(groupChat);
                     } else {
                         JOptionPane.showMessageDialog(this,
                                 "Failed to update group name. Group type may be restricted.", "Error",

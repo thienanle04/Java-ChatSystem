@@ -159,6 +159,16 @@ public class Menu_Left extends javax.swing.JPanel {
         showMessage();
     }
 
+    public void renameGroupChat(Model_Group_Chat groupChat) {
+        for (java.awt.Component com : menuList.getComponents()) {
+            Item_People item = (Item_People) com;
+            if (item.getChat().getGroupId() == groupChat.getGroupId()) {
+                item.setName(groupChat.getName());
+                break;
+            }
+        }
+    }
+
     private void showMessage() {
         menuList.removeAll();
         refreshMenuList();

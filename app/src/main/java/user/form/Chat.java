@@ -282,6 +282,10 @@ public class Chat extends javax.swing.JPanel {
         }
     }
 
+    public void renameGroupChat(Model_Group_Chat groupChat) {
+        chat_Title1.setChatName(groupChat);
+    }
+
     public ArrayList<Model_Chat_Message> searchAllMessages(String key) {
         ArrayList<Model_Chat_Message> results = new ArrayList<>();
         for (LinkedList<Model_Chat_Message> messages : chats_data.values()) {

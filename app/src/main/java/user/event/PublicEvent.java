@@ -11,12 +11,21 @@ public class PublicEvent {
     private EventFriendRequest eventFriendRequest;
     private EventFriendList eventFriendList;
     private EventFindNewFriend eventFindNewFriend;
+    private EventHome EventHome;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
             instance = new PublicEvent();
         }
         return instance;
+    }
+
+    public void addEventHome(EventHome event) {
+        this.EventHome = event;
+    }
+
+    public EventHome getEventHome() {
+        return EventHome;
     }
 
     public void addEventFindNewFriend(EventFindNewFriend event) {
