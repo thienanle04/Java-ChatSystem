@@ -19,12 +19,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import user.config.ConfigUtil;
 import user.event.PublicEvent;
 import user.service.Service;
 
 public class Friend_List_Search_Bar extends javax.swing.JPanel {
+    private String Url;
+    private String Username;
+    private String Password;
 
     public Friend_List_Search_Bar() {
+        try {
+            // Create an instance of ConfigUtil
+            ConfigUtil configUtil = new ConfigUtil();
+            // Access configuration values
+            Url = configUtil.getString("url");
+            Username = configUtil.getString("username");
+            Password = configUtil.getString("password");
+        } catch (Exception e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         initComponents();
         cmdSearch.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+3;");
@@ -32,8 +47,8 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
                 + "font:+3;");
     }
 
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jTextField2 = new javax.swing.JTextField();
@@ -74,47 +89,46 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(cmdSearch)
-                .addGap(5, 5, 5)
-                .addComponent(newGroup)
-                .addGap(5, 5, 5)
-                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                .addGap(5, 5, 5)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmdSearch)
+                                .addGap(5, 5, 5)
+                                .addComponent(newGroup)
+                                .addGap(5, 5, 5)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                                .addGap(5, 5, 5)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField2)
-            .addComponent(newGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(cmdSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextField2)
+                        .addComponent(newGroup, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmdSearch, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35,
+                                javax.swing.GroupLayout.PREFERRED_SIZE));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGroupActionPerformed
+    private void newGroupActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newGroupActionPerformed
         int currentUserId = Service.getInstance().getUser().getUserID(); // ID của user hiện tại
 
         try {
             // Kết nối đến database
-            String url = "jdbc:mysql://localhost:3306/chatsystem?zeroDateTimeBehavior=CONVERT_TO_NULL";
-            String user = "JavaChatSystem";
-            String password = "javachatsystem"; // Thay bằng mật khẩu của bạn
-            Connection conn = DriverManager.getConnection(url, user, password);
+            Connection conn = DriverManager.getConnection(Url, Username, Password);
 
             // Lấy dữ liệu bạn bè từ database
             String query = """
-                SELECT 
-                            CASE 
-                                WHEN user_id_1 = ? THEN user_id_2
-                                ELSE user_id_1
-                            END AS friend_id
-                        FROM user_friends
-                        WHERE 
-                            (user_id_1 = ? OR user_id_2 = ?)
-                            AND status = 'friends';
-            """;
+                        SELECT
+                                    CASE
+                                        WHEN user_id_1 = ? THEN user_id_2
+                                        ELSE user_id_1
+                                    END AS friend_id
+                                FROM user_friends
+                                WHERE
+                                    (user_id_1 = ? OR user_id_2 = ?)
+                                    AND status = 'friends';
+                    """;
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, currentUserId); // user_id cho điều kiện CASE
@@ -134,7 +148,7 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
 
                 ResultSet friendRs = friendStmt.executeQuery();
                 if (friendRs.next()) {
-                    data.add(new Object[]{
+                    data.add(new Object[] {
                             friendRs.getInt("user_id"),
                             friendRs.getString("username"),
                             friendRs.getString("name"),
@@ -146,7 +160,7 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
             }
 
             Object[][] friends = data.toArray(new Object[0][]);
-            String[] columnNames = {"User ID", "Username", "Name", "Email"};
+            String[] columnNames = { "User ID", "Username", "Name", "Email" };
 
             // Hiển thị dữ liệu trên JTable
             JTable friendsTable = new JTable(friends, columnNames);
@@ -157,7 +171,7 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
             scrollPane.setPreferredSize(new Dimension(500, 300));
 
             // Tạo JDialog để hiển thị bảng
-            JDialog dialog = new JDialog((JFrame) null, "List of Friends", true);  // Khai báo dialog
+            JDialog dialog = new JDialog((JFrame) null, "List of Friends", true); // Khai báo dialog
             dialog.setLayout(new BorderLayout());
 
             // Thêm bảng vào trung tâm của dialog
@@ -182,13 +196,15 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
                     String groupName = groupNameField.getText();
 
                     if (groupName.isEmpty()) {
-                        JOptionPane.showMessageDialog(dialog, "Please enter a group name.", "Group Name Required", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(dialog, "Please enter a group name.", "Group Name Required",
+                                JOptionPane.WARNING_MESSAGE);
                     } else {
                         try {
                             // Thêm nhóm mới vào bảng chat_group
                             String insertGroupQuery = "INSERT INTO chat_group (group_name, group_type, created_by) VALUES (?, 3, ?)";
                             int groupId = -1;
-                            try (PreparedStatement insertGroupStmt = conn.prepareStatement(insertGroupQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                            try (PreparedStatement insertGroupStmt = conn.prepareStatement(insertGroupQuery,
+                                    PreparedStatement.RETURN_GENERATED_KEYS)) {
                                 insertGroupStmt.setString(1, groupName);
                                 insertGroupStmt.setInt(2, currentUserId);
                                 insertGroupStmt.executeUpdate();
@@ -252,20 +268,22 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error fetching friends: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_newGroupActionPerformed
+    }// GEN-LAST:event_newGroupActionPerformed
 
-    private void cmdSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSearchActionPerformed
-        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
-    }//GEN-LAST:event_cmdSearchActionPerformed
+    private void cmdSearchActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdSearchActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(),
+                jComboBox1.getSelectedItem().toString().toLowerCase());
+    }// GEN-LAST:event_cmdSearchActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jTextField2ActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(),
+                jComboBox1.getSelectedItem().toString().toLowerCase());
+    }// GEN-LAST:event_jTextField2ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(), jComboBox1.getSelectedItem().toString().toLowerCase());
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jComboBox1ActionPerformed
+        PublicEvent.getInstance().getEventFriendList().filterFriend(jTextField2.getText(),
+                jComboBox1.getSelectedItem().toString().toLowerCase());
+    }// GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdSearch;
