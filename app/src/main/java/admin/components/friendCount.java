@@ -281,7 +281,6 @@ public class friendCount extends javax.swing.JPanel {
     private DefaultTableModel originalModel;
 
     private void filterByNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByNameActionPerformed
-        // TODO add your handling code here:
         String filterName = filterByName.getText().trim();
 
         if (!filterName.isEmpty()) {

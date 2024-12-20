@@ -321,7 +321,6 @@ public class userDetail extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewFriendsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewFriendsActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         // Lấy hàng được chọn trong bảng UserDetails

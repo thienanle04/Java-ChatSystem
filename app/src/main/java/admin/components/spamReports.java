@@ -377,7 +377,6 @@ public class spamReports extends javax.swing.JPanel {
     }// GEN-LAST:event_lockAccountActionPerformed
 
     private void FilterByTimeStampActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_FilterByTimeStampActionPerformed
-        // TODO add your handling code here:
         String filterTimestamp = FilterByTimeStamp.getText().trim();
 
         if (!filterTimestamp.isEmpty()) {

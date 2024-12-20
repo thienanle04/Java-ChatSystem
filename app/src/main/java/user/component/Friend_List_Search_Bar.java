@@ -28,6 +28,8 @@ public class Friend_List_Search_Bar extends javax.swing.JPanel {
         initComponents();
         cmdSearch.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:+3;");
+        newGroup.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:+3;");
     }
 
 
