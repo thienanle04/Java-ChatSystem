@@ -1,19 +1,20 @@
 package user.form;
 
-import java.util.ArrayList;
-
 import com.formdev.flatlaf.FlatClientProperties;
 
 import io.socket.client.Ack;
 import net.miginfocom.swing.MigLayout;
 import java.util.List;
+import java.util.HashMap;
 
+import user.model.Model_Chat_Message;
 import user.model.Model_Friend;
 import user.model.Model_Friend_Request;
 import user.model.Model_Group_Chat;
 import user.service.Service;
 import user.component.Friend_List_Menu_Button;
 import user.component.Friend_Request_Menu_Button;
+import user.component.AllMessageSearchBar;
 import user.component.Find_New_Friend_Menu_Button;
 import user.component.Item_People;
 import user.event.EventMenuLeft;
@@ -22,7 +23,7 @@ import user.app.GroupType;
 
 public class Menu_Left extends javax.swing.JPanel {
 
-    private List<Model_Group_Chat> chats;
+    private HashMap<Integer, Model_Group_Chat> chats;
 
     public Menu_Left() {
         initComponents();
@@ -37,12 +38,12 @@ public class Menu_Left extends javax.swing.JPanel {
                 + "thumbInsets:0,0,0,0;");
         sp.getVerticalScrollBar().setUnitIncrement(10);
         menuList.setLayout(new MigLayout("fillx", "0[fill]0", "0[]0"));
-        chats = new ArrayList<>();
+        chats = new HashMap<>();
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
             @Override
             public void newChat(List<Model_Group_Chat> groupChats) {
                 for (Model_Group_Chat d : groupChats) {
-                    chats.add(d);
+                    chats.put(d.getGroupId(), d);
                     menuList.add(new Item_People(d), "wrap");
                     refreshMenuList();
                 }
@@ -55,17 +56,13 @@ public class Menu_Left extends javax.swing.JPanel {
                     refreshMenuList();
                 }
 
-                for (Model_Group_Chat d : chats) {
-                    if (groupChat.getName().equals(d.getName())) {
-                        return;
-                    }
-                }
-                chats.add(groupChat);
+                chats.put(groupChat.getGroupId(), groupChat);
             }
 
             @Override
             public void selectChat(Model_Friend friend) {
-                for (Model_Group_Chat d : chats) {
+                showMessage();
+                for (Model_Group_Chat d : chats.values()) {
                     if (d.getGroupType() == GroupType.TWO) {
                         if (d.getUserID() == friend.getUserID()) {
                             PublicEvent.getInstance().getEventMain().selectChat(d);
@@ -78,7 +75,7 @@ public class Menu_Left extends javax.swing.JPanel {
             @Override
             public void selectChat(Model_Friend_Request friend) {
                 boolean isExist = false;
-                for (Model_Group_Chat d : chats) {
+                for (Model_Group_Chat d : chats.values()) {
                     if (d.getGroupType() == GroupType.TWO) {
                         if (d.getUserID() == friend.getToUserID()) {
                             PublicEvent.getInstance().getEventMain().selectChat(d);
@@ -97,6 +94,7 @@ public class Menu_Left extends javax.swing.JPanel {
                                 if ((boolean) os[0]) {
                                     Model_Group_Chat chat = new Model_Group_Chat(os[1]);
                                     newChat(chat);
+                                    showMessage();
                                     PublicEvent.getInstance().getEventChat().newChat(chat);
                                     PublicEvent.getInstance().getEventMain().selectChat(chat);
                                 }
@@ -109,13 +107,12 @@ public class Menu_Left extends javax.swing.JPanel {
 
             @Override
             public void userConnect(int groupChatId) {
-                for (Model_Group_Chat u : chats) {
-                    if (u.getGroupId() == groupChatId) {
-                        u.setStatus("online");
-                        PublicEvent.getInstance().getEventMain().updateChat(u);
-                        break;
-                    }
+                Model_Group_Chat u = chats.get(groupChatId);
+                if (u != null) {
+                    u.setStatus("online");
+                    PublicEvent.getInstance().getEventMain().updateChat(u);
                 }
+
                 if (menuMessage.isSelected()) {
                     for (java.awt.Component com : menuList.getComponents()) {
                         Item_People item = (Item_People) com;
@@ -129,13 +126,12 @@ public class Menu_Left extends javax.swing.JPanel {
 
             @Override
             public void userDisconnect(int groupChatId) {
-                for (Model_Group_Chat u : chats) {
-                    if (u.getGroupId() == groupChatId) {
-                        u.setStatus("offline");
-                        PublicEvent.getInstance().getEventMain().updateChat(u);
-                        break;
-                    }
+                Model_Group_Chat u = chats.get(groupChatId);
+                if (u != null) {
+                    u.setStatus("offline");
+                    PublicEvent.getInstance().getEventMain().updateChat(u);
                 }
+
                 if (menuMessage.isSelected()) {
                     for (java.awt.Component com : menuList.getComponents()) {
                         Item_People item = (Item_People) com;
@@ -146,19 +142,30 @@ public class Menu_Left extends javax.swing.JPanel {
                     }
                 }
             }
+
+            @Override
+            public void clickMessageItem(Model_Chat_Message message) {
+                showMessage();
+                Model_Group_Chat chat = chats.get(message.getGroupID());
+                PublicEvent.getInstance().getEventMain().selectChat(chat);
+                PublicEvent.getInstance().getEventChat().searchAndNavigateToMessage(message);
+            }
+
+            @Override
+            public Model_Group_Chat getChat(int groupChatId) {
+                return chats.get(groupChatId);
+            }
         });
         showMessage();
     }
-    
+
     private void showMessage() {
         menuList.removeAll();
         refreshMenuList();
         searchBar1.setVisible(true);
-        for (Model_Group_Chat d : chats) {
+        for (Model_Group_Chat d : chats.values()) {
             menuList.add(new Item_People(d), "wrap");
         }
-
-
     }
     
     private void showFriend() {
@@ -193,7 +200,7 @@ public class Menu_Left extends javax.swing.JPanel {
         menuProfile = new user.component.MenuButton();
         sp = new javax.swing.JScrollPane();
         menuList = new javax.swing.JLayeredPane();
-        searchBar1 = new user.component.SearchBar();
+        searchBar1 = new user.component.AllMessageSearchBar();
 
         setBackground(new java.awt.Color(249, 249, 249));
 
@@ -315,7 +322,7 @@ public class Menu_Left extends javax.swing.JPanel {
     private javax.swing.JLayeredPane menuList;
     private user.component.MenuButton menuMessage;
     private user.component.MenuButton menuProfile;
-    private user.component.SearchBar searchBar1;
+    private AllMessageSearchBar searchBar1;
     private javax.swing.JScrollPane sp;
     // End of variables declaration//GEN-END:variables
 }

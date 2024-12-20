@@ -21,6 +21,8 @@ public interface EventMain {
     public void showFindNewFriend();
     
     public void editProfile();
+
+    public void searchAllMessages(String key);
     
     public void showNotification(String message);
 }

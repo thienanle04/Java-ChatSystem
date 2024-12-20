@@ -103,6 +103,11 @@ public class Main extends javax.swing.JFrame {
             public void showNotification(String message) {
                 Main.this.showNotificationDialog(message);
             }
+
+            @Override
+            public void searchAllMessages(String key) {
+                home.searchAllMessages(key);
+            }
         });
     }
 

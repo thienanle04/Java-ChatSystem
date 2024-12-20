@@ -9,6 +9,8 @@ import java.util.List;
 import javax.swing.JComponent;
 
 import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
+
 import net.miginfocom.swing.MigLayout;
 import user.model.Model_Chat_Message;
 
@@ -77,7 +79,10 @@ public class Chat_Body extends javax.swing.JPanel {
     // Navigate to the next or previous match
     public void navigateMatches(int matchIndex) {
         if (matchIndex >= 0 && matchIndex < matchedMessages.size()) {
-            sp.getVerticalScrollBar().setValue(matchedMessages.get(matchIndex).getY() - 50);
+            JComponent comp = matchedMessages.get(matchIndex);
+            SwingUtilities.invokeLater(() -> {
+                sp.getVerticalScrollBar().setValue(comp.getY() - 50);
+            });
         }
 
     }
@@ -90,6 +95,23 @@ public class Chat_Body extends javax.swing.JPanel {
                 + "trackInsets:5,0,5,0;"
                 + "thumbInsets:5,0,5,0;");
         sp.getVerticalScrollBar().setUnitIncrement(10);
+    }
+
+    public int navigateToMessage(Model_Chat_Message message) {
+        // loop through matchedMessages to find the messags to match index
+        for (int i = 0; i < matchedMessages.size(); i++) {
+            JComponent comp = matchedMessages.get(i);
+            if (comp instanceof Chat_Left_With_Profile) {
+                if (((Chat_Left_With_Profile) comp).getMessage().getMessageID() == message.getMessageID()) {
+                    return i;
+                }
+            } else if (comp instanceof Chat_Right) {
+                if (((Chat_Right) comp).getMessage().getMessageID() == message.getMessageID()) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public void removeMessage(int ID) {

@@ -1,7 +1,9 @@
 package user.component;
 
-public class SearchBar extends javax.swing.JPanel {
-    public SearchBar() {
+import user.event.PublicEvent;
+
+public class AllMessageSearchBar extends javax.swing.JPanel {
+    public AllMessageSearchBar() {
         initComponents();
     }
 
@@ -13,9 +15,20 @@ public class SearchBar extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
+        input.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputActionPerformed(evt);
+            }
+        });
+
         status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user/search.png"))); // NOI18N
         status.setBorder(null);
         status.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -35,6 +48,14 @@ public class SearchBar extends javax.swing.JPanel {
 
         status.getAccessibleContext().setAccessibleName("status");
     }// </editor-fold>//GEN-END:initComponents
+
+    private void inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputActionPerformed
+        PublicEvent.getInstance().getEventMain().searchAllMessages(input.getText());
+    }//GEN-LAST:event_inputActionPerformed
+
+    private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
+        PublicEvent.getInstance().getEventMain().searchAllMessages(input.getText());
+    }//GEN-LAST:event_statusActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -176,7 +176,7 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="user.component.SearchBar" name="searchBar1">
+    <Component class="user.component.AllMessageSearchBar" name="searchBar1">
     </Component>
   </SubComponents>
 </Form>

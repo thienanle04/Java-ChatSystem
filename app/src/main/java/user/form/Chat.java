@@ -4,6 +4,7 @@ import net.miginfocom.swing.MigLayout;
 
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 import io.socket.client.Ack;
 import user.component.Chat_Body;
@@ -21,6 +22,7 @@ import user.model.Model_Spam_Report;
 
 public class Chat extends javax.swing.JPanel {
     HashMap<Integer, LinkedList<Model_Chat_Message>> chats_data;
+    private String searchingKey;
 
     public Chat() {
         initComponents();
@@ -140,12 +142,6 @@ public class Chat extends javax.swing.JPanel {
             }
 
             @Override
-            public void searchAllMessage(String key) {
-                // TODO Search all messages
-
-            }
-
-            @Override
             public void deleteMessageForMe(Model_Delete_Message req) {
                 new Thread(new Runnable() {
                     @Override
@@ -236,6 +232,17 @@ public class Chat extends javax.swing.JPanel {
                 }).start();
             }
 
+            @Override
+            public void searchAndNavigateToMessage(Model_Chat_Message message) {
+                search_bar.searchMessage(searchingKey);
+                int index = chatBody.navigateToMessage(message);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        search_bar.navigateToMatch(index);
+                    }
+                }).start();
+            }
         });
         add(chat_Title1, "wrap");
         add(search_bar, "wrap");
@@ -273,6 +280,19 @@ public class Chat extends javax.swing.JPanel {
                 }
             }
         }
+    }
+
+    public ArrayList<Model_Chat_Message> searchAllMessages(String key) {
+        ArrayList<Model_Chat_Message> results = new ArrayList<>();
+        for (LinkedList<Model_Chat_Message> messages : chats_data.values()) {
+            for (Model_Chat_Message message : messages) {
+                if (message.getMessage().toLowerCase().contains(key.toLowerCase())) {
+                    results.add(message);
+                }
+            }
+        }
+        searchingKey = key;
+        return results;
     }
 
     public void updateUser(Model_Group_Chat groupChat) {

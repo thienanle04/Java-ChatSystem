@@ -1,33 +1,13 @@
 package user.component;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 
 import user.event.PublicEvent;
-import user.model.Model_Friend_Request;
 import user.model.Model_Group_Chat;
-import user.service.Service;
 
 
-@SuppressWarnings("unused")
 public class Message_Search_Bar extends javax.swing.JPanel {
     private Model_Group_Chat chat;
 
@@ -45,6 +25,15 @@ public class Message_Search_Bar extends javax.swing.JPanel {
                 + "font:+3;");
     }
 
+    public void searchMessage(String key) {
+        txt.setText(key);
+        cmdSearch.doClick();
+    }
+
+    public void navigateToMatch(int index) {
+        navigator.setValue(index + 1);
+        PublicEvent.getInstance().getEventChat().navigateToMatch(index);
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

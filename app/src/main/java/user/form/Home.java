@@ -13,6 +13,8 @@ public class Home extends javax.swing.JLayeredPane {
     private Friend_Request friend_request;
     private CardLayout cardLayout;
     private Menu_Right menuRight;
+    private Find_All_Messages find_all_messages;
+
 
     public Home() {
         initComponents();
@@ -29,11 +31,13 @@ public class Home extends javax.swing.JLayeredPane {
         friend_list = new Friend_List();
         friend_request = new Friend_Request();
         find_new_friend = new Find_New_Friend();
+        find_all_messages = new Find_All_Messages();
         
         content.add(chat, "chat");
         content.add(friend_list, "friend_list");
         content.add(friend_request, "friend_request");
         content.add(find_new_friend, "find_new_friend");
+        content.add(find_all_messages, "find_all_messages");
         
         cardLayout.show(content, "chat");
         this.add(content);
@@ -45,6 +49,14 @@ public class Home extends javax.swing.JLayeredPane {
         initCardLayout();
         menuRight = new Menu_Right();
         this.add(menuRight);
+        menuRight.setVisible(false);
+        refreshUI();
+    }
+
+    public void searchAllMessages(String key) {
+        find_all_messages.showResults(chat.searchAllMessages(key));
+        setLayout(new MigLayout("fill, hidemode 3", "0[fill,230!][fill, grow]0", "0[fill]0"));
+        cardLayout.show(content, "find_all_messages");
         menuRight.setVisible(false);
         refreshUI();
     }

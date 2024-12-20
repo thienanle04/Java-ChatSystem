@@ -27,12 +27,12 @@ public interface EventChat {
 
     public void cancelSearch();
 
-    public void searchAllMessage(String key);
-
     public void deleteMessageForMe(Model_Delete_Message req);
 
     public void deleteMessageForEveryone(Model_Delete_Message req);
 
     public void reportSpam(Model_Spam_Report report);
+
+    public void searchAndNavigateToMessage(Model_Chat_Message message);
 
 }
