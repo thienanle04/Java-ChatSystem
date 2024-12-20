@@ -102,6 +102,7 @@ public class activeList extends javax.swing.JPanel {
                 new String[] {
                         "Username", "App Open", "People Chatted", "Group Chatted", "Creation Date"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class,
                     java.lang.String.class
@@ -110,6 +111,7 @@ public class activeList extends javax.swing.JPanel {
                     false, false, false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
@@ -309,15 +311,13 @@ public class activeList extends javax.swing.JPanel {
     }// GEN-LAST:event_sortByActionPerformed
 
     private void startDateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_startDateActionPerformed
-        // TODO add your handling code here:
+        //
     }// GEN-LAST:event_startDateActionPerformed
 
     private void endDateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_endDateActionPerformed
-        // TODO add your handling code here:
     }// GEN-LAST:event_endDateActionPerformed
 
     private void filterByTimeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByActionPerformed
-        // TODO add your handling code here:
         String start = startDate.getText().trim();
         String end = endDate.getText().trim();
 
@@ -375,18 +375,18 @@ public class activeList extends javax.swing.JPanel {
 
                 // Truy vấn số người đã trò chuyện
                 String peopleChattedQuery = """
-                            SELECT 
+                            SELECT
                                     gm.sender_id AS UserID,
                                     COUNT(DISTINCT gm_other.user_id) AS PeopleChatted
-                                FROM 
+                                FROM
                                     group_messages gm
-                                JOIN 
+                                JOIN
                                     group_members gm_other
                                     ON gm.group_id = gm_other.group_id
                                     AND gm.sender_id != gm_other.user_id
-                                WHERE 
+                                WHERE
                                     gm.sent_at BETWEEN ? AND ?
-                                GROUP BY 
+                                GROUP BY
                                     gm.sender_id;
                         """;
 
@@ -539,7 +539,7 @@ public class activeList extends javax.swing.JPanel {
     }// GEN-LAST:event_viewChartActionPerformed
 
     private void appOpenActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_appOpenActionPerformed
-        // TODO add your handling code here:
+        //
         String directFriend = appOpen.getText().trim();
         String _filterBy = (String) filterByAppOpen.getSelectedItem();// =, > , <
         if (originalModel == null) {

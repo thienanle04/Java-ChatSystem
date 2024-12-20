@@ -82,6 +82,7 @@ public class friendCount extends javax.swing.JPanel {
                 new String[] {
                         "Username", "Direct Friends Count", "Total Friends Count", "Creation Date"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
@@ -89,6 +90,7 @@ public class friendCount extends javax.swing.JPanel {
                     false, false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
@@ -314,7 +316,6 @@ public class friendCount extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByNameActionPerformed
 
     private void DirectFriendActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_DirectFriendActionPerformed
-        // TODO add your handling code here:
         String directFriend = DirectFriend.getText().trim().isEmpty() ? "0" : DirectFriend.getText().trim();
         ;
         String _filterBy = (String) filterBy.getSelectedItem();// =, > , <
@@ -366,12 +367,10 @@ public class friendCount extends javax.swing.JPanel {
     }// GEN-LAST:event_DirectFriendActionPerformed
 
     private void filterByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_filterByActionPerformed
-        // TODO add your handling code here:
         DirectFriendActionPerformed(evt);
     }// GEN-LAST:event_filterByActionPerformed
 
     private void SortByActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SortByActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) FriendCount.getModel();
 
         // Configure a TableRowSorter with custom comparators

@@ -87,6 +87,7 @@ public class groupList extends javax.swing.JPanel {
                 new String[] {
                         "Group Name", "Creation Date"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.String.class
             };
@@ -94,6 +95,7 @@ public class groupList extends javax.swing.JPanel {
                     false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
@@ -256,6 +258,7 @@ public class groupList extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_filterByNameActionPerformed
 
+    @SuppressWarnings("unused")
     private void viewMemberActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewMemberActionPerformed
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
@@ -334,21 +337,7 @@ public class groupList extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_viewMemberActionPerformed
 
-    private String[][] getGroupMembers(String groupName) {
-        return switch (groupName) {
-            case "Group A" -> new String[][] {
-                    { "Bob", "Member" },
-                    { "Charlie", "Member" }
-            };
-            case "Group B" -> new String[][] {
-                    { "Eva", "Member" }
-            };
-            default -> new String[][] {
-                    { "No members found", "" }
-            };
-        };
-    }
-
+    @SuppressWarnings("unused")
     private void viewAdminActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewAdminActionPerformed
         DefaultTableModel model = (DefaultTableModel) GroupList.getModel();
 
@@ -465,20 +454,6 @@ public class groupList extends javax.swing.JPanel {
             sorter.sort();
         }
     }// GEN-LAST:event_SortByActionPerformed
-
-    private String[][] getGroupAdmins(String groupName) {
-        return switch (groupName) {
-            case "Group A" -> new String[][] {
-                    { "Alice", "Admin" },
-            };
-            case "Group B" -> new String[][] {
-                    { "David", "Admin" },
-            };
-            default -> new String[][] {
-                    { "No members found", "" }
-            };
-        };
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable GroupList;

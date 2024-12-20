@@ -9,9 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -94,6 +92,7 @@ public class newUserRegistration extends javax.swing.JPanel {
                 new String[] {
                         "Creation Date", "Username", "Email"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
@@ -101,6 +100,7 @@ public class newUserRegistration extends javax.swing.JPanel {
                     false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
@@ -341,7 +341,6 @@ public class newUserRegistration extends javax.swing.JPanel {
     }// GEN-LAST:event_filterByEmailActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
         String inputYear = JOptionPane.showInputDialog(null, "Enter the year to view data (yyyy):", "Enter Year",
                 JOptionPane.QUESTION_MESSAGE);
         if (inputYear != null && !inputYear.trim().isEmpty()) {
@@ -411,7 +410,8 @@ public class newUserRegistration extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "You have not entered a year!", "Notification", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You have not entered a year!", "Notification",
+                    JOptionPane.WARNING_MESSAGE);
         }
 
     }// GEN-LAST:event_jButton4ActionPerformed

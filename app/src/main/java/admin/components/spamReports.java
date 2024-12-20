@@ -85,6 +85,7 @@ public class spamReports extends javax.swing.JPanel {
                 new String[] {
                         "Timestamp", "ReportBy", "Username", "Reported Email", "Lock"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
                     java.lang.Boolean.class
@@ -93,6 +94,7 @@ public class spamReports extends javax.swing.JPanel {
                     false, false, false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }

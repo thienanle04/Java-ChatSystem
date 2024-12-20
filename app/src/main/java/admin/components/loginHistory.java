@@ -69,6 +69,7 @@ public class loginHistory extends javax.swing.JPanel {
                 new String[] {
                         "Timestamp", "Username", "FullName"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
@@ -76,6 +77,7 @@ public class loginHistory extends javax.swing.JPanel {
                     false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }

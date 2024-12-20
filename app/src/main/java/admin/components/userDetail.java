@@ -111,6 +111,7 @@ public class userDetail extends javax.swing.JPanel {
                         "Name", "Username", "Password", "Address", "Date-of-birth", "Gender", "Email", "Status", "Lock",
                         "Role", "Creation Date"
                 }) {
+            @SuppressWarnings("rawtypes")
             Class[] types = new Class[] {
                     java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
                     java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
@@ -120,6 +121,7 @@ public class userDetail extends javax.swing.JPanel {
                     false, false, false, false, false, false, false, false, false, false, false
             };
 
+            @SuppressWarnings("rawtypes")
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
@@ -320,6 +322,7 @@ public class userDetail extends javax.swing.JPanel {
                                 .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
 
+    @SuppressWarnings("unused")
     private void viewFriendsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewFriendsActionPerformed
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
@@ -401,8 +404,8 @@ public class userDetail extends javax.swing.JPanel {
         }
     }// GEN-LAST:event_viewFriendsActionPerformed
 
+    @SuppressWarnings("unused")
     private void viewLoginHistoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_viewLoginHistoryActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
         // Lấy hàng được chọn trong bảng UserDetails
@@ -589,7 +592,6 @@ public class userDetail extends javax.swing.JPanel {
         int selectedRow = UserDetails.convertRowIndexToModel(UserDetails.getSelectedRow());
 
         if (selectedRow >= 0) {
-            String currentPassword = model.getValueAt(selectedRow, 2).toString();
             String currentUsername = model.getValueAt(selectedRow, 1).toString();
 
             JTextField passwordField = new JTextField();
@@ -835,7 +837,7 @@ public class userDetail extends javax.swing.JPanel {
             String email = emailField.getText();
 
             if (!username.isEmpty() && !name.isEmpty()) {
-                
+
                 DefaultTableModel model = (DefaultTableModel) UserDetails.getModel();
 
                 model.addRow(new Object[] { username, name, password_hash, address, dob, gender, email, "offline" });
