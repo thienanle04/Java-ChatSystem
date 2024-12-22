@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent;
 
 import user.event.PublicEvent;
 import user.model.Model_Friend_Request;
-import user.service.Service;
 
 public class Find_New_Friend_Item extends javax.swing.JPanel {
     private Model_Friend_Request friend;
