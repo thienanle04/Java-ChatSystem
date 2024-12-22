@@ -89,7 +89,7 @@ CREATE TABLE `login_history` (
   PRIMARY KEY (`login_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `login_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=632 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=636 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,13 +125,13 @@ CREATE TABLE `spam_list` (
   `report_id` int NOT NULL AUTO_INCREMENT,
   `report_by` int DEFAULT NULL,
   `report_user` int DEFAULT NULL,
-  `report_at` timestamp NULL DEFAULT NULL,
+  `report_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`report_id`),
   KEY `report_by` (`report_by`),
   KEY `report_user` (`report_user`),
   CONSTRAINT `spam_list_ibfk_1` FOREIGN KEY (`report_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `spam_list_ibfk_2` FOREIGN KEY (`report_user`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,4 +189,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-22 18:54:23
+-- Dump completed on 2024-12-22 20:33:51
