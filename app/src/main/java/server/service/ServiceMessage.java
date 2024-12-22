@@ -48,7 +48,7 @@ public class ServiceMessage {
     Model_Group_Chat createNewGroup(Model_New_Group group) throws SQLException {
         Model_Group_Chat groupChat = null;
         try {
-            PreparedStatement p = con.prepareStatement("insert into chat_group (group_name, group_type) values (?, 1)", PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement p = con.prepareStatement("insert into chat_group (group_name, group_type) values (?, 3)", PreparedStatement.RETURN_GENERATED_KEYS);
             p.setString(1, group.getGroupName());
             p.executeUpdate();
             ResultSet r = p.getGeneratedKeys();
@@ -62,7 +62,7 @@ public class ServiceMessage {
                 p2.setInt(2, group.getUserID2());
                 p2.executeUpdate();
                 p2.close();
-                groupChat = new Model_Group_Chat(groupID, 0, group.getGroupName(), "none", 1);
+                groupChat = new Model_Group_Chat(groupID, 0, group.getGroupName(), "none", 3);
             }
             r.close();
             p.close();

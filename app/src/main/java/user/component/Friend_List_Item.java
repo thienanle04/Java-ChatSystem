@@ -4,8 +4,12 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
+
 import user.event.PublicEvent;
 import user.model.Model_Friend;
+import user.model.Model_New_Group;
+import user.service.Service;
 
 public class Friend_List_Item extends javax.swing.JPanel {
     private Model_Friend friend;
@@ -146,7 +150,19 @@ public class Friend_List_Item extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
 
     private void cmdNewGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdNewGroupActionPerformed
+        // Open jdialog to enter new group name
         
+        // Open JDialog to enter new group name
+        String groupName = JOptionPane.showInputDialog(this, "Enter Group Name:", "New Group", JOptionPane.PLAIN_MESSAGE);
+
+        if (groupName != null && !groupName.trim().isEmpty()) {
+            // Create a new group chat
+            PublicEvent.getInstance().getEventFriendList().newGroupChat(
+                new Model_New_Group(friend.getUserID(), Service.getInstance().getUser().getUserID(), groupName.trim())
+            );
+        } else {
+
+        }
     }//GEN-LAST:event_cmdNewGroupActionPerformed
 
     private void cmdUnfriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdUnfriendActionPerformed
