@@ -16,6 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `chat_group`
+--
+
+DROP TABLE IF EXISTS `chat_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `chat_group` (
+  `group_id` int NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT 'New group chat',
+  `group_type` int DEFAULT '2',
+  `created_by` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_encrypted` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`group_id`),
+  KEY `created_by` (`created_by`),
+  CONSTRAINT `chat_group_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `chat_group`
 --
 
@@ -24,6 +44,25 @@ LOCK TABLES `chat_group` WRITE;
 INSERT INTO `chat_group` VALUES (1,'Java',3,1,'2024-12-08 16:44:22',0),(2,'New group chat',2,NULL,'2024-12-08 16:44:22',0),(3,'New group chat',2,NULL,'2024-12-08 16:44:22',0),(15,'New group chat',2,NULL,'2024-12-12 08:46:00',0),(16,'New group chat',2,NULL,'2024-12-12 15:44:14',0),(19,'New group chat',2,NULL,'2024-12-12 15:44:46',0),(20,'New group chat',2,NULL,'2024-12-12 18:16:24',0),(21,'New group chat',2,NULL,'2024-12-18 18:45:24',0),(22,'New group chat',2,NULL,'2024-12-18 18:51:13',0),(23,'Tình bạn diệu kỳ',3,21,'2024-12-18 19:05:18',0),(24,'New group chat',2,NULL,'2024-12-18 20:07:18',0),(25,'New group chat',2,NULL,'2024-12-18 20:07:43',0),(26,'New group chat',2,NULL,'2024-12-20 03:34:49',0),(27,'New group chat',2,NULL,'2024-12-20 13:20:17',0),(28,'Web',3,1,'2024-12-20 13:32:21',0),(29,'New group chat',2,NULL,'2024-12-22 02:42:53',0),(30,'New group chat',2,NULL,'2024-12-22 02:48:42',0),(31,'New group chat',2,NULL,'2024-12-22 02:53:54',0),(32,'New group chat',2,NULL,'2024-12-22 02:56:25',0),(33,'New group chat',2,NULL,'2024-12-22 02:57:51',0),(36,'New group chat',2,NULL,'2024-12-22 10:04:35',0),(42,'New group chat',3,NULL,'2024-12-22 10:52:35',0),(46,'Hello Test',3,NULL,'2024-12-22 11:06:00',0),(48,'Hi',3,NULL,'2024-12-22 11:07:35',0),(49,'1 2 3 ...',3,NULL,'2024-12-22 11:13:26',0),(50,'Java Test Demo',3,NULL,'2024-12-22 11:13:54',0),(51,'Java Demo 2',3,1,'2024-12-22 11:20:17',0),(52,'New group chat',2,NULL,'2024-12-22 11:26:29',0);
 /*!40000 ALTER TABLE `chat_group` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `group_members`
+--
+
+DROP TABLE IF EXISTS `group_members`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `group_members` (
+  `group_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `role` enum('admin','member') COLLATE utf8mb4_unicode_ci DEFAULT 'member',
+  `joined_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`group_id`,`user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `group_members_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `chat_group` (`group_id`) ON DELETE CASCADE,
+  CONSTRAINT `group_members_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_members`
@@ -36,6 +75,27 @@ INSERT INTO `group_members` VALUES (1,1,'admin','2024-12-08 16:48:06'),(1,2,'mem
 UNLOCK TABLES;
 
 --
+-- Table structure for table `group_messages`
+--
+
+DROP TABLE IF EXISTS `group_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `group_messages` (
+  `message_id` int NOT NULL AUTO_INCREMENT,
+  `group_id` int NOT NULL,
+  `sender_id` int DEFAULT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sent_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`message_id`),
+  KEY `group_id` (`group_id`),
+  KEY `sender_id` (`sender_id`),
+  CONSTRAINT `group_messages_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `chat_group` (`group_id`) ON DELETE CASCADE,
+  CONSTRAINT `group_messages_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `group_messages`
 --
 
@@ -44,6 +104,23 @@ LOCK TABLES `group_messages` WRITE;
 INSERT INTO `group_messages` VALUES (1,2,1,'Hello','2024-12-08 16:48:54'),(2,1,2,'Hi','2024-12-08 16:48:59'),(3,3,1,'Hehe','2024-12-08 16:49:06'),(4,2,2,'Bye','2024-12-08 16:49:18'),(5,2,2,'Oki','2024-12-08 16:49:26'),(6,2,1,'Hello','2024-12-08 16:50:06'),(7,1,2,'Hello dang o lop web ne','2024-12-09 02:34:18'),(8,1,2,'hehe','2024-12-09 02:34:20'),(9,1,1,'ok bro','2024-12-09 02:34:26'),(10,2,2,'oke bai bai','2024-12-09 02:34:40'),(11,2,1,'Oke bye','2024-12-12 15:48:00'),(12,2,1,'See u later','2024-12-12 15:48:04'),(13,2,1,'Good morning','2024-12-12 15:48:10'),(14,2,1,'How ya doing','2024-12-12 15:48:19'),(15,1,1,'Ua mai co di hoc phap luat dai cuong hong','2024-12-12 17:35:04'),(16,20,1,'Hi','2024-12-12 18:27:30'),(17,16,15,'Hello anh','2024-12-13 03:29:15'),(18,16,1,'Hi em','2024-12-13 03:29:38'),(19,16,1,'co viec gi khong','2024-12-13 03:29:41'),(20,15,1,'Hello','2024-12-13 07:20:49'),(21,3,1,'Hello be','2024-12-14 16:00:51'),(22,3,1,'Cho anh làm quen nha','2024-12-14 16:01:00'),(23,3,1,'được hem','2024-12-14 16:01:02'),(24,3,3,'oki anh','2024-12-14 16:01:41'),(25,3,3,'nhà anh ở đâu thế','2024-12-14 16:02:28'),(26,3,3,'nhà em ở Ninh Thuận á','2024-12-14 16:05:05'),(27,21,1,'Hello','2024-12-18 18:46:10'),(28,23,1,'Hello','2024-12-18 19:05:42'),(29,19,1,'Chao cau','2024-12-18 19:13:29'),(30,19,16,'Hi','2024-12-18 19:28:06'),(31,19,16,'Hi','2024-12-18 19:32:20'),(32,19,16,'Hello','2024-12-18 19:32:28'),(33,19,16,'Hi','2024-12-18 19:34:22'),(34,19,16,'Hi','2024-12-18 19:36:44'),(35,19,1,'Hi','2024-12-18 19:40:08'),(36,19,16,'Hi','2024-12-18 19:41:43'),(37,19,16,'Hi','2024-12-18 19:42:34'),(38,19,1,'Hello','2024-12-18 19:42:48'),(39,2,1,'1','2024-12-19 04:19:33'),(40,2,1,'2','2024-12-19 04:19:34'),(41,2,1,'3','2024-12-19 04:19:34'),(42,2,1,'4','2024-12-19 04:19:34'),(43,2,1,'5','2024-12-19 04:19:35'),(44,2,1,'6','2024-12-19 04:19:35'),(45,2,1,'7','2024-12-19 04:19:36'),(46,2,1,'8','2024-12-19 04:19:36'),(47,2,1,'8','2024-12-19 04:19:37'),(48,2,1,'9','2024-12-19 04:19:37'),(49,2,1,'10','2024-12-19 04:19:39'),(50,2,1,'hello','2024-12-19 04:19:43'),(51,2,1,'1','2024-12-19 05:03:39'),(52,2,1,'2','2024-12-19 05:03:40'),(53,2,1,'3','2024-12-19 05:03:40'),(54,2,1,'4','2024-12-19 05:03:40'),(55,2,1,'5','2024-12-19 05:03:41'),(56,2,1,'6','2024-12-19 05:03:41'),(57,2,1,'7','2024-12-19 05:03:42'),(58,2,1,'8','2024-12-19 05:03:42'),(59,2,1,'9','2024-12-19 05:03:43'),(60,2,1,'10','2024-12-19 05:03:45'),(61,2,1,'11','2024-12-19 05:03:46'),(62,2,1,'12','2024-12-19 05:03:47'),(63,2,1,'13','2024-12-19 05:03:48'),(64,2,1,'hello','2024-12-19 05:03:49'),(65,3,1,'Hi','2024-12-19 09:19:51'),(66,3,1,'Hello em','2024-12-19 13:59:02'),(67,3,1,'T7 này đi cafe hong','2024-12-19 13:59:07'),(68,1,3,'hinh nhu hong a','2024-12-19 14:00:31'),(69,3,1,'Hello','2024-12-19 16:42:20'),(70,3,1,'Xin chao','2024-12-19 16:42:27'),(71,23,1,'Chao ban','2024-12-19 18:47:07'),(72,1,2,'Hi','2024-12-20 13:05:57'),(73,1,21,'Hello mọi người','2024-12-20 13:06:48'),(74,1,2,'xin chao','2024-12-20 13:08:19'),(75,1,21,'Rat han hanh gap cac ban','2024-12-20 13:10:09'),(76,1,21,'CN tuan nay di choi hong','2024-12-20 13:12:38'),(77,1,3,'Oke','2024-12-20 13:14:59'),(78,1,3,'Oke','2024-12-20 13:16:08'),(79,1,3,'Oke','2024-12-20 13:16:25'),(80,1,3,'Oke','2024-12-20 13:16:48'),(81,1,21,'Chot','2024-12-20 13:18:48'),(82,27,3,'Hello','2024-12-20 13:20:24'),(83,28,1,'Hello','2024-12-20 13:32:32'),(84,29,22,'Hello','2024-12-22 02:43:07'),(85,32,14,'Hello','2024-12-22 02:56:46'),(86,33,14,'Hello','2024-12-22 02:58:01'),(100,42,1,'Hello','2024-12-22 10:52:59'),(101,50,31,'Hello','2024-12-22 11:14:02'),(102,50,2,'Hello moi nguoi','2024-12-22 11:14:55'),(103,51,1,'Hello','2024-12-22 11:20:30'),(104,51,31,'Chao ban','2024-12-22 11:20:35'),(105,51,2,'Chao moi nguoi','2024-12-22 11:20:58'),(106,51,1,'Chao','2024-12-22 11:24:48'),(107,52,31,'Hello','2024-12-22 11:26:38');
 /*!40000 ALTER TABLE `group_messages` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `login_history`
+--
+
+DROP TABLE IF EXISTS `login_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `login_history` (
+  `login_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `logged_in_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`login_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `login_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=632 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `login_history`
@@ -56,6 +133,28 @@ INSERT INTO `login_history` VALUES (1,1,'2024-12-08 16:48:40'),(2,2,'2024-12-08 
 UNLOCK TABLES;
 
 --
+-- Table structure for table `message_visibility`
+--
+
+DROP TABLE IF EXISTS `message_visibility`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `message_visibility` (
+  `visibility_id` int NOT NULL AUTO_INCREMENT,
+  `message_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `is_sender` tinyint(1) DEFAULT '0',
+  `visibility_status` enum('visible','hidden','deleted') COLLATE utf8mb4_unicode_ci DEFAULT 'visible',
+  `modified_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`visibility_id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `message_visibility_ibfk_1` FOREIGN KEY (`message_id`) REFERENCES `group_messages` (`message_id`) ON DELETE CASCADE,
+  CONSTRAINT `message_visibility_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=355 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `message_visibility`
 --
 
@@ -64,6 +163,26 @@ LOCK TABLES `message_visibility` WRITE;
 INSERT INTO `message_visibility` VALUES (1,1,1,1,'visible','2024-12-08 16:48:54'),(2,1,2,0,'visible','2024-12-08 16:48:54'),(4,2,1,0,'visible','2024-12-08 16:48:59'),(5,2,2,1,'visible','2024-12-08 16:48:59'),(6,2,3,0,'visible','2024-12-08 16:48:59'),(7,3,1,1,'hidden','2024-12-18 22:35:12'),(8,3,3,0,'visible','2024-12-08 16:49:06'),(10,4,1,0,'visible','2024-12-08 16:49:18'),(11,4,2,1,'visible','2024-12-08 16:49:18'),(13,5,1,0,'visible','2024-12-08 16:49:26'),(14,5,2,1,'visible','2024-12-08 16:49:26'),(16,6,1,1,'visible','2024-12-08 16:50:06'),(17,6,2,0,'visible','2024-12-08 16:50:06'),(18,7,1,0,'visible','2024-12-09 02:34:18'),(19,7,2,1,'visible','2024-12-09 02:34:18'),(20,7,3,0,'visible','2024-12-09 02:34:18'),(21,8,1,0,'visible','2024-12-09 02:34:20'),(22,8,2,1,'visible','2024-12-09 02:34:20'),(23,8,3,0,'visible','2024-12-09 02:34:20'),(24,9,1,1,'visible','2024-12-09 02:34:26'),(25,9,2,0,'visible','2024-12-09 02:34:26'),(26,9,3,0,'visible','2024-12-09 02:34:26'),(27,10,1,0,'visible','2024-12-09 02:34:40'),(28,10,2,1,'visible','2024-12-09 02:34:40'),(29,11,1,1,'visible','2024-12-12 15:48:00'),(30,11,2,0,'visible','2024-12-12 15:48:00'),(32,12,1,1,'visible','2024-12-12 15:48:04'),(33,12,2,0,'visible','2024-12-12 15:48:04'),(35,13,1,1,'visible','2024-12-12 15:48:10'),(36,13,2,0,'visible','2024-12-12 15:48:10'),(38,14,1,1,'visible','2024-12-12 15:48:19'),(39,14,2,0,'visible','2024-12-12 15:48:19'),(41,15,1,1,'visible','2024-12-12 17:35:04'),(42,15,2,0,'visible','2024-12-12 17:35:04'),(43,15,3,0,'visible','2024-12-12 17:35:04'),(44,16,1,1,'visible','2024-12-12 18:27:30'),(45,16,17,0,'visible','2024-12-12 18:27:30'),(47,17,1,0,'visible','2024-12-13 03:29:15'),(48,17,15,1,'visible','2024-12-13 03:29:15'),(50,18,1,1,'visible','2024-12-13 03:29:38'),(51,18,15,0,'visible','2024-12-13 03:29:38'),(53,19,1,1,'visible','2024-12-13 03:29:41'),(54,19,15,0,'visible','2024-12-13 03:29:41'),(56,20,1,1,'visible','2024-12-13 07:20:49'),(57,20,14,0,'visible','2024-12-13 07:20:49'),(59,21,1,1,'hidden','2024-12-18 22:35:12'),(60,21,3,0,'visible','2024-12-14 16:00:51'),(62,22,1,1,'hidden','2024-12-18 22:35:12'),(63,22,3,0,'visible','2024-12-14 16:01:00'),(65,23,1,1,'hidden','2024-12-18 22:35:12'),(66,23,3,0,'visible','2024-12-14 16:01:02'),(68,24,1,0,'hidden','2024-12-18 22:35:12'),(69,24,3,1,'visible','2024-12-14 16:01:41'),(71,25,1,0,'hidden','2024-12-18 22:35:12'),(72,25,3,1,'visible','2024-12-14 16:02:28'),(74,26,1,0,'hidden','2024-12-18 22:35:12'),(75,26,3,1,'visible','2024-12-14 16:05:05'),(76,27,1,1,'visible','2024-12-18 18:46:10'),(77,27,21,0,'visible','2024-12-18 18:46:10'),(79,28,1,1,'visible','2024-12-18 19:05:42'),(80,28,21,0,'hidden','2024-12-19 18:47:00'),(82,29,1,1,'visible','2024-12-18 19:13:29'),(83,29,16,0,'visible','2024-12-18 19:13:29'),(85,30,1,0,'visible','2024-12-18 19:28:06'),(86,30,16,1,'visible','2024-12-18 19:28:06'),(88,31,1,0,'visible','2024-12-18 19:32:20'),(89,31,16,1,'visible','2024-12-18 19:32:20'),(91,32,1,0,'visible','2024-12-18 19:32:28'),(92,32,16,1,'visible','2024-12-18 19:32:28'),(94,33,1,0,'visible','2024-12-18 19:34:22'),(95,33,16,1,'visible','2024-12-18 19:34:22'),(97,34,1,0,'visible','2024-12-18 19:36:44'),(98,34,16,1,'visible','2024-12-18 19:36:44'),(100,35,1,1,'visible','2024-12-18 19:40:08'),(101,35,16,0,'visible','2024-12-18 19:40:08'),(103,36,1,0,'visible','2024-12-18 19:41:43'),(104,36,16,1,'visible','2024-12-18 19:41:43'),(106,37,1,0,'visible','2024-12-18 19:42:34'),(107,37,16,1,'visible','2024-12-18 19:42:34'),(109,38,1,1,'visible','2024-12-18 19:42:48'),(110,38,16,0,'visible','2024-12-18 19:42:48'),(112,39,1,1,'visible','2024-12-19 04:19:33'),(113,39,2,0,'visible','2024-12-19 04:19:33'),(115,40,1,1,'visible','2024-12-19 04:19:34'),(116,40,2,0,'visible','2024-12-19 04:19:34'),(118,41,1,1,'visible','2024-12-19 04:19:34'),(119,41,2,0,'visible','2024-12-19 04:19:34'),(121,42,1,1,'visible','2024-12-19 04:19:34'),(122,42,2,0,'visible','2024-12-19 04:19:34'),(124,43,1,1,'visible','2024-12-19 04:19:35'),(125,43,2,0,'visible','2024-12-19 04:19:35'),(127,44,1,1,'visible','2024-12-19 04:19:35'),(128,44,2,0,'visible','2024-12-19 04:19:35'),(130,45,1,1,'visible','2024-12-19 04:19:36'),(131,45,2,0,'visible','2024-12-19 04:19:36'),(133,46,1,1,'visible','2024-12-19 04:19:36'),(134,46,2,0,'visible','2024-12-19 04:19:36'),(136,47,1,1,'visible','2024-12-19 04:19:37'),(137,47,2,0,'visible','2024-12-19 04:19:37'),(139,48,1,1,'visible','2024-12-19 04:19:37'),(140,48,2,0,'visible','2024-12-19 04:19:37'),(142,49,1,1,'visible','2024-12-19 04:19:39'),(143,49,2,0,'visible','2024-12-19 04:19:39'),(145,50,1,1,'visible','2024-12-19 04:19:43'),(146,50,2,0,'visible','2024-12-19 04:19:43'),(148,51,1,1,'visible','2024-12-19 05:03:39'),(149,51,2,0,'visible','2024-12-19 05:03:39'),(151,52,1,1,'visible','2024-12-19 05:03:40'),(152,52,2,0,'visible','2024-12-19 05:03:40'),(154,53,1,1,'visible','2024-12-19 05:03:40'),(155,53,2,0,'visible','2024-12-19 05:03:40'),(157,54,1,1,'visible','2024-12-19 05:03:40'),(158,54,2,0,'visible','2024-12-19 05:03:40'),(160,55,1,1,'visible','2024-12-19 05:03:41'),(161,55,2,0,'visible','2024-12-19 05:03:41'),(163,56,1,1,'visible','2024-12-19 05:03:41'),(164,56,2,0,'visible','2024-12-19 05:03:41'),(166,57,1,1,'visible','2024-12-19 05:03:42'),(167,57,2,0,'visible','2024-12-19 05:03:42'),(169,58,1,1,'visible','2024-12-19 05:03:42'),(170,58,2,0,'visible','2024-12-19 05:03:42'),(172,59,1,1,'visible','2024-12-19 05:03:43'),(173,59,2,0,'visible','2024-12-19 05:03:43'),(175,60,1,1,'visible','2024-12-19 05:03:45'),(176,60,2,0,'visible','2024-12-19 05:03:45'),(178,61,1,1,'visible','2024-12-19 05:03:46'),(179,61,2,0,'visible','2024-12-19 05:03:46'),(181,62,1,1,'visible','2024-12-19 05:03:47'),(182,62,2,0,'visible','2024-12-19 05:03:47'),(184,63,1,1,'visible','2024-12-19 05:03:48'),(185,63,2,0,'visible','2024-12-19 05:03:48'),(187,64,1,1,'visible','2024-12-19 05:03:49'),(188,64,2,0,'visible','2024-12-19 05:03:49'),(190,65,1,1,'hidden','2024-12-19 13:59:14'),(191,65,3,0,'visible','2024-12-19 09:19:51'),(193,66,1,1,'hidden','2024-12-19 13:59:14'),(194,66,3,0,'visible','2024-12-19 13:59:02'),(196,67,1,1,'hidden','2024-12-19 13:59:14'),(197,67,3,0,'visible','2024-12-19 13:59:07'),(199,68,1,0,'visible','2024-12-19 14:00:31'),(200,68,2,0,'visible','2024-12-19 14:00:31'),(201,68,3,1,'visible','2024-12-19 14:00:31'),(202,69,1,1,'hidden','2024-12-19 16:42:39'),(203,69,3,0,'visible','2024-12-19 16:42:20'),(205,70,1,1,'hidden','2024-12-19 16:42:39'),(206,70,3,0,'visible','2024-12-19 16:42:27'),(208,71,1,1,'deleted','2024-12-19 18:47:23'),(209,71,21,0,'deleted','2024-12-19 18:49:47'),(211,72,1,0,'visible','2024-12-20 13:05:58'),(212,72,2,1,'visible','2024-12-20 13:05:58'),(213,72,3,0,'visible','2024-12-20 13:05:58'),(214,73,1,0,'visible','2024-12-20 13:06:48'),(215,73,2,0,'visible','2024-12-20 13:06:48'),(216,73,3,0,'visible','2024-12-20 13:06:48'),(217,73,21,1,'visible','2024-12-20 13:06:48'),(221,74,1,0,'visible','2024-12-20 13:08:19'),(222,74,2,1,'visible','2024-12-20 13:08:19'),(223,74,3,0,'visible','2024-12-20 13:08:19'),(224,74,21,0,'visible','2024-12-20 13:08:19'),(228,75,1,0,'visible','2024-12-20 13:10:09'),(229,75,2,0,'visible','2024-12-20 13:10:09'),(230,75,3,0,'visible','2024-12-20 13:10:09'),(231,75,21,1,'visible','2024-12-20 13:10:09'),(235,76,1,0,'visible','2024-12-20 13:12:44'),(236,76,2,0,'visible','2024-12-20 13:12:44'),(237,76,3,0,'visible','2024-12-20 13:12:44'),(238,76,21,1,'visible','2024-12-20 13:12:44'),(242,77,1,0,'visible','2024-12-20 13:15:08'),(243,77,2,0,'visible','2024-12-20 13:15:08'),(244,77,3,1,'visible','2024-12-20 13:15:08'),(245,77,21,0,'visible','2024-12-20 13:15:08'),(249,78,1,0,'visible','2024-12-20 13:16:08'),(250,78,2,0,'visible','2024-12-20 13:16:08'),(251,78,3,1,'visible','2024-12-20 13:16:08'),(252,78,21,0,'visible','2024-12-20 13:16:08'),(256,79,1,0,'visible','2024-12-20 13:16:25'),(257,79,2,0,'visible','2024-12-20 13:16:25'),(258,79,3,1,'visible','2024-12-20 13:16:25'),(259,79,21,0,'visible','2024-12-20 13:16:25'),(263,80,1,0,'visible','2024-12-20 13:16:48'),(264,80,2,0,'visible','2024-12-20 13:16:48'),(265,80,3,1,'visible','2024-12-20 13:16:48'),(266,80,21,0,'visible','2024-12-20 13:16:48'),(270,81,1,0,'visible','2024-12-20 13:18:48'),(271,81,2,0,'visible','2024-12-20 13:18:48'),(272,81,3,0,'visible','2024-12-20 13:18:48'),(273,81,21,1,'visible','2024-12-20 13:18:48'),(277,82,2,0,'visible','2024-12-20 13:20:24'),(278,82,3,1,'visible','2024-12-20 13:20:24'),(280,83,1,1,'visible','2024-12-20 13:32:32'),(281,83,2,0,'visible','2024-12-20 13:32:32'),(283,84,21,0,'visible','2024-12-22 02:43:07'),(284,84,22,1,'visible','2024-12-22 02:43:07'),(286,85,14,1,'visible','2024-12-22 02:56:46'),(287,85,22,0,'visible','2024-12-22 02:56:46'),(289,86,2,0,'visible','2024-12-22 02:58:01'),(290,86,14,1,'visible','2024-12-22 02:58:01'),(331,100,1,1,'visible','2024-12-22 10:52:59'),(332,100,31,0,'visible','2024-12-22 10:52:59'),(334,101,1,0,'visible','2024-12-22 11:14:02'),(335,101,31,1,'visible','2024-12-22 11:14:02'),(337,102,1,0,'visible','2024-12-22 11:14:55'),(338,102,2,1,'visible','2024-12-22 11:14:55'),(339,102,31,0,'visible','2024-12-22 11:14:55'),(340,103,1,1,'hidden','2024-12-22 11:22:50'),(341,103,31,0,'hidden','2024-12-22 11:24:10'),(343,104,1,0,'hidden','2024-12-22 11:22:50'),(344,104,31,1,'hidden','2024-12-22 11:23:58'),(346,105,1,0,'hidden','2024-12-22 11:22:50'),(347,105,2,1,'visible','2024-12-22 11:20:58'),(348,105,31,0,'hidden','2024-12-22 11:24:08'),(349,106,1,1,'deleted','2024-12-22 11:24:51'),(350,106,31,0,'deleted','2024-12-22 11:24:51'),(352,107,2,0,'visible','2024-12-22 11:26:38'),(353,107,31,1,'visible','2024-12-22 11:26:38');
 /*!40000 ALTER TABLE `message_visibility` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `spam_list`
+--
+
+DROP TABLE IF EXISTS `spam_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `spam_list` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `report_by` int DEFAULT NULL,
+  `report_user` int DEFAULT NULL,
+  `report_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `report_by` (`report_by`),
+  KEY `report_user` (`report_user`),
+  CONSTRAINT `spam_list_ibfk_1` FOREIGN KEY (`report_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `spam_list_ibfk_2` FOREIGN KEY (`report_user`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `spam_list`
@@ -76,6 +195,25 @@ INSERT INTO `spam_list` VALUES (1,1,2,NULL);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_friends`
+--
+
+DROP TABLE IF EXISTS `user_friends`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_friends` (
+  `user_id_1` int NOT NULL,
+  `user_id_2` int NOT NULL,
+  `status` enum('pending_1_2','pending_2_1','friends','block_1_2','block_2_1') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `requested_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id_1`,`user_id_2`),
+  KEY `user_id_2` (`user_id_2`),
+  CONSTRAINT `user_friends_ibfk_1` FOREIGN KEY (`user_id_1`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `user_friends_ibfk_2` FOREIGN KEY (`user_id_2`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `user_friends`
 --
 
@@ -84,6 +222,33 @@ LOCK TABLES `user_friends` WRITE;
 INSERT INTO `user_friends` VALUES (1,2,'friends','2024-12-14 15:50:03'),(1,14,'block_1_2','2024-12-12 08:22:08'),(1,15,'pending_2_1','2024-12-14 15:49:40'),(1,16,'block_1_2','2024-12-18 18:22:49'),(1,17,'block_1_2','2024-12-13 07:19:44'),(1,18,'pending_2_1','2024-12-14 11:00:59'),(1,21,'block_1_2','2024-12-18 19:03:17'),(1,31,'friends','2024-12-22 10:53:07'),(2,14,'friends','2024-12-22 02:57:48'),(2,22,'friends','2024-12-22 02:48:37'),(3,22,'friends','2024-12-22 02:53:37'),(14,21,'pending_2_1','2024-12-18 20:08:38'),(14,22,'friends','2024-12-22 02:55:57'),(15,22,'friends','2024-12-22 10:04:30'),(16,21,'friends','2024-12-18 20:05:40'),(17,21,'pending_2_1','2024-12-18 20:08:40'),(17,22,'pending_2_1','2024-12-22 02:05:03'),(21,22,'friends','2024-12-22 02:42:49');
 /*!40000 ALTER TABLE `user_friends` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `gender` enum('Male','Female','Other') COLLATE utf8mb4_unicode_ci DEFAULT 'Other',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `verify_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('online','offline') COLLATE utf8mb4_unicode_ci DEFAULT 'offline',
+  `role` enum('admin','user') COLLATE utf8mb4_unicode_ci DEFAULT 'user',
+  `is_locked` tinyint(1) DEFAULT '0',
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
@@ -104,4 +269,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-22 18:54:46
+-- Dump completed on 2024-12-22 18:55:30
