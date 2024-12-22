@@ -124,7 +124,7 @@ public class Service {
                 }
             });
 
-            client.on("new_friend_", new Emitter.Listener() {
+            client.on("new_friend", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
                     Model_Friend friend = new Model_Friend(os[0]);

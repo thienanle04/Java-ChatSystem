@@ -114,6 +114,9 @@ public class ServiceUser {
                 String address = r.getString(5);
                 String gender = r.getString(6);
                 java.sql.Date dob = r.getDate(7);
+                if (address == null) {
+                    address = "";
+                }
                 LocalDate DOB = LocalDate.now().minusYears(100);
                 if (dob != null) {
                     DOB = dob.toLocalDate();
