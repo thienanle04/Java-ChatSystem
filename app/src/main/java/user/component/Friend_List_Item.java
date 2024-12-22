@@ -158,7 +158,7 @@ public class Friend_List_Item extends javax.swing.JPanel {
         if (groupName != null && !groupName.trim().isEmpty()) {
             // Create a new group chat
             PublicEvent.getInstance().getEventFriendList().newGroupChat(
-                new Model_New_Group(friend.getUserID(), Service.getInstance().getUser().getUserID(), groupName.trim())
+                new Model_New_Group(Service.getInstance().getUser().getUserID(), friend.getUserID(), groupName.trim())
             );
         } else {
 
