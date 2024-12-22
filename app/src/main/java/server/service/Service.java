@@ -147,16 +147,31 @@ public class Service {
                 try {
                     boolean ok = serviceUser.responseFriendRequest(t, "friends");
                     Model_Group_Chat chat = serviceMessage.getPrivateChat(t.getToUserID(), t.getFromUserID());
+                    Model_Client toUser = null;
+                    Model_Client fromUser = null;
+
                     for (Model_Client c : listClient) {
                         if (c.getUser().getUserID() == t.getToUserID()) {
                             // Send the chat to the user who accepted the friend request
                             c.getClient().sendEvent("new_chat", chat);
+                            toUser = c;
                         }
 
                         if (c.getUser().getUserID() == t.getFromUserID()) {
                             // Send the chat to the user who sent the friend request
                             Model_Group_Chat chat2 = serviceMessage.getPrivateChat(t.getFromUserID(), t.getToUserID());
                             c.getClient().sendEvent("new_chat", chat2);
+                            fromUser = c;
+                        }
+                    }
+
+                    if (toUser != null) {
+                        Model_User_Profile user = serviceUser.getUserProfile(t.getFromUserID());
+                        if (fromUser != null) {
+                            toUser.getClient().sendEvent("new_friend", new Model_Friend(t.getFromUserID(), user.getName(), "online"));
+                            fromUser.getClient().sendEvent("new_friend", new Model_Friend(t.getToUserID(), t.getName(), "online"));
+                        } else {
+                            toUser.getClient().sendEvent("new_friend", new Model_Friend(t.getFromUserID(), user.getName(), "offline"));
                         }
                     }
                     ar.sendAckData(ok);
