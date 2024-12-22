@@ -54,12 +54,13 @@ public class ServiceMessage {
             ResultSet r = p.executeQuery();
             if (r.next()) {
                 // group chat name is the name of the other person
-                PreparedStatement p2 = con.prepareStatement("select u.name from users u where u.user_id = ? limit 1");
+                PreparedStatement p2 = con.prepareStatement("select u.name, u.status from users u where u.user_id = ? limit 1");
                 p2.setInt(1, other);
                 ResultSet r2 = p2.executeQuery();
                 r2.next();
                 String name = r2.getString(1);
-                groupChat = new Model_Group_Chat(r.getInt(1), other, name, "none", 2);
+                String status = r2.getString(2);
+                groupChat = new Model_Group_Chat(r.getInt(1), other, name, status, 2);
                 p2.close();
                 r2.close();
                 return groupChat;

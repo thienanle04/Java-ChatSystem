@@ -151,14 +151,12 @@ public class Service {
                         if (c.getUser().getUserID() == t.getToUserID()) {
                             // Send the chat to the user who accepted the friend request
                             c.getClient().sendEvent("new_chat", chat);
-                            break;
                         }
 
                         if (c.getUser().getUserID() == t.getFromUserID()) {
                             // Send the chat to the user who sent the friend request
                             Model_Group_Chat chat2 = serviceMessage.getPrivateChat(t.getFromUserID(), t.getToUserID());
                             c.getClient().sendEvent("new_chat", chat2);
-                            break;
                         }
                     }
                     ar.sendAckData(ok);
@@ -240,6 +238,11 @@ public class Service {
                 try {
                     boolean ok = serviceUser.addFriend(t);
                     ar.sendAckData(ok);
+                    for (Model_Client c : listClient) {
+                        if (c.getUser().getUserID() == t.getToUserID()) {
+                            c.getClient().sendEvent("new_friend_request", t);
+                        }
+                    }
                 } catch (Exception e) {
                     System.err.println(e);
                     ar.sendAckData(false);

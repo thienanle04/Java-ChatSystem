@@ -21,6 +21,14 @@ public class Model_User_Profile {
         this.userName = userName;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -52,18 +60,20 @@ public class Model_User_Profile {
     public void setDob(LocalDate dob) {
         this.dob = dob;
     }
-    public Model_User_Profile(int userID, String userName, String email, String address, String gender, String dob) {
+    public Model_User_Profile(int userID, String userName, String name, String email, String address, String gender, String dob) {
         this.userID = userID;
         this.userName = userName;
+        this.name = name;
         this.email = email;
         this.address = address;
         this.gender = gender;
         this.dob = LocalDate.parse(dob);
     }
 
-    public Model_User_Profile(int userID, String userName, String email, String address, String gender, LocalDate dob) {
+    public Model_User_Profile(int userID, String userName, String name, String email, String address, String gender, LocalDate dob) {
         this.userID = userID;
         this.userName = userName;
+        this.name = name;
         this.email = email;
         this.address = address;
         this.gender = gender;
@@ -75,6 +85,7 @@ public class Model_User_Profile {
 
     private int userID;
     private String userName;
+    private String name;
     private String email;
     private String address;
     private String gender;

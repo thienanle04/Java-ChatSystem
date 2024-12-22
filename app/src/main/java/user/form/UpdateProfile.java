@@ -93,6 +93,7 @@ public class UpdateProfile extends javax.swing.JDialog {
 
     public void setUser(Model_User_Profile user) {
         this.user = user;
+        newName.setText(user.getName());
         newUsername.setText(user.getUserName());
         newEmail.setText(user.getEmail());
         currentPassword.setText("");
@@ -173,6 +174,9 @@ public class UpdateProfile extends javax.swing.JDialog {
         day = new javax.swing.JComboBox<>();
         month = new javax.swing.JComboBox<>();
         year = new javax.swing.JComboBox<>();
+        namePanel = new javax.swing.JPanel();
+        name = new javax.swing.JLabel();
+        newName = new javax.swing.JTextField();
         bottom = new javax.swing.JPanel();
         Save = new javax.swing.JButton();
         Cancel = new javax.swing.JButton();
@@ -353,6 +357,31 @@ public class UpdateProfile extends javax.swing.JDialog {
                 .addGap(5, 5, 5))
         );
 
+        name.setText("Name");
+
+        newName.setText("Enter a new name");
+
+        javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
+        namePanel.setLayout(namePanelLayout);
+        namePanelLayout.setHorizontalGroup(
+            namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namePanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(newName, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
+        );
+        namePanelLayout.setVerticalGroup(
+            namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namePanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(name)
+                    .addComponent(newName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5))
+        );
+
         javax.swing.GroupLayout contentLayout = new javax.swing.GroupLayout(content);
         content.setLayout(contentLayout);
         contentLayout.setHorizontalGroup(
@@ -362,12 +391,15 @@ public class UpdateProfile extends javax.swing.JDialog {
             .addComponent(addressPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(dobPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(usernamePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(namePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         contentLayout.setVerticalGroup(
             contentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contentLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addComponent(usernamePane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(genderPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
@@ -376,7 +408,7 @@ public class UpdateProfile extends javax.swing.JDialog {
                 .addComponent(emailPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(addressPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         updateProfile.add(content, java.awt.BorderLayout.PAGE_START);
@@ -578,11 +610,12 @@ public class UpdateProfile extends javax.swing.JDialog {
 
     private void SaveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SaveActionPerformed
         String new_username = newUsername.getText();
+        String new_name = newName.getText();
         String new_email = newEmail.getText();
         String new_address = addressInput.getText();
         String new_gender = genderOption.getSelectedItem().toString();
         LocalDate dob = LocalDate.of(Integer.parseInt(year.getSelectedItem().toString()), Integer.parseInt(month.getSelectedItem().toString()), Integer.parseInt(day.getSelectedItem().toString()));
-        Model_User_Profile newUserInfo = new Model_User_Profile(user.getUserID(), new_username, new_email, new_address, new_gender, dob);
+        Model_User_Profile newUserInfo = new Model_User_Profile(user.getUserID(), new_username, new_name, new_email, new_address, new_gender, dob);
         PublicEvent.getInstance().getEventUpdateInfo().updateProfile(newUserInfo);
         dispose();
     }// GEN-LAST:event_SaveActionPerformed
@@ -633,7 +666,10 @@ public class UpdateProfile extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JComboBox<String> month;
+    private javax.swing.JLabel name;
+    private javax.swing.JPanel namePanel;
     private javax.swing.JTextField newEmail;
+    private javax.swing.JTextField newName;
     private javax.swing.JPasswordField newPasswordInput;
     private javax.swing.JTextField newUsername;
     private javax.swing.JPanel passwordContent;

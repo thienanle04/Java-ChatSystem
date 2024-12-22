@@ -31,7 +31,7 @@ public class Find_New_Friend extends javax.swing.JPanel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Model_Friend_Request req = new Model_Friend_Request(friend.getToUserID(), Service.getInstance().getUser().getUserID(), friend.getName());
+                        Model_Friend_Request req = new Model_Friend_Request(friend.getToUserID(), Service.getInstance().getUser().getUserID(), Service.getInstance().getUser().getName());
                         Service.getInstance().getClient().emit("add_friend", req.toJsonObject(), new Ack() {
                             @Override
                             public void call(Object... args) {

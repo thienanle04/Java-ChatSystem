@@ -84,7 +84,7 @@ public class ServiceUser {
                 con.setAutoCommit(true);
                 message.setAction(true);
                 message.setMessage("Ok");
-                message.setData(new Model_User_Profile(userID, data.getUserName(), data.getEmail(), "", "Other", date));
+                message.setData(new Model_User_Profile(userID, data.getUserName(), data.getName(), data.getEmail(), "", "Other", date));
             }
         } catch (SQLException e) {
             message.setAction(false);
@@ -102,18 +102,23 @@ public class ServiceUser {
 
     public Model_User_Profile login(Model_Login login) throws SQLException {
         Model_User_Profile data = null;
-        PreparedStatement p = con.prepareStatement("select user_id, username, email, address, gender, date_of_birth, password_hash from users where username=BINARY(?)");
+        PreparedStatement p = con.prepareStatement("select user_id, username, name, email, address, gender, date_of_birth, password_hash from users where username=BINARY(?)");
         p.setString(1, login.getUserName());
         ResultSet r = p.executeQuery();
         if (r.next()) {
-            if (BCrypt.checkpw(login.getPassword(), r.getString(7))) {
+            if (BCrypt.checkpw(login.getPassword(), r.getString(8))) {
                 int userID = r.getInt(1);
                 String userName = r.getString(2);
-                String email = r.getString(3);
-                String address = r.getString(4);
-                String gender = r.getString(5);
-                LocalDate dob = r.getDate(6).toLocalDate();
-                data = new Model_User_Profile(userID, userName, email, address, gender, dob);
+                String name = r.getString(3);
+                String email = r.getString(4);
+                String address = r.getString(5);
+                String gender = r.getString(6);
+                java.sql.Date dob = r.getDate(7);
+                LocalDate DOB = LocalDate.now().minusYears(100);
+                if (dob != null) {
+                    DOB = dob.toLocalDate();
+                }
+                data = new Model_User_Profile(userID, userName, name, email, address, gender, DOB);
                 // Set Status Online
                 p = con.prepareStatement(SET_STATUS);
                 p.setString(1, "online");
@@ -236,17 +241,22 @@ public class ServiceUser {
     public Model_User_Profile getUserProfile(int userId) throws SQLException {
         Model_User_Profile profile = null;
         PreparedStatement p = con.prepareStatement(
-                "SELECT user_id, name, email, address, gender, date_of_birth FROM users where user_id=?");
+                "SELECT user_id, username, name, email, address, gender, date_of_birth FROM users where user_id=?");
         p.setInt(1, userId);
         ResultSet rs = p.executeQuery();
         if (rs.next()) {
             int userID = rs.getInt(1);
             String userName = rs.getString(2);
-            String email = rs.getString(3);
-            String address = rs.getString(4);
-            String gender = rs.getString(5);
-            LocalDate dob = rs.getDate(6).toLocalDate();
-            profile = new Model_User_Profile(userID, userName, email, address, gender, dob);
+            String name = rs.getString(3);
+            String email = rs.getString(4);
+            String address = rs.getString(5);
+            String gender = rs.getString(6);
+            java.sql.Date dob = rs.getDate(7);
+            LocalDate DOB = LocalDate.now().minusYears(100);
+            if (dob != null) {
+                DOB = dob.toLocalDate();
+            }
+            profile = new Model_User_Profile(userID, userName, name, email, address, gender, DOB);
         }
         return profile;
     }

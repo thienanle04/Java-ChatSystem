@@ -116,6 +116,14 @@ public class Service {
                 }
             });
 
+            client.on("new_friend_request", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    Model_Friend_Request fr = new Model_Friend_Request(os[0]);
+                    PublicEvent.getInstance().getEventFriendRequest().addNewFriendRequest(fr);
+                }
+            });
+
             client.on("user_status", new Emitter.Listener() {
                 @Override
                 public void call(Object... os) {
