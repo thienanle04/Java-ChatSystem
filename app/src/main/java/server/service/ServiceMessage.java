@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 import server.connection.DatabaseConnection;
 import server.model.Model_Group_Chat;
+import server.model.Model_New_Group;
 import server.model.Model_Chat_Message;
 import server.model.Model_Delete_Message;
 import server.app.GroupType;
@@ -42,6 +43,33 @@ public class ServiceMessage {
         r.close();
         p.close();
         return list;
+    }
+
+    Model_Group_Chat createNewGroup(Model_New_Group group) throws SQLException {
+        Model_Group_Chat groupChat = null;
+        try {
+            PreparedStatement p = con.prepareStatement("insert into chat_group (group_name, group_type) values (?, 1)", PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setString(1, group.getGroupName());
+            p.executeUpdate();
+            ResultSet r = p.getGeneratedKeys();
+            if (r.next()) {
+                int groupID = r.getInt(1);
+                PreparedStatement p2 = con.prepareStatement("insert into group_members (group_id, user_id) values (?, ?)");
+                p2.setInt(1, groupID);
+                p2.setInt(2, group.getUserID1());
+                p2.executeUpdate();
+                p2.setInt(1, groupID);
+                p2.setInt(2, group.getUserID2());
+                p2.executeUpdate();
+                p2.close();
+                groupChat = new Model_Group_Chat(groupID, 0, group.getGroupName(), "none", 1);
+            }
+            r.close();
+            p.close();
+        } catch (SQLException e) {
+            throw e;
+        }
+        return groupChat;
     }
 
     // Get the private chat between only two users

@@ -10,6 +10,7 @@ import user.component.Friend_List_Search_Bar;
 import user.component.Friend_List_Body;
 import user.model.Model_Friend;
 import user.service.Service;
+import user.model.Model_New_Group;
 
 public class Friend_List extends javax.swing.JPanel {
     Friend_Title title;
@@ -74,6 +75,23 @@ public class Friend_List extends javax.swing.JPanel {
                                 if ((boolean) args[0]) {
                                     body.removeFriend(friend.getUserID());
                                     PublicEvent.getInstance().getEventMain().showNotification("You have blocked " + friend.getName());
+                                }
+                            }
+                        });
+                    }
+                }).start();
+            }
+
+            @Override
+            public void newGroupChat(Model_New_Group group) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Service.getInstance().getClient().emit("create_new_group", group.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... args) {
+                                if ((boolean) args[0]) {
+                                    PublicEvent.getInstance().getEventMain().showNotification("Create group chat successful");
                                 }
                             }
                         });

@@ -24,6 +24,7 @@ import server.model.Model_User_Profile;
 import server.model.Model_Chat_Message;
 import server.model.Model_Friend_Request;
 import server.model.Model_Friend;
+import server.model.Model_New_Group;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -95,6 +96,25 @@ public class Service {
                     ar.sendAckData(false);
                 }
 
+            }
+        });
+
+        server.addEventListener("create_new_group", Model_New_Group.class, new DataListener<Model_New_Group>() {
+            @Override
+            public void onData(SocketIOClient sioc, Model_New_Group t, AckRequest ar) throws Exception {
+                try {
+                    Model_Group_Chat chat = serviceMessage.createNewGroup(t);
+                    ar.sendAckData(true);
+
+                    for (Model_Client c : listClient) {
+                        if (c.getUser().getUserID() == t.getUserID1() || c.getUser().getUserID() == t.getUserID2()) {
+                            c.getClient().sendEvent("new_chat", chat);
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.println(e);
+                    ar.sendAckData(false);
+                }
             }
         });
 
